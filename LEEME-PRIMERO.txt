@@ -1,0 +1,32 @@
+CLIPSPHERE - INSTALACION RAPIDA (Windows 10/11)
+Creado por Erick Ramirez - (c) 2026. Ver LICENCIA.txt
+================================================
+
+1) DESBLOQUEAR EL ZIP (importante)
+   Antes de descomprimir: clic derecho al .zip > Propiedades > marca "Desbloquear" > Aceptar.
+   Si no lo haces, Windows puede bloquear instalar.bat e iniciar.bat.
+
+2) DESCOMPRIMIR
+   Clic derecho al .zip > Extraer todo. Ponlo por ejemplo en Documentos\ClipSphere.
+
+3) INSTALAR (una sola vez)
+   Doble clic en instalar.bat. Instala Node.js, yt-dlp, ffmpeg, Python y Whisper.
+   Si Windows pregunta "Permitir cambios", di que Si. Espera a que diga "Listo".
+   Despues REINICIA la PC.
+
+4) ABRIR
+   Doble clic en iniciar.bat. Se abre http://localhost:3600 en el navegador.
+   Deja abierta la ventana negra mientras lo usas.
+   Si Windows pregunta por el Firewall: marca "Redes privadas" y Permitir.
+
+5) CLAVES (en Ajustes, dentro de la app)
+   - Claude (obligatoria): console.anthropic.com > Obtener clave de API.
+     Necesita credito (5 USD alcanzan para muchos videos).
+   - Deepgram (recomendada, para videos SIN subtitulos): console.deepgram.com
+     Gratis 200 USD de credito, sin tarjeta. Copia la clave secreta al crearla.
+
+6) USAR
+   Pega el link del video y dale a "Generar clips".
+   Los clips quedan en Videos\ClipSphere\<fecha>-<video>.
+
+Guia completa con fotos de cada paso y solucion de problemas: ver el enlace que te paso.

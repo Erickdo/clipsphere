@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClipSphere</title>
+<meta name="author" content="Erick Ramírez">
+<meta name="copyright" content="© 2026 Erick Ramírez">
+<link rel="icon" href="/favicon.ico" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --ink:#0d0d0f; --ink2:#16161a; --ink3:#202026; --line:#2c2c34;
+  --paper:#f2ede4; --mute:#8d8a84; --sig:#ffe100; --hot:#ff4d2e; --ok:#3ddc84;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  --r:16px; --gap:clamp(12px,2vw,20px);
+}
+*{box-sizing:border-box;margin:0;min-width:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--display);min-height:100vh;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3,b,p,span,a,div{overflow-wrap:anywhere}
+
+/* ---------- barra superior ---------- */
+.top{position:sticky;top:0;z-index:20;background:rgba(13,13,15,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .in{max-width:1440px;margin:0 auto;padding:12px var(--gap);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:baseline;gap:12px;min-width:0}
+.brand b{font-size:24px;font-weight:800;letter-spacing:-.03em;white-space:nowrap}
+.brand b i{font-style:normal;color:var(--sig)}
+.brand span{font-family:var(--mono);font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-flex;gap:6px;align-items:center;font-size:14px;white-space:nowrap}
+.ghost:hover{border-color:var(--paper)}
+.ghost:disabled{opacity:.5}
+
+/* ---------- distribución ---------- */
+.layout{max-width:1440px;margin:0 auto;padding:var(--gap);display:grid;gap:var(--gap);grid-template-columns:minmax(0,1fr)}
+.main{display:flex;flex-direction:column;gap:var(--gap)}
+@media (min-width:1180px){
+  .layout{grid-template-columns:minmax(0,1fr) 340px;align-items:start}
+  .side{position:sticky;top:76px;max-height:calc(100vh - 96px);display:flex}
+  .side .panel{flex:1;display:flex;flex-direction:column;min-height:0}
+  .side #hist{overflow-y:auto;overflow-x:hidden;flex:1;padding:0 10px;margin:0 -10px}
+}
+.panel{scroll-margin-top:76px;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);padding:clamp(14px,2.2vw,24px)}
+.ph-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.ph-title h4{font-family:var(--mono);font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.12em;display:flex;gap:8px;align-items:center}
+.ph-title .count{font-family:var(--mono);font-size:12px;color:var(--sig)}
+
+/* ---------- nuevo trabajo ---------- */
+.hero h1{font-size:clamp(28px,4vw,50px);font-weight:600;line-height:1.1;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--sig)}
+.hero p{color:var(--mute);margin:12px 0 20px;max-width:640px;font-size:clamp(14px,1.4vw,16px)}
+.bar{display:flex;gap:8px;background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:6px}
+.bar:focus-within{border-color:var(--sig)}
+.bar input{flex:1;background:none;border:0;outline:0;padding:12px 14px;font-size:clamp(14px,1.5vw,17px);font-family:var(--mono);min-width:0}
+.go{background:var(--sig);color:var(--ink);border:0;border-radius:10px;padding:12px 22px;font-weight:800;font-size:16px;display:inline-flex;gap:8px;align-items:center;justify-content:center;white-space:nowrap}
+.go:disabled{opacity:.5;cursor:wait}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+.opts label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--mute)}
+.opts input,.opts select{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-family:var(--mono);font-size:14px;width:100%}
+.warn{margin-top:14px;padding:12px 14px;border:1px solid var(--hot);border-radius:12px;color:#ffb3a5;font-size:14px;display:none;line-height:1.45}
+.warn.show{display:block}
+
+/* ---------- progreso ---------- */
+section.run{display:none}
+section.run.show{display:block}
+.runhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px 20px;margin-bottom:16px}
+.runhead > div:first-child{flex:1 1 320px}
+.runhead h2{font-size:clamp(18px,2.2vw,26px);font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.runhead small{display:block;font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:6px;line-height:1.5}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
+.step{background:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}
+.step .n{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.step .t{font-weight:600;margin-top:4px;display:flex;gap:6px;align-items:center;font-size:15px}
+.step .d{font-size:12px;color:var(--mute);margin-top:4px;min-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step .fill{position:absolute;left:0;bottom:0;height:3px;background:var(--sig);width:0;transition:width .3s}
+.step.run{border-color:var(--sig)}
+.step.run .t i{animation:spin 1s linear infinite}
+.step.ok .t i{color:var(--ok)}
+.step.err{border-color:var(--hot)}
+@keyframes spin{to{transform:rotate(360deg)}}
+details.log{background:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+details.log summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--mute)}
+details.log pre{font-family:var(--mono);font-size:12px;color:#c9c5bd;max-height:240px;overflow:auto;margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* ---------- clips ---------- */
+section.clips{display:none}
+section.clips.show{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:14px}
+.card{background:var(--ink);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card video,.card .ph{width:100%;aspect-ratio:9/16;background:#000;display:block;object-fit:contain}
+.card .ph{display:grid;place-items:center;color:var(--mute);font-family:var(--mono);font-size:12px}
+.card .b{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.meta{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:11px}
+.tag{border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--mute);white-space:nowrap}
+.tag.l{background:var(--sig);color:var(--ink);border-color:var(--sig);font-weight:600}
+.card h3{font-size:15px;line-height:1.25;font-weight:800}
+.card p{font-size:13px;color:#c9c5bd;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hs{font-family:var(--mono);font-size:11px;color:var(--sig);line-height:1.5}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:auto;padding-top:6px}
+.acts button,.acts a{color:var(--paper);background:var(--ink3);border:1px solid var(--line);border-radius:8px;padding:8px 4px;font-size:12px;text-decoration:none;display:flex;justify-content:center;gap:4px;align-items:center;white-space:nowrap}
+.acts button:hover,.acts a:hover{border-color:var(--paper)}
+
+/* ---------- historial ---------- */
+.hrow{display:flex;flex-direction:column;gap:6px;padding:12px 10px;margin:0;border-top:1px solid var(--line);cursor:pointer;border-radius:10px}
+.hrow:first-child{border-top:0}
+.hrow:hover{background:var(--ink3)}
+.hrow:hover b{color:var(--sig)}
+.hrow b{font-weight:600;font-size:14px;line-height:1.3}
+.hrow span{font-family:var(--mono);font-size:11px;color:var(--mute);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.hrow .st{border-radius:999px;padding:1px 8px;font-style:normal}
+.hrow .st.interrumpido,.hrow .st.error{background:#3a1a14;color:#ffb3a5}
+.hrow .st.running,.hrow .st.queued{background:#3a3410;color:var(--sig)}
+.empty{color:var(--mute);font-size:14px}
+
+/* ---------- diálogos ---------- */
+dialog{background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,26px);width:min(580px,94vw);max-height:92vh;overflow:auto}
+dialog::backdrop{background:#000b}
+dialog h3{font-size:22px;margin-bottom:16px}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;font-size:13px;color:var(--mute)}
+.f input,.f select{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--paper);font-family:var(--mono);font-size:13px;width:100%}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.dlg-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;flex-wrap:wrap;position:sticky;bottom:-26px;background:var(--ink2);padding:10px 0 4px}
+.toast{opacity:0;pointer-events:none;position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(120px);background:var(--paper);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:600;transition:transform .25s;z-index:50;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- pantallas pequeñas ---------- */
+@media (max-width:820px){ .brand span{display:none} }
+@media (max-width:600px){
+  .hide-sm{display:none}
+  .brand b{font-size:21px}
+  .ghost{padding:8px 11px}
+  .bar{flex-direction:column}
+  .go{width:100%;padding:14px}
+  .runhead .hbtns{width:100%}
+  .runhead .hbtns > *{flex:1 1 auto;justify-content:center}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card .b{padding:10px;gap:6px}
+  .card h3{font-size:13px}
+  .card p,.hs{display:none}
+  .acts{grid-template-columns:1fr 1fr}
+  .acts a{grid-column:span 2}
+}
+@media (max-width:360px){ .grid{grid-template-columns:1fr} .steps{grid-template-columns:1fr} }
+
+/* ---------- desde el móvil (otro aparato): sin funciones de la laptop ---------- */
+body.remote #btnPhone, body.remote #btnSettings, body.remote #btnOpen{display:none !important}
+
+/* ---------- modo app en pantallas de móvil ---------- */
+.tabbar{display:none}
+.empty-pane{display:none}
+@media (max-width:700px){
+  body.app{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  body.app .top .in{padding:10px 14px}
+  body.app .layout{display:block;padding:12px}
+  body.app .main{gap:0}
+  body.app .panel{border-radius:14px}
+  body.app .pane{display:none !important}
+  body.app .pane.on{display:block !important}
+  body.app .side{position:static;max-height:none;display:block}
+  body.app .hero h1{font-size:26px}
+  body.app .hero p{display:none}
+  body.app .hero::before{content:"Nuevo trabajo";display:block;font-family:var(--mono);font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+  body.app .empty-pane{display:none;text-align:center;color:var(--mute);padding:40px 16px;font-size:15px;line-height:1.5}
+  body.app .pane.on > .empty-pane{display:block}
+  body.app .run.on:not(.show) > :not(.empty-pane), body.app .clips.on:not(.show) > :not(.empty-pane){display:none}
+  body.app .run.show > .empty-pane, body.app .clips.show > .empty-pane{display:none !important}
+  .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;
+    background:rgba(22,22,26,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .tabbar button{background:none;border:0;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;padding:6px 0;border-radius:10px;position:relative}
+  .tabbar button i{font-size:22px}
+  .tabbar button.on{color:var(--sig);background:var(--ink3)}
+  .tabbar .badge{position:absolute;top:2px;left:calc(50% + 6px);background:var(--sig);color:var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;border-radius:999px;padding:0 5px;min-width:16px;line-height:16px;display:none}
+  .tabbar .badge.show{display:block}
+  .tabbar .dot{position:absolute;top:6px;left:calc(50% + 8px);width:8px;height:8px;border-radius:50%;background:var(--sig);display:none;animation:pulse 1.2s infinite}
+  .tabbar .dot.show{display:block}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+@keyframes pulse{50%{opacity:.3}}
+
+.credit{max-width:1440px;margin:8px auto 0;padding:18px var(--gap) 28px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.04em}
+.credit b{color:var(--paper);font-weight:600}
+.credit span{opacity:.8}
+@media (max-width:700px){ body.app .credit{padding:14px 14px 10px} }
+
+.update-bar{display:none;background:#2a2610;border-bottom:1px solid #5a4f12}
+.update-bar.show{display:block}
+.update-bar .in{max-width:1440px;margin:0 auto;padding:10px var(--gap);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;color:#f6e7a3}
+.update-bar .in span{flex:1 1 220px}
+body.remote .update-bar{display:none !important}
+.credit .ver{opacity:.7}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <div class="brand"><b>Clip<i>Sphere</i></b><span>clips verticales automáticos</span></div>
+    <div class="hbtns">
+      <button class="ghost" id="btnPhone" title="Abrir en el móvil"><i class="ti ti-device-mobile"></i><span class="hide-sm">Abrir en el </span><span>móvil</span></button>
+      <button class="ghost" id="btnSettings" title="Ajustes"><i class="ti ti-settings"></i><span>Ajustes</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="update-bar" id="updBar">
+  <div class="in"><i class="ti ti-download"></i><span id="updText">Hay una versión nueva de ClipSphere.</span>
+    <button class="go" id="btnUpdate" style="padding:7px 14px;font-size:14px">Actualizar</button>
+    <button class="ghost" id="btnUpdLater" style="padding:6px 12px">Luego</button></div>
+</div>
+<div class="layout">
+  <main class="main">
+    <section class="panel hero pane" data-pane="crear">
+      <h1>Pega el link. <em>Sal con los clips.</em></h1>
+      <p>Descarga, transcribe, encuentra los momentos que pegan y los monta en 9:16 con título, subtítulos y texto para publicar.</p>
+      <form class="bar" id="form">
+        <input id="url" type="url" inputmode="url" placeholder="https://youtu.be/…" autocomplete="off" spellcheck="false" required>
+        <button class="go" id="go"><i class="ti ti-sparkles"></i> Generar clips</button>
+      </form>
+      <div class="opts">
+        <label>Duración mínima (seg) <input id="o_minSeconds" type="number" min="15" inputmode="numeric"></label>
+        <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
+        <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
+        <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
+      </div>
+      <div class="warn" id="warn"></div>
+    </section>
+
+    <section class="panel run pane" id="run" data-pane="progreso">
+      <div class="empty-pane"><i class="ti ti-activity" style="font-size:34px"></i><br>No hay ningún trabajo en curso.<br>Ve a <b>Crear</b> y pega un link.</div>
+      <div class="ph-title"><h4><i class="ti ti-activity"></i> Progreso</h4></div>
+      <div class="runhead">
+        <div><h2 id="runTitle">Preparando…</h2><small id="runSub"></small></div>
+        <div class="hbtns">
+          <button class="go" id="btnRetry" style="display:none;padding:9px 16px;font-size:14px"><i class="ti ti-player-play"></i> Reintentar</button>
+          <button class="ghost" id="btnOpen"><i class="ti ti-folder-open"></i> Abrir carpeta</button>
+          <button class="ghost" id="btnCancel"><i class="ti ti-x"></i> Cancelar</button>
+        </div>
+      </div>
+      <div class="steps" id="steps"></div>
+      <details class="log"><summary>Registro</summary><pre id="log"></pre></details>
+    </section>
+
+    <section class="panel clips pane" id="clipsSec" data-pane="clips">
+      <div class="empty-pane"><i class="ti ti-movie" style="font-size:34px"></i><br>Aquí aparecen los clips a medida que se terminan.</div>
+      <div class="ph-title"><h4><i class="ti ti-movie"></i> Clips</h4><span class="count" id="clipCount"></span></div>
+      <div class="grid" id="grid"></div>
+    </section>
+  </main>
+
+  <aside class="side pane" data-pane="historial">
+    <section class="panel">
+      <div class="ph-title"><h4><i class="ti ti-history"></i> Historial</h4></div>
+      <div id="hist"></div>
+    </section>
+  </aside>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="cfgForm">
+    <h3>Ajustes</h3>
+    <div class="f">API key de Claude (console.anthropic.com → Obtener clave de API) <input name="anthropicKey" placeholder="sk-ant-…" autocomplete="off"></div>
+    <div class="f">Modelo de Claude <input name="claudeModel"></div>
+    <div class="f">Clave de Deepgram — transcribe videos SIN subtítulos en 1–2 min, sin límites ($200 gratis en console.deepgram.com) <input name="deepgramKey" placeholder="pega aquí la clave de Deepgram" autocomplete="off"></div>
+    <p style="font-size:12px;color:var(--mute);margin:-4px 0 14px">Claude elige los momentos y escribe títulos, descripciones y hashtags. Los videos sin subtítulos se transcriben con Deepgram si pones su clave; si no, con Whisper en tu PC (más lento).</p>
+    <details style="margin-bottom:14px"><summary style="cursor:pointer;font-size:13px;color:var(--mute)">Opciones avanzadas (no hacen falta)</summary>
+      <div style="margin-top:12px">
+        <div class="f">IA que elige los momentos
+          <select name="provider"><option value="claude">Claude (recomendado)</option><option value="gemini">Google Gemini</option><option value="ollama">Ollama (local)</option></select>
+        </div>
+        <div class="f">Clave de Groq (alternativa a Deepgram; gratis con límite por hora) <input name="groqKey" placeholder="gsk_…" autocomplete="off"></div>
+        <div class="row2">
+          <div class="f">Clave de Gemini <input name="geminiKey" placeholder="AIza…" autocomplete="off"></div>
+          <div class="f">Modelo Whisper local
+            <select name="whisperModel"><option value="base">base (rápido)</option><option value="small">small (recomendado)</option><option value="medium">medium (más preciso, lento)</option></select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="f">Modelo Gemini <input name="geminiModel"></div>
+          <div class="f">Modelo Ollama <input name="ollamaModel"></div>
+        </div>
+      </div>
+    </details>
+    <div class="f">Carpeta de salida <input name="outputRoot"></div>
+    <div class="row2">
+      <div class="f">Codificador de video
+        <select name="encoder"><option value="libx264">CPU (x264)</option><option value="h264_nvenc">NVIDIA (NVENC)</option><option value="h264_qsv">Intel (QuickSync)</option><option value="h264_amf">AMD (AMF)</option></select>
+      </div>
+      <div class="f">Guardar video original
+        <select name="keepSource"><option value="">No (ahorra espacio)</option><option value="1">Sí</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f">Fuente (nombre) <input name="fontName"></div>
+      <div class="f">Fuente (archivo) <input name="fontFile"></div>
+    </div>
+    <div class="dlg-acts">
+      <button class="ghost" value="cancel">Cerrar</button>
+      <button class="go" id="saveCfg" value="default" style="padding:10px 20px">Guardar</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="dlgPhone">
+  <h3>Abrir en el móvil</h3>
+  <p style="color:var(--mute);font-size:14px;margin-bottom:14px">Conecta el móvil al <b>mismo Wi-Fi</b> que esta laptop y abre en su navegador:</p>
+  <div id="phoneUrls" style="font-family:var(--mono);font-size:20px;color:var(--sig);margin-bottom:14px;word-break:break-all"></div>
+  <p style="color:var(--mute);font-size:14px">Código de acceso:</p>
+  <div id="phoneCode" style="font-family:var(--mono);font-size:40px;letter-spacing:8px;margin:6px 0 14px"></div>
+  <p style="color:var(--mute);font-size:12px">El móvil lo pide una sola vez. Si Windows pregunta por el firewall al iniciar ClipSphere, elige <b>Permitir</b> en redes privadas. La laptop tiene que estar encendida con ClipSphere abierto.</p>
+  <div class="dlg-acts"><button class="ghost" onclick="this.closest('dialog').close()">Cerrar</button></div>
+</dialog>
+<footer class="credit">ClipSphere <span class="ver" id="verLabel"></span> <span>© 2026</span> · Creado por <b>Erick Ramírez</b></footer>
+<nav class="tabbar" id="tabbar">
+  <button data-tab="crear" class="on"><i class="ti ti-circle-plus"></i>Crear</button>
+  <button data-tab="progreso"><i class="ti ti-activity"></i>Progreso<span class="dot" id="dotRun"></span></button>
+  <button data-tab="clips"><i class="ti ti-movie"></i>Clips<span class="badge" id="badgeClips"></span></button>
+  <button data-tab="historial"><i class="ti ti-history"></i>Historial</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const STEPS = [
+  ["info", "Info", "ti-info-circle"],
+  ["subs", "Transcripción", "ti-text-caption"],
+  ["ai", "Momentos (IA)", "ti-brain"],
+  ["download", "Descarga", "ti-download"],
+  ["render", "Render 9:16", "ti-movie"],
+];
+let current = null, es = null, cfg = {};
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1600); }
+function fmt(s) { s = Math.round(s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+function escH(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+async function api(p, opt = {}) {
+  const r = await fetch(p, { headers: { "content-type": "application/json" }, ...opt, body: opt.body ? JSON.stringify(opt.body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+async function loadCfg() {
+  cfg = await api("/api/config");
+  for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
+  const f = $("#cfgForm");
+  for (const el of f.elements) if (el.name in cfg) el.value = el.name === "keepSource" ? (cfg.keepSource ? "1" : "") : cfg[el.name];
+}
+
+async function check() {
+  const c = await api("/api/check");
+  const miss = [];
+  if (!c.tools.ytdlp) miss.push("yt-dlp");
+  if (!c.tools.ffmpeg) miss.push("ffmpeg");
+  const w = $("#warn");
+  let msg = "";
+  if (miss.length) msg += `Falta instalar: <b>${miss.join(", ")}</b>. Cierra esto y ejecuta <b>instalar.bat</b>. `;
+  if (c.provider === "claude" && !c.hasKey) msg += `Falta la <b>API key de Claude</b>: ponla en ⚙️ Ajustes. `;
+  if (!c.tools.whisper && !c.hasGroq) msg += `Para videos <b>sin subtítulos</b> falta Whisper: cierra ClipSphere y ejecuta <b>instalar.bat</b>. `;
+  if (c.provider === "gemini" && !c.hasKey) msg += `Falta la <b>clave de Gemini</b>: sácala gratis en <b>aistudio.google.com/apikey</b> y pégala en ⚙️ Ajustes. `;
+  if (c.provider === "ollama" && !c.ollama) msg += `Ollama no responde en tu PC. Ábrelo o cambia a Claude. `;
+  if (!c.fontOk) msg += `No encuentro el archivo de la fuente; revisa Ajustes. `;
+  w.innerHTML = msg; w.classList.toggle("show", !!msg);
+}
+
+function drawSteps() {
+  $("#steps").innerHTML = STEPS.map(([id, t, ic], i) =>
+    `<div class="step" id="st_${id}"><div class="n">0${i + 1}</div><div class="t"><i class="ti ${ic}"></i>${t}</div><div class="d"></div><div class="fill"></div></div>`).join("");
+}
+function setStep(id, status, detail) {
+  const el = $("#st_" + id); if (!el) return;
+  el.classList.remove("run", "ok", "err"); el.classList.add(status);
+  const ic = el.querySelector(".t i");
+  if (status === "run") ic.className = "ti ti-loader-2";
+  if (status === "ok") { ic.className = "ti ti-circle-check"; el.querySelector(".fill").style.width = "100%"; }
+  if (detail) el.querySelector(".d").textContent = detail;
+}
+function log(m) { const p = $("#log"); p.textContent += m + "\n"; p.scrollTop = p.scrollHeight; }
+
+function card(c, jobId, ready = true) {
+  const hs = (c.hashtags || []).join(" ");
+  const media = ready
+    ? `<video src="/files/${jobId}/${c.file}" poster="/files/${jobId}/${c.cover}" controls preload="none" playsinline></video>`
+    : `<div class="ph">renderizando…</div>`;
+  return `<div class="card" id="card_${c.id}">${media}<div class="b">
+    <div class="meta"><span class="tag l">${escH(c.label)}</span><span class="tag">${fmt(c.end - c.start)}</span><span class="tag">${c.startTimestamp?.slice(0, 8)}</span>${c.series ? `<span class="tag">Parte ${c.series.part}/${c.series.totalParts}</span>` : ""}</div>
+    <h3>${escH(c.title)}</h3><p>${escH((c.description || "").split("\n")[0])}</p><div class="hs">${escH(hs)}</div>
+    <div class="acts">
+      <button data-copy="${escH(c.title)}"><i class="ti ti-copy"></i>Título</button>
+      <button data-copy="${escH(c.description + "\n\n" + hs)}"><i class="ti ti-copy"></i>Texto</button>
+      <a href="/files/${jobId}/${c.file}" download><i class="ti ti-download"></i>MP4</a>
+    </div></div></div>`;
+}
+
+function showPlan(plan, jobId, readyAll) {
+  $("#runTitle").textContent = plan.source.title;
+  $("#runSub").textContent = `${plan.source.creator} · ${plan.clips.length} clips`;
+  $("#grid").innerHTML = plan.clips.map((c) => card(c, jobId, readyAll || c.status === "ok")).join("");
+}
+
+function showRetry(on, done = false) {
+  $("#btnRetry").style.display = on && !done ? "" : "none";
+  $("#btnCancel").style.display = on || done ? "none" : "";
+}
+
+function attach(jobId) {
+  current = jobId;
+  tab("progreso"); $("#dotRun").classList.add("show");
+  showRetry(false);
+  if (es) es.close();
+  $("#run").classList.add("show"); drawSteps(); $("#log").textContent = ""; $("#grid").innerHTML = "";
+  $("#runTitle").textContent = "Preparando…"; $("#runSub").textContent = "";
+  es = new EventSource(`/api/jobs/${jobId}/events`);
+  es.onmessage = (m) => {
+    const e = JSON.parse(m.data);
+    if (e.type === "gone") { es.close(); return loadDone(jobId); }
+    if (e.type === "status" && e.status === "queued") $("#runTitle").textContent = `En cola (posición ${e.position})`;
+    if (e.type === "info") { $("#runTitle").textContent = e.info.title; $("#runSub").textContent = `${e.info.uploader} · ${fmt(e.info.duration)}`; }
+    if (e.type === "step") setStep(e.id, e.status, e.detail);
+    if (e.type === "progress") { const el = $("#st_" + e.id); if (el) { el.querySelector(".fill").style.width = (e.value * 100).toFixed(1) + "%"; if (e.id === "render" && e.clip) el.querySelector(".d").textContent = `${e.clip} · ${(e.value * 100).toFixed(0)}%`; } }
+    if (e.type === "log") log(e.msg);
+    if (e.type === "plan") showPlan(e.plan, jobId, false);
+    if (e.type === "clip") { const el = $("#card_" + e.clip.id); if (el) el.outerHTML = card(e.clip, jobId, true); }
+    if (e.type === "done") { $("#dotRun").classList.remove("show"); showRetry(false, true); es.close(); if (mqApp.matches) tab("clips"); $("#go").disabled = false; toast("¡Clips listos!"); loadHist(); }
+    if (e.type === "error") { $("#dotRun").classList.remove("show"); es.close(); $("#go").disabled = false; log("ERROR: " + e.msg); document.querySelectorAll(".step.run").forEach((s) => { s.classList.remove("run"); s.classList.add("err"); }); $("#runSub").textContent = "Error: " + e.msg; document.querySelector("details.log").open = true; showRetry(true); loadHist(); }
+  };
+}
+
+async function loadDone(jobId, status = "done") {
+  current = jobId;
+  tab(status === "done" ? "clips" : "progreso");
+  if (es) es.close();
+  $("#run").classList.add("show"); drawSteps(); $("#log").textContent = "";
+  const done = status === "done";
+  if (done) STEPS.forEach(([id]) => setStep(id, "ok"));
+  showRetry(!done, done);
+  try {
+    const plan = await api(`/api/jobs/${jobId}`);
+    showPlan(plan, jobId, false);
+    if (!done) $("#runSub").textContent = `Trabajo sin terminar · ${plan.clips.filter((c) => c.status === "ok").length}/${plan.clips.length} clips listos — dale a Reintentar y sigue donde se quedó`;
+  } catch (e) {
+    $("#runTitle").textContent = done ? "Sin resultados" : "Trabajo sin terminar";
+    $("#runSub").textContent = done ? "" : "Dale a Reintentar: lo ya hecho (descarga, transcripción) no se repite.";
+  }
+  $("#run").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function loadHist() {
+  const h = await api("/api/jobs");
+  const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
+  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}"><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
+  return h;
+}
+
+$("#form").onsubmit = async (ev) => {
+  ev.preventDefault();
+  const options = {};
+  for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) options[k] = $("#o_" + k).value;
+  $("#go").disabled = true;
+  try { const { id } = await api("/api/jobs", { method: "POST", body: { url: $("#url").value, options } }); attach(id); loadHist(); }
+  catch (e) { $("#go").disabled = false; const w = $("#warn"); w.textContent = e.message; w.classList.add("show"); }
+};
+$("#btnSettings").onclick = () => $("#dlg").showModal();
+$("#btnPhone").onclick = async () => {
+  try {
+    const r = await api("/api/lan");
+    $("#phoneUrls").innerHTML = r.urls.length ? r.urls.map((u) => `${u}<br>`).join("") : "No encontré la red Wi-Fi de la laptop.";
+    $("#phoneCode").textContent = r.code;
+    $("#dlgPhone").showModal();
+  } catch (e) { toast("Esto se ve desde la laptop"); }
+};
+$("#saveCfg").onclick = async (ev) => {
+  ev.preventDefault();
+  const body = Object.fromEntries(new FormData($("#cfgForm")));
+  body.keepSource = !!body.keepSource;
+  await api("/api/config", { method: "POST", body });
+  $("#dlg").close(); toast("Ajustes guardados"); await loadCfg(); check();
+};
+$("#btnOpen").onclick = () => current && api(`/api/jobs/${current}/open`, { method: "POST" });
+$("#btnCancel").onclick = async () => {
+  if (!current) return;
+  $("#btnCancel").disabled = true;
+  try { await api(`/api/jobs/${current}/cancel`, { method: "POST" }); toast("Trabajo cancelado"); }
+  finally { $("#btnCancel").disabled = false; $("#go").disabled = false; loadHist(); }
+};
+$("#hist").onclick = (e) => { const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#btnRetry").onclick = async () => {
+  if (!current) return;
+  try { const { id } = await api(`/api/jobs/${current}/retry`, { method: "POST" }); attach(id); loadHist(); toast("Retomando…"); }
+  catch (e) { toast(e.message); }
+};
+function copyText(t) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+  // En el móvil (http de la red local) el portapapeles moderno no está permitido: método clásico
+  const ta = document.createElement("textarea");
+  ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, t.length);
+  try { document.execCommand("copy"); } finally { ta.remove(); }
+  return Promise.resolve();
+}
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-copy]"); if (b) { copyText(b.dataset.copy).then(() => toast("Copiado"), () => toast("No se pudo copiar")); } });
+
+// ---------- modo app (móvil) ----------
+const mqApp = window.matchMedia("(max-width:700px)");
+function applyApp() { document.body.classList.toggle("app", mqApp.matches); }
+mqApp.addEventListener("change", applyApp); applyApp();
+function tab(name) {
+  document.querySelectorAll(".pane").forEach((p) => p.classList.toggle("on", p.dataset.pane === name));
+  document.querySelectorAll("#tabbar button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+  if (mqApp.matches) window.scrollTo({ top: 0 });
+}
+tab("crear");
+$("#tabbar").onclick = (e) => { const b = e.target.closest("button[data-tab]"); if (b) tab(b.dataset.tab); };
+// Abierto desde otro aparato (el móvil entra por la IP de la laptop, no por localhost)
+if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) document.body.classList.add("remote");
+
+// Mostrar la sección de clips solo cuando hay clips, con su contador
+new MutationObserver(() => {
+  const cards = $("#grid").querySelectorAll(".card");
+  const ready = $("#grid").querySelectorAll(".card video").length;
+  $("#clipsSec").classList.toggle("show", cards.length > 0);
+  $("#clipCount").textContent = cards.length ? `${ready}/${cards.length} listos` : "";
+  const bd = $("#badgeClips"); bd.textContent = ready; bd.classList.toggle("show", ready > 0);
+}).observe($("#grid"), { childList: true, subtree: true });
+
+// ---------- actualizaciones ----------
+async function checkUpdate() {
+  try {
+    const u = await api("/api/update/check");
+    $("#verLabel").textContent = u.current ? "v" + u.current : "";
+    if (!u.available || document.body.classList.contains("remote")) return;
+    if (localStorage.getItem("cs_skip") === u.latest) return;
+    $("#updText").innerHTML = `Hay una versión nueva de ClipSphere: <b>v${escH(u.latest)}</b>${u.notes?.length ? " — " + u.notes.map(escH).join(" · ") : ""}`;
+    $("#updBar").classList.add("show");
+    $("#updBar").dataset.v = u.latest;
+  } catch {}
+}
+$("#btnUpdLater").onclick = () => { try { localStorage.setItem("cs_skip", $("#updBar").dataset.v); } catch {} $("#updBar").classList.remove("show"); };
+$("#btnUpdate").onclick = async () => {
+  const b = $("#btnUpdate"); b.disabled = true; b.textContent = "Actualizando…";
+  try {
+    const r = await api("/api/update/apply", { method: "POST" });
+    $("#updText").textContent = `Listo: versión ${r.version}. Recargando…`;
+    setTimeout(() => location.reload(), 4000);
+  } catch (e) { toast(e.message); b.disabled = false; b.textContent = "Actualizar"; }
+};
+checkUpdate(); setInterval(checkUpdate, 6 * 3600 * 1000);
+
+loadCfg().then(check);
+// Al recargar la página: volver a conectarse al trabajo que esté en curso
+loadHist().then((h) => { const r = (h || []).find((j) => j.status === "running" || j.status === "queued"); if (r) attach(r.id); });
+</script>
+</body>
+</html>

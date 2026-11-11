@@ -1,0 +1,18 @@
+CLIPSPHERE
+Copyright (c) 2026 Erick Ramírez. Todos los derechos reservados.
+
+ClipSphere fue creado y es propiedad de Erick Ramírez.
+
+Se permite:
+  - Instalar y usar ClipSphere para uso personal, a quien el autor se lo haya entregado.
+
+No se permite, sin permiso escrito del autor:
+  - Vender, alquilar o cobrar por ClipSphere o por copias de él.
+  - Redistribuirlo o publicarlo como propio.
+  - Quitar o cambiar este aviso o el crédito "Creado por Erick Ramírez".
+
+El software se entrega "tal cual", sin garantías. El autor no se hace responsable del
+uso que se le dé, incluido el contenido de terceros que se procese con él: quien lo usa
+es responsable de tener permiso para publicar los clips que genere.
+
+Contacto del autor: Erick Ramírez

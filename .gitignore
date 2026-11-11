@@ -1,0 +1,4 @@
+config.json
+_update_tmp/
+*.new
+node_modules/

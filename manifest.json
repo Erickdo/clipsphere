@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "date": "2026-11-11",
+  "notes": [
+    "Primera versión con actualizaciones automáticas"
+  ],
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "2ae3852896321c94f58b84551f28fa2e68124cbdcd82d7ca4782be451b4e0a7d"
+    },
+    {
+      "path": "LEEME-PRIMERO.txt",
+      "sha256": "04eb478b3ae8e0ab5ffe132fb9c06164c372efc0700840484fea7aa97b8ae94f"
+    },
+    {
+      "path": "LICENCIA.txt",
+      "sha256": "0872f153bea595d779b8e7241c2a4db845b48adff9e3a3e9ef0c85061d249b08"
+    },
+    {
+      "path": "README.md",
+      "sha256": "f4df27812c05131538d32e8cc0b53bdb108cc3c81d948c5cbac6b6987b7bbd5d"
+    },
+    {
+      "path": "iniciar.bat",
+      "sha256": "bcb3e8cb3bad3482fe5be1adad6e8c9cf718c24f18947fa73253bbb300b0605d"
+    },
+    {
+      "path": "instalar.bat",
+      "sha256": "2e844c1c0bdd4efb13c156385bbb91cb89a84b565687d30f313867c449a3a7d7"
+    },
+    {
+      "path": "lib/llm.js",
+      "sha256": "feae4cb6295d01fea691aff0df48128560420fcc7d3dedb87344087978aeb1f5"
+    },
+    {
+      "path": "lib/pipeline.js",
+      "sha256": "25b3d8bc98af885b7044e8969513be5eb78bf51d78fe158b8f8936b0c8945022"
+    },
+    {
+      "path": "lib/render.js",
+      "sha256": "dd515cfb9dcc048fcb5e449e9ad2fd81fd56b32c6b40f5d2ce4f30bba0a2a615"
+    },
+    {
+      "path": "lib/subs.js",
+      "sha256": "9946ba569a5c62ec7b336b09c71f8f52cc4a9af2f78e63e64c24a2133b5b50ec"
+    },
+    {
+      "path": "lib/transcribe.js",
+      "sha256": "e0e186a76df897626bab2371fda3e03fc56169dbf35b5470fb6bf7ff1802d35e"
+    },
+    {
+      "path": "lib/updater.js",
+      "sha256": "a152d370c1af6ee95a7364c382d3abe775d7304d7fb2c9c6835143dc97d9c1cd"
+    },
+    {
+      "path": "lib/util.js",
+      "sha256": "2f965a25d289e88129c791ca5fc193e6d05b72f8c84b9d001f4107ac34d0bae2"
+    },
+    {
+      "path": "make-manifest.js",
+      "sha256": "57597f165f857b6a5ac2307a9b863e6b4da79ab73526aec9cb4529dd3e83845c"
+    },
+    {
+      "path": "prompts/system.md",
+      "sha256": "c69952362dea3ecbb3a705e3751d54b8c3178dd29ebd301d69fe9f1785cc9db2"
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "08debbc1d904151d03ed039fd58a617fe6e61a0e9facdde1bf6715a801cd4ecc"
+    },
+    {
+      "path": "reiniciar.bat",
+      "sha256": "ac7e8e87b74990637f289d878482be8afe16b4c62593e18fed67433115a429ac"
+    },
+    {
+      "path": "server.js",
+      "sha256": "36be325d2f03687217f9cbeaf8913d9f1db599d1bbea4eee0ebbf72ab4eb749b"
+    }
+  ]
+}
