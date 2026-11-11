@@ -6,7 +6,8 @@ const path = require("node:path");
 const os = require("node:os");
 const { spawn } = require("node:child_process");
 const { runJob, tools, newJobDir, findResumableDir } = require("./lib/pipeline");
-const { isWin } = require("./lib/util");
+const { isWin, writeAtomic } = require("./lib/util");
+const backup = require("./lib/backup");
 const updater = require("./lib/updater");
 
 const PORT = +process.env.PORT || 3600;
@@ -36,6 +37,9 @@ const DEFAULTS = {
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
   whisperModel: "small",
   accessCode: "",                  // código para entrar desde el móvil (se genera solo)
+  backupEnabled: true,             // respaldo automático a OneDrive / Google Drive
+  backupDir: "",                   // vacío = se detecta OneDrive o Google Drive solo
+  backupClips: true,               // incluir los videos de los clips en el respaldo
 };
 
 /** Si pegan un ejemplo de código (curl…) en vez de la clave sola, extrae la clave. */
@@ -46,16 +50,28 @@ function cleanKey(k, kind) {
   return m ? m[0] : k.replace(/\s+/g, "");
 }
 
+function readConfigFile() {
+  // Si config.json se dañó (corte de luz), se usa la copia anterior para no perder las claves.
+  for (const f of [CONFIG_FILE, CONFIG_FILE + ".bak"]) {
+    try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch {}
+  }
+  return null;
+}
 function loadConfig() {
-  let c;
-  try { c = { ...DEFAULTS, ...JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8")) }; } catch { c = { ...DEFAULTS }; }
+  const c = { ...DEFAULTS, ...(readConfigFile() || {}) };
   c.anthropicKey = cleanKey(c.anthropicKey, "anthropic");
   c.geminiKey = cleanKey(c.geminiKey, "gemini");
   c.groqKey = cleanKey(c.groqKey, "groq");
   c.deepgramKey = cleanKey(c.deepgramKey, "deepgram");
   return c;
 }
-function saveConfig(c) { fs.writeFileSync(CONFIG_FILE, JSON.stringify(c, null, 2)); }
+function saveConfig(c) {
+  try { if (readConfigFile()) fs.copyFileSync(CONFIG_FILE, CONFIG_FILE + ".bak"); } catch {}
+  writeAtomic(CONFIG_FILE, JSON.stringify(c, null, 2));
+  backupSoon();
+}
+// Respaldo: se pide al guardar ajustes, al terminar cada clip y cada video, y cada 30 min.
+function backupSoon(only) { return backup.schedule(loadConfig, CONFIG_FILE, only); }
 
 // ---- Acceso desde el móvil (misma red Wi-Fi) ----
 function accessCode() {
@@ -98,6 +114,7 @@ function emit(job, ev) {
   job.events.push(ev);
   if (ev.type === "done") job.status = "done";
   if (ev.type === "error") job.status = "error";
+  if ((ev.type === "clip" && ev.clip?.status === "ok") || ev.type === "done" || ev.type === "plan") backupSoon(job.id);
   const data = `data: ${JSON.stringify(ev)}\n\n`;
   for (const res of job.clients) res.write(data);
 }
@@ -120,6 +137,7 @@ async function pump() {
     if (job.status !== "error") emit(job, { type: "error", msg: e.message === "Cancelado" ? "Cancelado por ti." : e.message });
   } finally {
     running = null;
+    backupSoon(job.id);
     pump();
   }
 }
@@ -247,6 +265,22 @@ const server = http.createServer(async (req, res) => {
       } catch (e) { return send(res, 500, { error: e.message }); }
     }
 
+    // ---- Respaldo (solo desde la laptop) ----
+    if (p.startsWith("/api/backup")) {
+      if (!isLocal(req)) return send(res, 403, { error: "El respaldo se maneja desde la laptop." });
+      if (p === "/api/backup") return send(res, 200, backup.status(loadConfig()));
+      if (p === "/api/backup/run" && req.method === "POST") {
+        const r = await backup.schedule(loadConfig, CONFIG_FILE);
+        const st = backup.status(loadConfig());
+        if (!r && st.error) return send(res, 500, { error: st.error });
+        return send(res, 200, st);
+      }
+      if (p === "/api/backup/restore" && req.method === "POST") {
+        try { return send(res, 200, await backup.restore(loadConfig(), CONFIG_FILE)); }
+        catch (e) { return send(res, 500, { error: e.message }); }
+      }
+    }
+
     if (p === "/api/whoami") return send(res, 200, { local: isLocal(req) });
 
     if (p === "/api/lan") {
@@ -368,6 +402,22 @@ function openBrowser() {
   spawn(cmd, args, { detached: true, stdio: "ignore" }).unref();
 }
 
+// PC nueva o reinstalada: si no hay ajustes pero sí respaldo, se recupera todo antes de arrancar.
+async function restoreIfFresh() {
+  if (readConfigFile()) return;
+  try {
+    const r = await backup.restore({ ...DEFAULTS }, CONFIG_FILE);
+    if (r.config || r.restored) console.log(`\n  Respaldo recuperado: ${r.config ? "ajustes y claves, " : ""}${r.restored} archivos del historial.`);
+  } catch {}
+}
+
+function startBackups() {
+  const st = backup.status(loadConfig());
+  if (st.enabled) console.log(st.dir ? `  Respaldo automático en: ${st.dir}\n` : "  Respaldo: no encontré OneDrive ni Google Drive. Elige una carpeta en Ajustes.\n");
+  setTimeout(() => backupSoon(), 15000);
+  setInterval(() => backupSoon(), 30 * 60 * 1000).unref();
+}
+
 server.on("error", (e) => {
   if (e.code === "EADDRINUSE") {
     console.log(`\n  ClipSphere ya está abierto en otra ventana. Abriendo ${URL_APP} …\n`);
@@ -379,10 +429,11 @@ server.on("error", (e) => {
   }
 });
 
-server.listen(PORT, "0.0.0.0", () => {
+restoreIfFresh().then(() => server.listen(PORT, "0.0.0.0", () => {
   console.log(`\n  ClipSphere v${updater.localManifest().version} © 2026 · Creado por Erick Ramírez`);
   console.log(`\n  ClipSphere listo en ${URL_APP}\n  (deja esta ventana abierta mientras lo usas)\n`);
   const lan = lanUrls();
   if (lan.length) console.log(`  En el móvil (mismo Wi-Fi): ${lan[0]}   código: ${accessCode()}\n`);
   openBrowser();
-});
+  startBackups();
+}));

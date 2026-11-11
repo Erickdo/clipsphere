@@ -19,6 +19,15 @@ ClipSphere revisa solo si hay versión nueva en este repositorio. Cuando la hay,
 arriba con el botón **Actualizar**: baja solo lo que cambió y se reinicia. Tus claves y tu historial
 no se tocan.
 
+## Respaldo automático (no se pierde nada)
+
+ClipSphere copia tus ajustes, claves, historial y clips a **OneDrive** o **Google Drive** (los encuentra solo) cada vez que termina un clip, al guardar ajustes y cada 30 minutos. Solo copia lo nuevo y nunca borra nada del respaldo.
+
+- **PC dañada o nueva:** instala ClipSphere, inicia sesión en el mismo OneDrive / Google Drive y abre la app: recupera sola ajustes, claves e historial.
+- Ajustes → *Respaldo automático* muestra cuándo fue el último respaldo, y tiene **Respaldar ahora** y **Recuperar lo que falte**.
+- Si no tienes OneDrive ni Google Drive, escribe otra carpeta (una USB o disco externo).
+- Los ajustes se guardan de forma segura: si se va la luz mientras se guardan, se usa la copia anterior.
+
 ## Primera vez
 
 1. Doble clic en **instalar.bat** (instala Node.js, yt-dlp y ffmpeg con winget).

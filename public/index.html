@@ -124,6 +124,13 @@ dialog h3{font-size:22px;margin-bottom:16px}
 .f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;font-size:13px;color:var(--mute)}
 .f input,.f select{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--paper);font-family:var(--mono);font-size:13px;width:100%}
 .row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.bk{border:1px solid var(--line);border-radius:14px;padding:12px 14px 14px;margin:0 0 14px}
+.bk legend{padding:0 6px;font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center}
+.bk-note{font-size:12px;color:var(--mute);margin:2px 0 12px;line-height:1.45}
+.bk-st{font-family:var(--mono);font-size:12px;color:var(--mute);margin:-4px 0 10px;line-height:1.5;word-break:break-all}
+.bk-st.ok b{color:#9be39b}.bk-st.bad{color:#ffb3a5}
+.bk-acts{display:flex;gap:8px;flex-wrap:wrap}
+.bk-acts button{padding:8px 12px;font-size:13px}
 .dlg-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;flex-wrap:wrap;position:sticky;bottom:-26px;background:var(--ink2);padding:10px 0 4px}
 .toast{opacity:0;pointer-events:none;position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(120px);background:var(--paper);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:600;transition:transform .25s;z-index:50;max-width:92vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -286,6 +293,24 @@ body.remote .update-bar{display:none !important}
       </div>
     </details>
     <div class="f">Carpeta de salida <input name="outputRoot"></div>
+    <fieldset class="bk">
+      <legend><i class="ti ti-cloud-upload"></i> Respaldo automático</legend>
+      <p class="bk-note">Copia tus ajustes, claves, historial y clips a la nube (OneDrive o Google Drive) cada vez que termina un clip. Si se daña o cambias la PC, instalas ClipSphere y todo vuelve solo. Nunca se borra nada del respaldo.</p>
+      <div class="row2">
+        <div class="f">Respaldo
+          <select name="backupEnabled"><option value="1">Activado</option><option value="">Desactivado</option></select>
+        </div>
+        <div class="f">Incluir los videos de los clips
+          <select name="backupClips"><option value="1">Sí (recomendado)</option><option value="">No (solo textos e historial)</option></select>
+        </div>
+      </div>
+      <div class="f">Carpeta de respaldo (vacío = la detecto sola) <input name="backupDir" id="bkDir"></div>
+      <div class="bk-st" id="bkStatus">…</div>
+      <div class="bk-acts">
+        <button type="button" class="ghost" id="bkRun"><i class="ti ti-refresh"></i> Respaldar ahora</button>
+        <button type="button" class="ghost" id="bkRestore"><i class="ti ti-download"></i> Recuperar lo que falte</button>
+      </div>
+    </fieldset>
     <div class="row2">
       <div class="f">Codificador de video
         <select name="encoder"><option value="libx264">CPU (x264)</option><option value="h264_nvenc">NVIDIA (NVENC)</option><option value="h264_qsv">Intel (QuickSync)</option><option value="h264_amf">AMD (AMF)</option></select>
@@ -344,11 +369,33 @@ async function api(p, opt = {}) {
   return j;
 }
 
+const BOOLS = ["keepSource", "backupEnabled", "backupClips"];
+function ago(iso) {
+  const m = Math.round((Date.now() - new Date(iso)) / 60000);
+  return m < 1 ? "hace un momento" : m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} días`;
+}
+function mb(b) { return b > 1e9 ? (b / 1e9).toFixed(1) + " GB" : Math.max(1, Math.round(b / 1e6)) + " MB"; }
+async function loadBackup() {
+  const el = $("#bkStatus");
+  try {
+    const b = await api("/api/backup");
+    $("#bkDir").placeholder = b.detected || "Ej: C:\\Users\\tu-usuario\\OneDrive\\ClipSphere-respaldo";
+    el.className = "bk-st";
+    if (!b.enabled) { el.textContent = "Desactivado: no se está respaldando nada."; el.classList.add("bad"); return; }
+    if (!b.dir) { el.textContent = "No encontré OneDrive ni Google Drive en esta PC. Escribe una carpeta de respaldo (por ejemplo una USB o un disco externo)."; el.classList.add("bad"); return; }
+    let t = `Carpeta: ${b.dir}<br>`;
+    if (b.running) t += "<b>Respaldando ahora…</b>";
+    else if (b.error) { t += "Último intento falló: " + escH(b.error); el.classList.add("bad"); }
+    else if (b.last) { t += `<b>✓ Respaldado ${ago(b.last.at)}</b> · ${b.last.videos} videos en el respaldo`; el.classList.add("ok"); }
+    else t += "Todavía no se ha hecho el primer respaldo.";
+    el.innerHTML = t;
+  } catch (e) { el.textContent = e.message; }
+}
 async function loadCfg() {
   cfg = await api("/api/config");
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
   const f = $("#cfgForm");
-  for (const el of f.elements) if (el.name in cfg) el.value = el.name === "keepSource" ? (cfg.keepSource ? "1" : "") : cfg[el.name];
+  for (const el of f.elements) if (el.name in cfg) el.value = BOOLS.includes(el.name) ? (cfg[el.name] ? "1" : "") : cfg[el.name];
 }
 
 async function check() {
@@ -464,7 +511,19 @@ $("#form").onsubmit = async (ev) => {
   try { const { id } = await api("/api/jobs", { method: "POST", body: { url: $("#url").value, options } }); attach(id); loadHist(); }
   catch (e) { $("#go").disabled = false; const w = $("#warn"); w.textContent = e.message; w.classList.add("show"); }
 };
-$("#btnSettings").onclick = () => $("#dlg").showModal();
+$("#btnSettings").onclick = () => { $("#dlg").showModal(); loadBackup(); };
+$("#bkRun").onclick = async () => {
+  const b = $("#bkRun"); b.disabled = true; $("#bkStatus").innerHTML = "<b>Respaldando… (la primera vez puede tardar si hay muchos clips)</b>";
+  try { await api("/api/backup/run", { method: "POST" }); toast("Respaldo al día"); }
+  catch (e) { toast(e.message); }
+  finally { b.disabled = false; loadBackup(); }
+};
+$("#bkRestore").onclick = async () => {
+  const b = $("#bkRestore"); b.disabled = true;
+  try { const r = await api("/api/backup/restore", { method: "POST" }); toast(r.restored ? `Recuperados ${r.restored} archivos` : "No faltaba nada"); loadHist(); }
+  catch (e) { toast(e.message); }
+  finally { b.disabled = false; }
+};
 $("#btnPhone").onclick = async () => {
   try {
     const r = await api("/api/lan");
@@ -476,7 +535,7 @@ $("#btnPhone").onclick = async () => {
 $("#saveCfg").onclick = async (ev) => {
   ev.preventDefault();
   const body = Object.fromEntries(new FormData($("#cfgForm")));
-  body.keepSource = !!body.keepSource;
+  for (const k of BOOLS) body[k] = !!body[k];
   await api("/api/config", { method: "POST", body });
   $("#dlg").close(); toast("Ajustes guardados"); await loadCfg(); check();
 };

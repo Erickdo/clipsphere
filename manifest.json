@@ -1,13 +1,15 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "date": "2026-11-11",
   "notes": [
-    "Primera versión con actualizaciones automáticas"
+    "Respaldo automático a OneDrive / Google Drive: ajustes, claves, historial y clips",
+    "Si cambias o se daña la PC, al instalar ClipSphere se recupera todo solo",
+    "Los ajustes y el historial se guardan sin riesgo de dañarse si se va la luz"
   ],
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "2ae3852896321c94f58b84551f28fa2e68124cbdcd82d7ca4782be451b4e0a7d"
+      "sha256": "c56e55e560215af7e0efbb7b82e6c8d850e76443ccf3a574e4225158f950e2db"
     },
     {
       "path": "LEEME-PRIMERO.txt",
@@ -19,7 +21,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "f4df27812c05131538d32e8cc0b53bdb108cc3c81d948c5cbac6b6987b7bbd5d"
+      "sha256": "321af8f07b1457cd1696f0a2891550028cf17d530365e26e61da0d3274e841b4"
     },
     {
       "path": "iniciar.bat",
@@ -30,12 +32,16 @@
       "sha256": "2e844c1c0bdd4efb13c156385bbb91cb89a84b565687d30f313867c449a3a7d7"
     },
     {
+      "path": "lib/backup.js",
+      "sha256": "8290c9657f1a99156ea6beac7f8158e87ba5d917a50cd9096260ba072c6c7c18"
+    },
+    {
       "path": "lib/llm.js",
       "sha256": "feae4cb6295d01fea691aff0df48128560420fcc7d3dedb87344087978aeb1f5"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "25b3d8bc98af885b7044e8969513be5eb78bf51d78fe158b8f8936b0c8945022"
+      "sha256": "1461b0e5d9c46f0d5e56926db76b0a45be4ab358d55c0de6ccc1fc51f5b3b9c0"
     },
     {
       "path": "lib/render.js",
@@ -55,11 +61,11 @@
     },
     {
       "path": "lib/util.js",
-      "sha256": "2f965a25d289e88129c791ca5fc193e6d05b72f8c84b9d001f4107ac34d0bae2"
+      "sha256": "f3e6b1c3c3f54f1fc610d1273317257c5461f12f3b15c899f01ab2e29a760c8d"
     },
     {
       "path": "make-manifest.js",
-      "sha256": "57597f165f857b6a5ac2307a9b863e6b4da79ab73526aec9cb4529dd3e83845c"
+      "sha256": "a2bfb12a22076cc581023e81b31a44cd90bddcfdb3c86c7097fafe7a620ecdd6"
     },
     {
       "path": "prompts/system.md",
@@ -67,7 +73,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "08debbc1d904151d03ed039fd58a617fe6e61a0e9facdde1bf6715a801cd4ecc"
+      "sha256": "f22c3ead0d8e8c833e9b49f8f05df1799052de845a11937cfcae470cc518b9df"
     },
     {
       "path": "reiniciar.bat",
@@ -75,7 +81,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "36be325d2f03687217f9cbeaf8913d9f1db599d1bbea4eee0ebbf72ab4eb749b"
+      "sha256": "28e1cfbc9ea86f2bd27cc9f5612d6fe1a73ac81ec7c75bc9549adc036dfad534"
     }
   ]
 }
