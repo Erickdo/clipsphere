@@ -58,7 +58,7 @@ const DEFAULTS = {
 /** Si pegan un ejemplo de código (curl…) en vez de la clave sola, extrae la clave. */
 function cleanKey(k, kind) {
   k = String(k || "").trim();
-  const re = kind === "gemini" ? /AIza[0-9A-Za-z_\-]{30,}/ : kind === "groq" ? /gsk_[A-Za-z0-9]{20,}/ : kind === "deepgram" ? /(?<=Token\s+)[A-Za-z0-9_\-.]{30,}|\b[0-9a-f]{40}\b/i : /sk-ant-[A-Za-z0-9_\-]{20,}/;
+  const re = kind === "gemini" ? /AIza[0-9A-Za-z_\-]{30,}|AQ\.[0-9A-Za-z_\-.]{30,}/ : kind === "groq" ? /gsk_[A-Za-z0-9]{20,}/ : kind === "deepgram" ? /(?<=Token\s+)[A-Za-z0-9_\-.]{30,}|\b[0-9a-f]{40}\b/i : /sk-ant-[A-Za-z0-9_\-]{20,}/;
   const m = k.match(re);
   return m ? m[0] : k.replace(/\s+/g, "");
 }

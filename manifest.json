@@ -1,8 +1,8 @@
 {
-  "version": "1.1.3",
+  "version": "1.1.4",
   "date": "2026-11-12",
   "notes": [
-    "El instalador ya instala Python aunque Windows tenga el acceso directo falso de la Store"
+    "Acepta las claves nuevas de Gemini (las que empiezan con AQ.)"
   ],
   "files": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "feae4cb6295d01fea691aff0df48128560420fcc7d3dedb87344087978aeb1f5"
+      "sha256": "292e10cf4a3eaa2429746d958c6b45ab23a1f8246cfb71f33923b8292a1be15a"
     },
     {
       "path": "lib/pipeline.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "f22c3ead0d8e8c833e9b49f8f05df1799052de845a11937cfcae470cc518b9df"
+      "sha256": "be7da75020f5676d728de50d4c49fa0dccf5d8642e31a7118a097a6913bfc8e4"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "691c336b64313737d0892f155a9594f58e956c863fab76aac204b19433988115"
+      "sha256": "5ca7debd1387a022c559dbeb068a852216a657bb2fee1a3c83f7653b89d0bae2"
     }
   ]
 }
