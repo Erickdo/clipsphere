@@ -1,15 +1,14 @@
 {
-  "version": "1.1.0",
-  "date": "2026-11-11",
+  "version": "1.1.1",
+  "date": "2026-11-12",
   "notes": [
-    "Respaldo automático a OneDrive / Google Drive: ajustes, claves, historial y clips",
-    "Si cambias o se daña la PC, al instalar ClipSphere se recupera todo solo",
-    "Los ajustes y el historial se guardan sin riesgo de dañarse si se va la luz"
+    "Arreglo: ClipSphere ya no se cierra después de actualizar",
+    "Si la app se cierra sola, el motivo queda en errores.log"
   ],
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "c56e55e560215af7e0efbb7b82e6c8d850e76443ccf3a574e4225158f950e2db"
+      "sha256": "9452c5f463975517506515c4e6850e7a761fabe36d6450eed554a48fedc72af2"
     },
     {
       "path": "LEEME-PRIMERO.txt",
@@ -65,7 +64,7 @@
     },
     {
       "path": "make-manifest.js",
-      "sha256": "a2bfb12a22076cc581023e81b31a44cd90bddcfdb3c86c7097fafe7a620ecdd6"
+      "sha256": "e80fc63222665739cb85e7e5c471aa38648c65589e1be6154ff80af271e2cd81"
     },
     {
       "path": "prompts/system.md",
@@ -81,7 +80,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "28e1cfbc9ea86f2bd27cc9f5612d6fe1a73ac81ec7c75bc9549adc036dfad534"
+      "sha256": "691c336b64313737d0892f155a9594f58e956c863fab76aac204b19433988115"
     }
   ]
 }

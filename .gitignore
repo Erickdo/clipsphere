@@ -4,3 +4,4 @@ _update_tmp/
 node_modules/
 config.json.bak
 *.guardando
+errores.log

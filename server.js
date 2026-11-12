@@ -11,6 +11,19 @@ const backup = require("./lib/backup");
 const updater = require("./lib/updater");
 
 const PORT = +process.env.PORT || 3600;
+// Con "node --watch" (iniciar.bat) el proceso hijo no ve --watch en execArgv; Node marca esta variable.
+const IS_WATCH = process.execArgv.some((a) => a.startsWith("--watch")) || !!process.env.WATCH_REPORT_DEPENDENCIES;
+
+// Registro de errores: si ClipSphere se cierra solo, aquí queda el motivo (errores.log en la carpeta de la app).
+const ERR_LOG = path.join(__dirname, "errores.log");
+function logErr(kind, e) {
+  const line = `[${new Date().toISOString()}] ${kind}: ${e && e.stack ? e.stack : e}\n`;
+  try { fs.appendFileSync(ERR_LOG, line); } catch {}
+  console.error("  " + line);
+}
+process.on("unhandledRejection", (e) => logErr("Promesa sin manejar", e));
+process.on("uncaughtException", (e) => { logErr("Error inesperado", e); process.exit(1); });
+process.on("exit", (code) => { if (code) try { fs.appendFileSync(ERR_LOG, `[${new Date().toISOString()}] Salió con código ${code}\n`); } catch {} });
 const ROOT = __dirname;
 const CONFIG_FILE = path.join(ROOT, "config.json");
 
@@ -260,7 +273,7 @@ const server = http.createServer(async (req, res) => {
         console.log(`\n  ClipSphere actualizado a la versión ${r.version} (${r.changed.length} archivos). Reiniciando…\n`);
         send(res, 200, r);
         // Si iniciar.bat usa --watch se reinicia solo; si no, salimos y el .bat lo vuelve a abrir.
-        if (!process.execArgv.some((a) => a.startsWith("--watch"))) setTimeout(() => process.exit(0), 800);
+        if (!IS_WATCH) setTimeout(() => process.exit(0), 800);
         return;
       } catch (e) { return send(res, 500, { error: e.message }); }
     }

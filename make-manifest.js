@@ -2,7 +2,7 @@
 // Genera manifest.json con la versión y el sha256 de cada archivo de la app.
 const fs = require("node:fs"), path = require("node:path"), crypto = require("node:crypto");
 const ROOT = __dirname;
-const SKIP = new Set(["config.json", "config.json.bak", "manifest.json", "node_modules", ".git", "_update_tmp"]);
+const SKIP = new Set(["config.json", "config.json.bak", "errores.log", "manifest.json", "node_modules", ".git", "_update_tmp"]);
 const files = [];
 (function walk(d) {
   for (const n of fs.readdirSync(d)) {
