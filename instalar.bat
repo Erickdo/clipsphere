@@ -29,7 +29,8 @@ where ffmpeg >nul 2>&1 || (
   echo  - Instalando ffmpeg...
   winget install -e --id Gyan.FFmpeg --accept-source-agreements --accept-package-agreements
 )
-where py >nul 2>&1 || where python >nul 2>&1 || (
+rem "python" puede ser solo el acceso directo de la Store: se comprueba que funcione de verdad
+py -3 --version >nul 2>&1 || python --version >nul 2>&1 || (
   echo  - Instalando Python para Whisper...
   winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
 )

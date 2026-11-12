@@ -1,8 +1,8 @@
 {
-  "version": "1.1.2",
+  "version": "1.1.3",
   "date": "2026-11-12",
   "notes": [
-    "El instalador avisa si a la PC le falta winget y abre la Microsoft Store para instalarlo"
+    "El instalador ya instala Python aunque Windows tenga el acceso directo falso de la Store"
   ],
   "files": [
     {
@@ -27,7 +27,7 @@
     },
     {
       "path": "instalar.bat",
-      "sha256": "d69f514293b7b7120f8b719ac7251e968a9dd09797b6256b1cc3fb1e02e07e88"
+      "sha256": "425a9eb09914a7f23feac7fb5f35d214f200485d42e147c6b9ab1fc9c2cacfc7"
     },
     {
       "path": "lib/backup.js",
