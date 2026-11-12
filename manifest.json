@@ -1,8 +1,8 @@
 {
-  "version": "1.1.5",
+  "version": "1.1.6",
   "date": "2026-11-12",
   "notes": [
-    "Gemini: usa solo el modelo más nuevo; si Google retira uno, cambia al que Google indica"
+    "Gemini gratis: si un modelo no tiene cupo, cambia solo a otro modelo Gemini que sí tenga"
   ],
   "files": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "cc7c2e217e0f77b62f982fab6e5c1062615606da122c852008fc10132f4a8de1"
+      "sha256": "482db688af382995033ce258aa2554548ad6e2c35bee29a5afe34bb14874cbac"
     },
     {
       "path": "lib/pipeline.js",
