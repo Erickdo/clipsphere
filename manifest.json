@@ -1,8 +1,8 @@
 {
-  "version": "1.1.6",
+  "version": "1.1.7",
   "date": "2026-11-12",
   "notes": [
-    "Gemini gratis: si un modelo no tiene cupo, cambia solo a otro modelo Gemini que sí tenga"
+    "Gemini: si se corta el internet o tarda mucho, reintenta solo en vez de fallar"
   ],
   "files": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "482db688af382995033ce258aa2554548ad6e2c35bee29a5afe34bb14874cbac"
+      "sha256": "065bcceacbad3a573eb73c4c6f5daea610fbb3ca44e5c0d97d2c5c18d81a0e9a"
     },
     {
       "path": "lib/pipeline.js",
