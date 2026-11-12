@@ -33,7 +33,7 @@ const DEFAULTS = {
   geminiKey: "",
   groqKey: "",
   deepgramKey: "",
-  geminiModel: "gemini-2.5-flash",
+  geminiModel: "",                 // vacío = el Flash más nuevo disponible
   claudeModel: "claude-sonnet-5-5",
   ollamaUrl: "http://localhost:11434",
   ollamaModel: "qwen2.5:7b",

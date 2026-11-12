@@ -1,8 +1,8 @@
 {
-  "version": "1.1.4",
+  "version": "1.1.5",
   "date": "2026-11-12",
   "notes": [
-    "Acepta las claves nuevas de Gemini (las que empiezan con AQ.)"
+    "Gemini: usa solo el modelo más nuevo; si Google retira uno, cambia al que Google indica"
   ],
   "files": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "292e10cf4a3eaa2429746d958c6b45ab23a1f8246cfb71f33923b8292a1be15a"
+      "sha256": "cc7c2e217e0f77b62f982fab6e5c1062615606da122c852008fc10132f4a8de1"
     },
     {
       "path": "lib/pipeline.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "be7da75020f5676d728de50d4c49fa0dccf5d8642e31a7118a097a6913bfc8e4"
+      "sha256": "664a84807663de3b0ab7a659cd3850b9439236514f124f5a4b9d4735e743692c"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "5ca7debd1387a022c559dbeb068a852216a657bb2fee1a3c83f7653b89d0bae2"
+      "sha256": "2a4f2c8ec0722166e2bb9d53bd34406efe6e63b24c3a11c48486b4742fa19c9f"
     }
   ]
 }
