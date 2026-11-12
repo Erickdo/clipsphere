@@ -1,9 +1,8 @@
 {
-  "version": "1.1.1",
+  "version": "1.1.2",
   "date": "2026-11-12",
   "notes": [
-    "Arreglo: ClipSphere ya no se cierra después de actualizar",
-    "Si la app se cierra sola, el motivo queda en errores.log"
+    "El instalador avisa si a la PC le falta winget y abre la Microsoft Store para instalarlo"
   ],
   "files": [
     {
@@ -28,7 +27,7 @@
     },
     {
       "path": "instalar.bat",
-      "sha256": "2e844c1c0bdd4efb13c156385bbb91cb89a84b565687d30f313867c449a3a7d7"
+      "sha256": "d69f514293b7b7120f8b719ac7251e968a9dd09797b6256b1cc3fb1e02e07e88"
     },
     {
       "path": "lib/backup.js",
