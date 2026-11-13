@@ -544,7 +544,7 @@ function attach(jobId) {
     if (e.type === "status" && e.status === "queued") $("#runTitle").textContent = `En cola (posición ${e.position})`;
     if (e.type === "info") { $("#runTitle").textContent = e.info.title; $("#runSub").textContent = `${e.info.uploader} · ${fmt(e.info.duration)}`; }
     if (e.type === "step") setStep(e.id, e.status, e.detail);
-    if (e.type === "progress") { const el = $("#st_" + e.id); if (el) { el.querySelector(".fill").style.width = (e.value * 100).toFixed(1) + "%"; if (e.id === "render" && e.clip) el.querySelector(".d").textContent = `${e.clip} · ${(e.value * 100).toFixed(0)}%`; } }
+    if (e.type === "progress") { const el = $("#st_" + e.id); if (el) { el.querySelector(".fill").style.width = (e.value * 100).toFixed(1) + "%"; if (e.id === "render" && e.clip) el.querySelector(".d").textContent = `Creando clip ${e.clip} · ${(e.value * 100).toFixed(0)}%`; } }
     if (e.type === "log") log(e.msg);
     if (e.type === "recording") $("#btnStopRec").classList.toggle("show", !!e.on);
     if (e.type === "module" && e.module === "live" && MODE !== "live") { setMode("live", { keepJob: true }); toast("Es un EN VIVO: lo verás en Directos"); }

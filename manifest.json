@@ -1,8 +1,8 @@
 {
-  "version": "1.5.1",
+  "version": "1.5.2",
   "date": "2026-11-13",
   "notes": [
-    "Nueva firma: Creado por Erick Nex · NexTech360"
+    "Directos: los pasos dicen «Grabación en curso», «Transcripción en curso» y «N clips generados de este live»"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "21915ebbb31895b687abef8096dcdf12d26e3b485afa53588071f67f1d0efdb3"
+      "sha256": "384c875aa38f052c9279f525e654fea06d5a1fe3bb367eb25ad8325211de64c6"
     },
     {
       "path": "lib/render.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "1126dba2b84621a686efde54350c81ed0041eb6bb46d862cadc567eebc3d54dc"
+      "sha256": "97b63df646b83fee0868d0796978aeaac04aff76340e4efb22f85c3c6db8a4c0"
     },
     {
       "path": "reiniciar.bat",
