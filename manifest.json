@@ -1,8 +1,8 @@
 {
-  "version": "1.5.2",
+  "version": "1.5.3",
   "date": "2026-11-13",
   "notes": [
-    "Directos: los pasos dicen «Grabación en curso», «Transcripción en curso» y «N clips generados de este live»"
+    "Directos: botón «Seguir vigilando el directo» para retomar un live que paraste; los clips nuevos se suman a los anteriores"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "384c875aa38f052c9279f525e654fea06d5a1fe3bb367eb25ad8325211de64c6"
+      "sha256": "0da4a491762b66a6025057a494445aa78f0c9a2282906f41943e8301e2ea7f50"
     },
     {
       "path": "lib/render.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "97b63df646b83fee0868d0796978aeaac04aff76340e4efb22f85c3c6db8a4c0"
+      "sha256": "a48e994a21b3160d003616774b4304c3b3bd44f6d45f0ab17b7aeed60a8f7332"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "f054807491111605001f113402adad17e850108ac8c2574969d7c5f62375d904"
+      "sha256": "a70a11e8859cf1bd389e7ba0f8e8f69468a5dedaa20c2a7c5e047fdd03945b37"
     }
   ]
 }

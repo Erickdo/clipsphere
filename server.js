@@ -426,6 +426,18 @@ const server = http.createServer(async (req, res) => {
       }
       return send(res, 200, { ok: true });
     }
+    // Directos: seguir vigilando un directo que se cerró (con «Terminar grabación», o porque se cortó).
+    if ((m = /^\/api\/jobs\/([\w-]+)\/resume-live$/.exec(p)) && req.method === "POST") {
+      const dir = safeJoin(loadConfig().outputRoot, m[1]);
+      const info = readJsonSafe(path.join(dir, "info.json"));
+      if (!info?.isLive) return send(res, 400, { error: "Ese trabajo no es de un directo en vivo." });
+      const live = jobs.get(m[1]);
+      if (live && (live.status === "running" || live.status === "queued")) return send(res, 200, { id: live.id });
+      try { fs.unlinkSync(path.join(dir, "done.json")); } catch {}
+      const saved = readJsonSafe(path.join(dir, "job.json")) || {};
+      const job = startJob({ url: info.url, dir, opts: { ...(saved.options || {}), module: "live" } });
+      return send(res, 200, { id: job.id });
+    }
     if ((m = /^\/api\/jobs\/([\w-]+)\/stop-recording$/.exec(p)) && req.method === "POST") {
       const job = jobs.get(m[1]);
       if (!job || job.status !== "running") return send(res, 400, { error: "Ese trabajo no está grabando." });

@@ -277,6 +277,7 @@ body.mlive .vod-only{display:none !important}
       <div class="runhead">
         <div><h2 id="runTitle">Preparando…</h2><small id="runSub"></small></div>
         <div class="hbtns">
+          <button class="go" id="btnResumeLive" style="display:none;padding:9px 16px;font-size:14px"><i class="ti ti-broadcast"></i> Seguir vigilando el directo</button>
           <button class="go" id="btnStopRec" style="padding:9px 16px;font-size:14px"><i class="ti ti-player-stop"></i> Terminar grabación y sacar clips</button>
           <button class="go" id="btnRetry" style="display:none;padding:9px 16px;font-size:14px"><i class="ti ti-player-play"></i> Reintentar</button>
           <button class="ghost" id="btnOpen"><i class="ti ti-folder-open"></i> Abrir carpeta</button>
@@ -533,7 +534,7 @@ function showRetry(on, done = false) {
 function attach(jobId) {
   current = jobId;
   tab("progreso"); $("#dotRun").classList.add("show");
-  showRetry(false); $("#btnStopRec").classList.remove("show");
+  showRetry(false); $("#btnStopRec").classList.remove("show"); $("#btnResumeLive").style.display = "none";
   if (es) es.close();
   $("#run").classList.add("show"); drawSteps(); $("#log").textContent = ""; $("#grid").innerHTML = "";
   $("#runTitle").textContent = "Preparando…"; $("#runSub").textContent = "";
@@ -555,7 +556,7 @@ function attach(jobId) {
   };
 }
 
-async function loadDone(jobId, status = "done", err = "") {
+async function loadDone(jobId, status = "done", err = "", isLive = false) {
   current = jobId;
   tab(status === "done" ? "clips" : "progreso");
   if (es) es.close();
@@ -563,6 +564,8 @@ async function loadDone(jobId, status = "done", err = "") {
   const done = status === "done";
   if (done) STEPS.forEach(([id]) => setStep(id, "ok"));
   showRetry(!done, done);
+  $("#btnResumeLive").style.display = isLive ? "" : "none";
+  if (isLive) $("#btnRetry").style.display = "none"; // en un directo, "Seguir vigilando" hace de reintentar
   try {
     const plan = await api(`/api/jobs/${jobId}`);
     showPlan(plan, jobId, false);
@@ -578,7 +581,7 @@ async function loadDone(jobId, status = "done", err = "") {
 async function loadHist() {
   const h = await api("/api/jobs?module=" + MODE);
   const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
-  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? `<em class="st live">en vivo</em>` : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">${MODE === "live" ? "Todavía no has procesado ningún directo." : "Todavía no hay trabajos."}</p>`;
+  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}" data-live="${j.live ? 1 : ""}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? `<em class="st live">en vivo</em>` : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">${MODE === "live" ? "Todavía no has procesado ningún directo." : "Todavía no hay trabajos."}</p>`;
   return h;
 }
 
@@ -638,7 +641,12 @@ async function deleteRow(r) {
     loadHist();
   } catch (e) { toast(e.message); }
 }
-$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err, !!r.dataset.live); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#btnResumeLive").onclick = async () => {
+  if (!current) return;
+  try { const { id } = await api(`/api/jobs/${current}/resume-live`, { method: "POST" }); attach(id); loadHist(); toast("Vigilando el directo otra vez…"); }
+  catch (e) { toast(e.message); }
+};
 $("#btnStopRec").onclick = async () => {
   if (!current || !confirm("¿Terminar la grabación ahora y sacar los clips de lo que se grabó hasta aquí?")) return;
   try { await api(`/api/jobs/${current}/stop-recording`, { method: "POST" }); $("#btnStopRec").classList.remove("show"); toast("Terminando la grabación…"); }
