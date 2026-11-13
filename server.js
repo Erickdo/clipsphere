@@ -145,7 +145,7 @@ async function pump() {
   const cancelled = new Promise((_, rej) => job.abort.signal.addEventListener("abort", () => rej(new Error("Cancelado"))));
   try {
     await Promise.race([
-      runJob({ url: job.url, cfg, jobDir: job.dir, emit: (e) => job.status !== "error" && emit(job, e), signal: job.abort.signal }),
+      runJob({ url: job.url, cfg, jobDir: job.dir, emit: (e) => job.status !== "error" && emit(job, e), signal: job.abort.signal, recStop: job.recStop.signal }),
       cancelled,
     ]);
   } catch (e) {
@@ -161,7 +161,7 @@ async function pump() {
 }
 
 // ---- Historial desde disco ----
-function listHistory() {
+function listHistory(module) {
   const root = loadConfig().outputRoot;
   let dirs = [];
   try { dirs = fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith("_") && d.name !== "clips" && d.name !== "crudos").map((d) => d.name); } catch {}
@@ -173,6 +173,9 @@ function listHistory() {
     if (!plan && !info && !fs.existsSync(path.join(dir, "error.json"))) continue;
     const live = jobs.get(d);
     const errFile = readJsonSafe(path.join(dir, "error.json"));
+    const jobFile = readJsonSafe(path.join(dir, "job.json"));
+    const mod = jobFile?.module === "live" || info?.isLive || plan?.source?.mode === "live" ? "live" : "vod";
+    if (module && mod !== module) continue;
     const ready = plan ? plan.clips.filter((c) => c.status === "ok" && fs.existsSync(path.join(dir, c.file))).length : 0;
     const allReady = plan && plan.clips.length > 0 && ready === plan.clips.length;
     const done = fs.existsSync(path.join(dir, "done.json")) || allReady;
@@ -180,9 +183,9 @@ function listHistory() {
     const vid = d.replace(/^\d{8}-\d{4}-/, "");
     all.push({ id: d, vid, title: plan?.source.title || info?.title || errFile?.url || d, creator: plan?.source.creator || info?.uploader, url: info?.url || plan?.source.url,
       createdAt: plan?.createdAt || new Date(fs.statSync(dir).mtimeMs).toISOString(), clips: plan?.clips.length || 0, ready, status,
-      error: status === "error" ? errFile?.msg || "" : "", live: !!info?.isLive });
+      error: status === "error" ? errFile?.msg || "" : "", live: !!info?.isLive, module: mod });
   }
-  for (const j of jobs.values()) if (!all.find((o) => o.id === j.id)) all.push({ id: j.id, vid: j.id.replace(/^\d{8}-\d{4}-/, ""), title: j.url, url: j.url, status: j.status, createdAt: new Date(j.created).toISOString(), clips: 0, ready: 0 });
+  for (const j of jobs.values()) if (!all.find((o) => o.id === j.id) && (!module || (j.options?.module === "live" ? "live" : "vod") === module)) all.push({ id: j.id, vid: j.id.replace(/^\d{8}-\d{4}-/, ""), title: j.url, url: j.url, status: j.status, createdAt: new Date(j.created).toISOString(), clips: 0, ready: 0 });
   all.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
   // Un solo renglón por video: los terminados con clips siempre; de los intentos fallidos, solo el más reciente.
   const out = [], seenPending = new Set();
@@ -217,7 +220,12 @@ function startJob({ url, dir, opts }) {
   const id = path.basename(dir);
   const prev = jobs.get(id);
   if (prev && (prev.status === "running" || prev.status === "queued")) return prev;
-  const job = { id, url, dir, status: "queued", events: [], clients: prev ? prev.clients : new Set(), abort: new AbortController(), options: opts || prev?.options || {}, created: Date.now() };
+  // job.json: sección (videos/directos), link y opciones; así "Reintentar" funciona aunque se haya cerrado la app.
+  const jf = path.join(dir, "job.json"), saved = readJsonSafe(jf) || {};
+  const options = opts || prev?.options || saved.options || {};
+  const module = saved.module === "live" ? "live" : options.module === "live" ? "live" : "vod";
+  try { fs.mkdirSync(dir, { recursive: true }); writeAtomic(jf, JSON.stringify({ ...saved, url, module, options })); } catch {}
+  const job = { id, url, dir, status: "queued", events: [], clients: prev ? prev.clients : new Set(), abort: new AbortController(), recStop: new AbortController(), options, created: Date.now() };
   jobs.set(id, job);
   queue.push(job);
   emit(job, { type: "status", status: "queued", position: queue.length });
@@ -360,7 +368,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
-    if (p === "/api/jobs" && req.method === "GET") return send(res, 200, listHistory());
+    if (p === "/api/jobs" && req.method === "GET") return send(res, 200, listHistory(["live", "vod"].includes(u.searchParams.get("module")) ? u.searchParams.get("module") : null));
     // Eliminar un video del historial: todos sus intentos, sus clips y el video descargado.
     const mDel = p.match(/^\/api\/jobs\/([^/]+)$/);
     if (mDel && req.method === "DELETE") {
@@ -379,12 +387,15 @@ const server = http.createServer(async (req, res) => {
       if (prov === "gemini" && !cfg.geminiKey && !cfg.fakeLlmFile)
         return send(res, 400, { error: "Falta la clave de Gemini (gratis en aistudio.google.com). Ponla en ⚙️ Ajustes." });
       let dir = findResumableDir(cfg.outputRoot, url);
+      const wantMod = body.options?.module === "live" ? "live" : "vod";
+      const oldJob = dir && readJsonSafe(path.join(dir, "job.json"));
+      if (dir && oldJob?.module && oldJob.module !== wantMod && !readJsonSafe(path.join(dir, "info.json"))?.isLive) dir = null; // cada sección con sus trabajos
       // Un en vivo de hace horas ya es otra transmisión: se empieza una grabación nueva.
       const oldInfo = dir && readJsonSafe(path.join(dir, "info.json"));
       if (oldInfo?.isLive && Date.now() - fs.statSync(path.join(dir, "info.json")).mtimeMs > 6 * 3600e3) dir = null;
       dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
-      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
+      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
       const job = startJob({ url, dir, opts });
       return send(res, 200, { id: job.id });
     }
@@ -413,10 +424,17 @@ const server = http.createServer(async (req, res) => {
       }
       return send(res, 200, { ok: true });
     }
+    if ((m = /^\/api\/jobs\/([\w-]+)\/stop-recording$/.exec(p)) && req.method === "POST") {
+      const job = jobs.get(m[1]);
+      if (!job || job.status !== "running") return send(res, 400, { error: "Ese trabajo no está grabando." });
+      job.recStop.abort();
+      emit(job, { type: "log", msg: "Terminando la grabación: ahora saco los clips de lo grabado…" });
+      return send(res, 200, { ok: true });
+    }
     if ((m = /^\/api\/jobs\/([\w-]+)\/retry$/.exec(p)) && req.method === "POST") {
       const dir = safeJoin(loadConfig().outputRoot, m[1]);
       const info = readJsonSafe(path.join(dir, "info.json"));
-      const url = info?.url || jobs.get(m[1])?.url;
+      const url = info?.url || jobs.get(m[1])?.url || readJsonSafe(path.join(dir, "job.json"))?.url || readJsonSafe(path.join(dir, "error.json"))?.url;
       if (!url) return send(res, 400, { error: "No sé qué video era este trabajo; pega el link otra vez." });
       const job = startJob({ url, dir });
       return send(res, 200, { id: job.id });

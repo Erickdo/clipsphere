@@ -19,6 +19,15 @@ ClipSphere revisa solo si hay versión nueva en este repositorio. Cuando la hay,
 arriba con el botón **Actualizar**: baja solo lo que cambió y se reinicia. Tus claves y tu historial
 no se tocan.
 
+## Directos (Live Clips)
+
+Arriba, el selector **Videos | Directos** cambia de sección. Cada una tiene su propio historial.
+
+- Pega el link de un **directo en vivo** (YouTube, Kick, Twitch, TikTok, Facebook…): se graba 30 min, 1 h, 2 h, 4 h o **hasta que termine** (máx. 12 h) y luego se sacan los clips con el mismo motor. El botón **Terminar grabación y sacar clips** corta cuando quieras.
+- También acepta la **repetición** de un directo que ya terminó (aunque dure horas).
+- Pensado para horas: graba en tramos y reconecta si la señal se corta; si se cierra la app, lo grabado se conserva y **Reintentar** sigue desde ahí.
+- Si pegas un en vivo en *Videos*, se pasa solo a *Directos*.
+
 ## Respaldo automático (no se pierde nada)
 
 ClipSphere copia tus ajustes, claves, historial y clips a **OneDrive** o **Google Drive** (los encuentra solo) cada vez que termina un clip, al guardar ajustes y cada 30 minutos. Solo copia lo nuevo y nunca borra nada del respaldo.

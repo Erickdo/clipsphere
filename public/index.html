@@ -207,12 +207,37 @@ body.remote #btnPhone, body.remote #btnSettings, body.remote #btnOpen{display:no
 .update-bar .in span{flex:1 1 220px}
 body.remote .update-bar{display:none !important}
 .credit .ver{opacity:.7}
+/* ---- Secciones: Videos | Directos ---- */
+.modes{display:flex;gap:4px;padding:4px;background:var(--ink2,#15151a);border:1px solid var(--line);border-radius:999px;flex:0 0 auto}
+.modes button{display:flex;align-items:center;gap:7px;background:none;border:0;color:var(--mute);font:inherit;font-size:14px;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.modes button:hover{color:var(--fg,#fff)}
+.modes button.on{background:var(--ink3);color:var(--fg,#fff);box-shadow:inset 0 0 0 1px var(--line)}
+.modes button[data-mode="vod"].on i{color:var(--sig)}
+.ldot{width:9px;height:9px;border-radius:50%;background:#ff4d6d;box-shadow:0 0 0 0 rgba(255,77,109,.6)}
+.modes button[data-mode="live"].on .ldot{animation:lpulse 1.6s infinite}
+@keyframes lpulse{0%{box-shadow:0 0 0 0 rgba(255,77,109,.55)}70%{box-shadow:0 0 0 7px rgba(255,77,109,0)}100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}}
+.livechip{display:none;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;color:#ff8fa3;background:#2c1119;border:1px solid #5a1e2c;border-radius:999px;padding:4px 11px;margin-bottom:14px}
+body.mlive .livechip{display:inline-flex}
+.live-only{display:none !important}
+body.mlive .live-only{display:flex !important}
+body.mlive .vod-only{display:none !important}
+#btnStopRec{display:none;background:#ff4d6d;color:#fff;border:0}
+#btnStopRec.show{display:inline-flex}
+@media (max-width:700px){
+  .top .in{flex-wrap:wrap;row-gap:10px}
+  .modes{order:3;width:100%}
+  .modes button{flex:1;justify-content:center;padding:9px 10px}
+}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="in">
     <div class="brand"><b>Clip<i>Sphere</i></b><span>clips verticales automáticos</span></div>
+    <nav class="modes" id="modes" aria-label="Sección">
+      <button type="button" data-mode="vod" class="on"><i class="ti ti-movie"></i><span>Videos</span></button>
+      <button type="button" data-mode="live"><span class="ldot"></span><span>Directos</span></button>
+    </nav>
     <div class="hbtns">
       <button class="ghost" id="btnPhone" title="Abrir en el móvil"><i class="ti ti-device-mobile"></i><span class="hide-sm">Abrir en el </span><span>móvil</span></button>
       <button class="ghost" id="btnSettings" title="Ajustes"><i class="ti ti-settings"></i><span>Ajustes</span></button>
@@ -228,8 +253,9 @@ body.remote .update-bar{display:none !important}
 <div class="layout">
   <main class="main">
     <section class="panel hero pane" data-pane="crear">
-      <h1>Pega el link. <em>Sal con los clips.</em></h1>
-      <p>Descarga, transcribe, encuentra los momentos que pegan y los monta en 9:16 con título, subtítulos y texto para publicar.</p>
+      <span class="livechip"><span class="ldot"></span>CLIPS DE DIRECTOS</span>
+      <h1 id="heroTitle">Pega el link. <em>Sal con los clips.</em></h1>
+      <p id="heroText">Descarga, transcribe, encuentra los momentos que pegan y los monta en 9:16 con título, subtítulos y texto para publicar.</p>
       <form class="bar" id="form">
         <input id="url" type="url" inputmode="url" placeholder="https://youtu.be/…" autocomplete="off" spellcheck="false" required>
         <button class="go" id="go"><i class="ti ti-sparkles"></i> Generar clips</button>
@@ -239,6 +265,7 @@ body.remote .update-bar{display:none !important}
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
         <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
+        <label class="live-only">Grabar el directo <select id="o_liveMinutes"><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option><option value="0">Hasta que termine</option></select></label>
       </div>
       <div class="warn" id="warn"></div>
     </section>
@@ -249,6 +276,7 @@ body.remote .update-bar{display:none !important}
       <div class="runhead">
         <div><h2 id="runTitle">Preparando…</h2><small id="runSub"></small></div>
         <div class="hbtns">
+          <button class="go" id="btnStopRec" style="padding:9px 16px;font-size:14px"><i class="ti ti-player-stop"></i> Terminar grabación y sacar clips</button>
           <button class="go" id="btnRetry" style="display:none;padding:9px 16px;font-size:14px"><i class="ti ti-player-play"></i> Reintentar</button>
           <button class="ghost" id="btnOpen"><i class="ti ti-folder-open"></i> Abrir carpeta</button>
           <button class="ghost" id="btnCancel"><i class="ti ti-x"></i> Cancelar</button>
@@ -267,7 +295,7 @@ body.remote .update-bar{display:none !important}
 
   <aside class="side pane" data-pane="historial">
     <section class="panel">
-      <div class="ph-title"><h4><i class="ti ti-history"></i> Historial</h4></div>
+      <div class="ph-title"><h4><i class="ti ti-history"></i> <span id="histTitle">Historial</span></h4></div>
       <div id="hist"></div>
     </section>
   </aside>
@@ -356,13 +384,49 @@ body.remote .update-bar{display:none !important}
 
 <script>
 const $ = (s) => document.querySelector(s);
-const STEPS = [
+const STEPS_VOD = [
   ["info", "Info", "ti-info-circle"],
   ["subs", "Transcripción", "ti-text-caption"],
   ["ai", "Momentos (IA)", "ti-brain"],
   ["download", "Descarga", "ti-download"],
   ["render", "Render 9:16", "ti-movie"],
 ];
+// Directos: primero se graba (o descarga la repetición), después se transcribe todo.
+const STEPS_LIVE = [
+  ["info", "Info", "ti-info-circle"],
+  ["download", "Grabación", "ti-broadcast"],
+  ["subs", "Transcripción", "ti-text-caption"],
+  ["ai", "Momentos (IA)", "ti-brain"],
+  ["render", "Render 9:16", "ti-movie"],
+];
+let MODE = "vod";
+let STEPS = STEPS_VOD;
+const HERO = {
+  vod: { t: 'Pega el link. <em>Sal con los clips.</em>', p: "Descarga, transcribe, encuentra los momentos que pegan y los monta en 9:16 con título, subtítulos y texto para publicar.", ph: "https://youtu.be/…", h: "Historial" },
+  live: { t: 'Pega el directo. <em>Sal con los clips.</em>', p: "Graba el en vivo (o usa la repetición de un directo que ya terminó), lo transcribe completo y saca los mejores momentos en 9:16. Aguanta transmisiones de horas.", ph: "Link del directo: YouTube, Kick, Twitch, TikTok, Facebook…", h: "Historial de directos" },
+};
+function setMode(m, { keepJob = false, quiet = false } = {}) {
+  MODE = m === "live" ? "live" : "vod";
+  STEPS = MODE === "live" ? STEPS_LIVE : STEPS_VOD;
+  document.body.classList.toggle("mlive", MODE === "live");
+  document.querySelectorAll("#modes button").forEach((b) => b.classList.toggle("on", b.dataset.mode === MODE));
+  $("#heroTitle").innerHTML = HERO[MODE].t; $("#heroText").textContent = HERO[MODE].p;
+  $("#url").placeholder = HERO[MODE].ph; $("#histTitle").textContent = HERO[MODE].h;
+  try { localStorage.setItem("cs_mode", MODE); } catch {}
+  history.replaceState(null, "", MODE === "live" ? "#directos" : location.pathname);
+  if (!keepJob) {
+    try { es?.close(); } catch {}
+    current = null; $("#run").classList.remove("show"); $("#clipsSec").classList.remove("show"); $("#grid").innerHTML = "";
+    $("#go").disabled = false; $("#btnStopRec").classList.remove("show");
+    if (!quiet) tab("crear");
+  }
+  return loadHist();
+}
+$("#modes").onclick = async (e) => {
+  const b = e.target.closest("button[data-mode]"); if (!b || b.dataset.mode === MODE) return;
+  const h = await setMode(b.dataset.mode);
+  const r = (h || []).find((j) => j.status === "running" || j.status === "queued"); if (r) attach(r.id);
+};
 let current = null, es = null, cfg = {};
 
 function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1600); }
@@ -401,6 +465,9 @@ async function loadBackup() {
 async function loadCfg() {
   cfg = await api("/api/config");
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
+  const lm = String(cfg.liveMinutes ?? 30), sel = $("#o_liveMinutes");
+  if (![...sel.options].some((o) => o.value === lm)) sel.add(new Option(`${lm} min`, lm));
+  sel.value = lm;
   const f = $("#cfgForm");
   for (const el of f.elements) if (el.name in cfg) el.value = BOOLS.includes(el.name) ? (cfg[el.name] ? "1" : "") : cfg[el.name];
 }
@@ -464,7 +531,7 @@ function showRetry(on, done = false) {
 function attach(jobId) {
   current = jobId;
   tab("progreso"); $("#dotRun").classList.add("show");
-  showRetry(false);
+  showRetry(false); $("#btnStopRec").classList.remove("show");
   if (es) es.close();
   $("#run").classList.add("show"); drawSteps(); $("#log").textContent = ""; $("#grid").innerHTML = "";
   $("#runTitle").textContent = "Preparando…"; $("#runSub").textContent = "";
@@ -477,10 +544,12 @@ function attach(jobId) {
     if (e.type === "step") setStep(e.id, e.status, e.detail);
     if (e.type === "progress") { const el = $("#st_" + e.id); if (el) { el.querySelector(".fill").style.width = (e.value * 100).toFixed(1) + "%"; if (e.id === "render" && e.clip) el.querySelector(".d").textContent = `${e.clip} · ${(e.value * 100).toFixed(0)}%`; } }
     if (e.type === "log") log(e.msg);
+    if (e.type === "recording") $("#btnStopRec").classList.toggle("show", !!e.on);
+    if (e.type === "module" && e.module === "live" && MODE !== "live") { setMode("live", { keepJob: true }); toast("Es un EN VIVO: lo verás en Directos"); }
     if (e.type === "plan") showPlan(e.plan, jobId, false);
     if (e.type === "clip") { const el = $("#card_" + e.clip.id); if (el) el.outerHTML = card(e.clip, jobId, true); }
-    if (e.type === "done") { $("#dotRun").classList.remove("show"); showRetry(false, true); es.close(); if (mqApp.matches) tab("clips"); $("#go").disabled = false; toast("¡Clips listos!"); loadHist(); }
-    if (e.type === "error") { $("#dotRun").classList.remove("show"); es.close(); $("#go").disabled = false; log("ERROR: " + e.msg); document.querySelectorAll(".step.run").forEach((s) => { s.classList.remove("run"); s.classList.add("err"); }); $("#runSub").textContent = "Error: " + e.msg; document.querySelector("details.log").open = true; showRetry(true); loadHist(); }
+    if (e.type === "done") { $("#btnStopRec").classList.remove("show"); $("#dotRun").classList.remove("show"); showRetry(false, true); es.close(); if (mqApp.matches) tab("clips"); $("#go").disabled = false; toast("¡Clips listos!"); loadHist(); }
+    if (e.type === "error") { $("#btnStopRec").classList.remove("show"); $("#dotRun").classList.remove("show"); es.close(); $("#go").disabled = false; log("ERROR: " + e.msg); document.querySelectorAll(".step.run").forEach((s) => { s.classList.remove("run"); s.classList.add("err"); }); $("#runSub").textContent = "Error: " + e.msg; document.querySelector("details.log").open = true; showRetry(true); loadHist(); }
   };
 }
 
@@ -505,9 +574,9 @@ async function loadDone(jobId, status = "done", err = "") {
 }
 
 async function loadHist() {
-  const h = await api("/api/jobs");
+  const h = await api("/api/jobs?module=" + MODE);
   const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
-  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? `<em class="st live">en vivo</em>` : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
+  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? `<em class="st live">en vivo</em>` : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">${MODE === "live" ? "Todavía no has procesado ningún directo." : "Todavía no hay trabajos."}</p>`;
   return h;
 }
 
@@ -515,6 +584,8 @@ $("#form").onsubmit = async (ev) => {
   ev.preventDefault();
   const options = {};
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) options[k] = $("#o_" + k).value;
+  options.module = MODE;
+  if (MODE === "live") options.liveMinutes = $("#o_liveMinutes").value;
   $("#go").disabled = true;
   try { const { id } = await api("/api/jobs", { method: "POST", body: { url: $("#url").value, options } }); attach(id); loadHist(); }
   catch (e) { $("#go").disabled = false; const w = $("#warn"); w.textContent = e.message; w.classList.add("show"); }
@@ -566,6 +637,11 @@ async function deleteRow(r) {
   } catch (e) { toast(e.message); }
 }
 $("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#btnStopRec").onclick = async () => {
+  if (!current || !confirm("¿Terminar la grabación ahora y sacar los clips de lo que se grabó hasta aquí?")) return;
+  try { await api(`/api/jobs/${current}/stop-recording`, { method: "POST" }); $("#btnStopRec").classList.remove("show"); toast("Terminando la grabación…"); }
+  catch (e) { toast(e.message); }
+};
 $("#btnRetry").onclick = async () => {
   if (!current) return;
   try { const { id } = await api(`/api/jobs/${current}/retry`, { method: "POST" }); attach(id); loadHist(); toast("Retomando…"); }
@@ -629,8 +705,15 @@ $("#btnUpdate").onclick = async () => {
 checkUpdate(); setInterval(checkUpdate, 6 * 3600 * 1000);
 
 loadCfg().then(check);
-// Al recargar la página: volver a conectarse al trabajo que esté en curso
-loadHist().then((h) => { const r = (h || []).find((j) => j.status === "running" || j.status === "queued"); if (r) attach(r.id); });
+// Al abrir: la sección que tocaba (#directos o la última usada); si hay un trabajo en curso, se va a su sección.
+(async () => {
+  let saved = location.hash === "#directos" ? "live" : "";
+  if (!saved) try { saved = localStorage.getItem("cs_mode") || "vod"; } catch { saved = "vod"; }
+  const all = await api("/api/jobs").catch(() => []);
+  const r = all.find((j) => j.status === "running" || j.status === "queued");
+  await setMode(r ? r.module || "vod" : saved, { quiet: true });
+  if (r) attach(r.id);
+})();
 </script>
 </body>
 </html>

@@ -1,10 +1,9 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "date": "2026-11-13",
   "notes": [
-    "Cualquier link: en vivo (graba y saca clips), perfiles y listas (usa el video más reciente), sitios que piden sesión",
-    "Videos sin voz: si son cortos se usan completos",
-    "Los errores quedan guardados en el historial y explicados en español"
+    "Nueva sección Directos: graba en vivos (o usa la repetición) y saca clips con el mismo motor, con su propio historial",
+    "Grabación de horas en tramos, reconexión automática y botón Terminar grabación"
   ],
   "files": [
     {
@@ -21,7 +20,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "321af8f07b1457cd1696f0a2891550028cf17d530365e26e61da0d3274e841b4"
+      "sha256": "94f0583ba39b1ce63f5e5e1dbf3bcb149c4cd2b6d2fd3620efbb4202e1438349"
     },
     {
       "path": "iniciar.bat",
@@ -41,7 +40,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "ceb000bd2c97fedda4d8340e6d21ee13e3f8f13a30324bf28f9bc5f7013fa6d4"
+      "sha256": "ef0ab70f720b2d776e83c83969b99af29c507f8b6f79e36f65192bc87bcf60cd"
     },
     {
       "path": "lib/render.js",
@@ -73,7 +72,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "15b475dbc69fff79161acadba5a5de21f5d848b0b0d4c43847f00937976caef3"
+      "sha256": "5551f3cca0db9e932c9da1a4851dde74e8473b9454a4c0fb5af95266e943898b"
     },
     {
       "path": "reiniciar.bat",
@@ -81,7 +80,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "444bec5ddea6ab546d77a55ed266f644eef6ecf3512e278b17876ec0d0021eff"
+      "sha256": "146306fc0be90adafe1b10b059d94568d7d1fd6f4340a42fdf7e64b07b1eb1fc"
     }
   ]
 }
