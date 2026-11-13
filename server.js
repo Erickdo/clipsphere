@@ -130,6 +130,7 @@ function emit(job, ev) {
   job.events.push(ev);
   if (ev.type === "done") job.status = "done";
   if (ev.type === "error") job.status = "error";
+  if (ev.type === "recording") job.recording = !!ev.on;
   if ((ev.type === "clip" && ev.clip?.status === "ok") || ev.type === "done" || ev.type === "plan") backupSoon(job.id);
   const data = `data: ${JSON.stringify(ev)}\n\n`;
   for (const res of job.clients) res.write(data);
@@ -185,7 +186,8 @@ function listHistory(module) {
     const vid = d.replace(/^\d{8}-\d{4}-/, "");
     all.push({ id: d, vid, title: plan?.source.title || info?.title || errFile?.url || d, creator: plan?.source.creator || info?.uploader, url: info?.url || plan?.source.url,
       createdAt: plan?.createdAt || new Date(fs.statSync(dir).mtimeMs).toISOString(), clips: plan?.clips.length || 0, ready, status,
-      error: status === "error" ? errFile?.msg || "" : "", live: !!info?.isLive, module: mod });
+      error: status === "error" ? errFile?.msg || "" : "", live: !!info?.isLive,
+      onAir: !!info?.isLive && !!live?.recording && live.status === "running", module: mod });
   }
   for (const j of jobs.values()) if (!all.find((o) => o.id === j.id) && (!module || (j.options?.module === "live" ? "live" : "vod") === module)) all.push({ id: j.id, vid: j.id.replace(/^\d{8}-\d{4}-/, ""), title: j.url, url: j.url, status: j.status, createdAt: new Date(j.created).toISOString(), clips: 0, ready: 0 });
   all.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));

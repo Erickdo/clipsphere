@@ -1,8 +1,8 @@
 {
-  "version": "1.5.4",
+  "version": "1.5.5",
   "date": "2026-11-13",
   "notes": [
-    "Directos: «Grabación en curso» muestra solo el tiempo grabado; «Seguir vigilando» siempre es hasta que termine"
+    "El historial de Directos ahora dice «en vivo finalizado» cuando el directo terminó, y «en vivo» con punto rojo solo mientras se está grabando."
   ],
   "files": [
     {
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "a48e994a21b3160d003616774b4304c3b3bd44f6d45f0ab17b7aeed60a8f7332"
+      "sha256": "5a04fe93e4ced0adfa42cef38ef86e7146191ba39a317583b080c4ab17fca9fd"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "cf2564b0536e56acac542749a64345730936dd120a7cea47dd8127376b73d650"
+      "sha256": "5d20949c9724d04b403ed09ec64f3241759c7648bba21ec0f27bf7f901ec9b63"
     }
   ]
 }
