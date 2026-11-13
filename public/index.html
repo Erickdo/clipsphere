@@ -120,6 +120,7 @@ section.clips.show{display:block}
 .hrow .st{border-radius:999px;padding:1px 8px;font-style:normal}
 .hrow .st.interrumpido,.hrow .st.error{background:#3a1a14;color:#ffb3a5}
 .hrow .st.running,.hrow .st.queued{background:#3a3410;color:var(--sig)}
+.hrow .st.live{background:#3b1530;color:#ff9ad5}
 .empty{color:var(--mute);font-size:14px}
 
 /* ---------- diálogos ---------- */
@@ -287,6 +288,7 @@ body.remote .update-bar{display:none !important}
         <div class="f">Clave de Groq (alternativa a Deepgram; gratis con límite por hora) <input name="groqKey" placeholder="gsk_…" autocomplete="off"></div>
         <div class="row2">
           <div class="f">Clave de Gemini <input name="geminiKey" placeholder="AIza… o AQ.…" autocomplete="off"></div>
+          <div class="f">Minutos a grabar de un EN VIVO (Kick, Twitch, YouTube…) <input name="liveMinutes" type="number" min="1" max="240"></div>
           <div class="f">Modelo Whisper local
             <select name="whisperModel"><option value="base">base (rápido)</option><option value="small">small (recomendado)</option><option value="medium">medium (más preciso, lento)</option></select>
           </div>
@@ -482,7 +484,7 @@ function attach(jobId) {
   };
 }
 
-async function loadDone(jobId, status = "done") {
+async function loadDone(jobId, status = "done", err = "") {
   current = jobId;
   tab(status === "done" ? "clips" : "progreso");
   if (es) es.close();
@@ -498,13 +500,14 @@ async function loadDone(jobId, status = "done") {
     $("#runTitle").textContent = done ? "Sin resultados" : "Trabajo sin terminar";
     $("#runSub").textContent = done ? "" : "Dale a Reintentar: lo ya hecho (descarga, transcripción) no se repite.";
   }
+  if (err) { $("#runSub").textContent = "Error: " + err; $("#log").textContent = "ERROR: " + err; }
   $("#run").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function loadHist() {
   const h = await api("/api/jobs");
   const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
-  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
+  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? `<em class="st live">en vivo</em>` : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
   return h;
 }
 
@@ -562,7 +565,7 @@ async function deleteRow(r) {
     loadHist();
   } catch (e) { toast(e.message); }
 }
-$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
 $("#btnRetry").onclick = async () => {
   if (!current) return;
   try { const { id } = await api(`/api/jobs/${current}/retry`, { method: "POST" }); attach(id); loadHist(); toast("Retomando…"); }

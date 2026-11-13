@@ -49,6 +49,7 @@ const DEFAULTS = {
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
   whisperModel: "small",
+  liveMinutes: 30,                 // en vivo: minutos que se graban antes de sacar los clips
   accessCode: "",                  // código para entrar desde el móvil (se genera solo)
   backupEnabled: true,             // respaldo automático a OneDrive / Google Drive
   backupDir: "",                   // vacío = se detecta OneDrive o Google Drive solo
@@ -137,6 +138,7 @@ async function pump() {
   const job = queue.shift();
   running = job;
   job.status = "running";
+  try { fs.unlinkSync(path.join(job.dir, "error.json")); } catch {}
   emit(job, { type: "status", status: "running" });
   const cfg = { ...loadConfig(), ...job.options };
   // Si se cancela, se suelta enseguida aunque el paso actual (esperas, IA) no haya terminado.
@@ -147,7 +149,10 @@ async function pump() {
       cancelled,
     ]);
   } catch (e) {
-    if (job.status !== "error") emit(job, { type: "error", msg: e.message === "Cancelado" ? "Cancelado por ti." : e.message });
+    const msg = e.message === "Cancelado" ? "Cancelado por ti." : e.message;
+    if (job.status !== "error") emit(job, { type: "error", msg });
+    // Se guarda el motivo para verlo después en el historial (aunque se cierre la app).
+    try { fs.mkdirSync(job.dir, { recursive: true }); writeAtomic(path.join(job.dir, "error.json"), JSON.stringify({ at: new Date().toISOString(), msg, url: job.url })); } catch {}
   } finally {
     running = null;
     backupSoon(job.id);
@@ -165,15 +170,17 @@ function listHistory() {
     const dir = path.join(root, d);
     const plan = readJsonSafe(path.join(dir, "plan.json"));
     const info = readJsonSafe(path.join(dir, "info.json"));
-    if (!plan && !info) continue;
+    if (!plan && !info && !fs.existsSync(path.join(dir, "error.json"))) continue;
     const live = jobs.get(d);
+    const errFile = readJsonSafe(path.join(dir, "error.json"));
     const ready = plan ? plan.clips.filter((c) => c.status === "ok" && fs.existsSync(path.join(dir, c.file))).length : 0;
     const allReady = plan && plan.clips.length > 0 && ready === plan.clips.length;
     const done = fs.existsSync(path.join(dir, "done.json")) || allReady;
-    const status = live && (live.status === "running" || live.status === "queued") ? live.status : done ? "done" : live?.status === "error" ? "error" : "interrumpido";
+    const status = live && (live.status === "running" || live.status === "queued") ? live.status : done ? "done" : live?.status === "error" || errFile ? "error" : "interrumpido";
     const vid = d.replace(/^\d{8}-\d{4}-/, "");
-    all.push({ id: d, vid, title: plan?.source.title || info?.title || d, creator: plan?.source.creator || info?.uploader, url: info?.url || plan?.source.url,
-      createdAt: plan?.createdAt || new Date(fs.statSync(dir).mtimeMs).toISOString(), clips: plan?.clips.length || 0, ready, status });
+    all.push({ id: d, vid, title: plan?.source.title || info?.title || errFile?.url || d, creator: plan?.source.creator || info?.uploader, url: info?.url || plan?.source.url,
+      createdAt: plan?.createdAt || new Date(fs.statSync(dir).mtimeMs).toISOString(), clips: plan?.clips.length || 0, ready, status,
+      error: status === "error" ? errFile?.msg || "" : "", live: !!info?.isLive });
   }
   for (const j of jobs.values()) if (!all.find((o) => o.id === j.id)) all.push({ id: j.id, vid: j.id.replace(/^\d{8}-\d{4}-/, ""), title: j.url, url: j.url, status: j.status, createdAt: new Date(j.created).toISOString(), clips: 0, ready: 0 });
   all.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
@@ -371,7 +378,11 @@ const server = http.createServer(async (req, res) => {
         return send(res, 400, { error: "Falta la API key de Claude. Ábrela en ⚙️ Ajustes." });
       if (prov === "gemini" && !cfg.geminiKey && !cfg.fakeLlmFile)
         return send(res, 400, { error: "Falta la clave de Gemini (gratis en aistudio.google.com). Ponla en ⚙️ Ajustes." });
-      const dir = findResumableDir(cfg.outputRoot, url) || newJobDir(cfg.outputRoot, url);
+      let dir = findResumableDir(cfg.outputRoot, url);
+      // Un en vivo de hace horas ya es otra transmisión: se empieza una grabación nueva.
+      const oldInfo = dir && readJsonSafe(path.join(dir, "info.json"));
+      if (oldInfo?.isLive && Date.now() - fs.statSync(path.join(dir, "info.json")).mtimeMs > 6 * 3600e3) dir = null;
+      dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
       for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
       const job = startJob({ url, dir, opts });
