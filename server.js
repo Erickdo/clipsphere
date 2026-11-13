@@ -1,4 +1,4 @@
-// ClipSphere — © 2026 Erick Ramírez. Todos los derechos reservados. Ver LICENCIA.txt
+// ClipSphere — © 2026 NexTech360 (Erick Ramírez). Todos los derechos reservados. Ver LICENCIA.txt
 // ClipSphere — servidor local sin dependencias. Uso: node server.js  →  http://localhost:3600
 const http = require("node:http");
 const fs = require("node:fs");
@@ -239,7 +239,7 @@ function startJob({ url, dir, opts }) {
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".json": "application/json", ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml" };
 
 function send(res, code, body, type = "application/json") {
-  res.writeHead(code, { "content-type": type, "cache-control": "no-store", "x-created-by": "ClipSphere by Erick Ramirez" });
+  res.writeHead(code, { "content-type": type, "cache-control": "no-store", "x-created-by": "ClipSphere by Erick Nex - NexTech360" });
   res.end(typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 }
 
@@ -496,7 +496,7 @@ server.on("error", (e) => {
 });
 
 restoreIfFresh().then(() => server.listen(PORT, "0.0.0.0", () => {
-  console.log(`\n  ClipSphere v${updater.localManifest().version} © 2026 · Creado por Erick Ramírez`);
+  console.log(`\n  ClipSphere v${updater.localManifest().version} © 2026 · Creado por Erick Nex · NexTech360`);
   console.log(`\n  ClipSphere listo en ${URL_APP}\n  (deja esta ventana abierta mientras lo usas)\n`);
   const lan = lanUrls();
   if (lan.length) console.log(`  En el móvil (mismo Wi-Fi): ${lan[0]}   código: ${accessCode()}\n`);

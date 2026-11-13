@@ -1,6 +1,6 @@
 # ClipSphere
 
-**Creado por Erick Ramírez** · © 2026 · Todos los derechos reservados (ver `LICENCIA.txt`).
+**Creado por Erick Nex · NexTech360** · © 2026 · Todos los derechos reservados (ver `LICENCIA.txt`).
 
 Pegas el link de un video largo y ClipSphere:
 

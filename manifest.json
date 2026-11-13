@@ -1,9 +1,8 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "date": "2026-11-13",
   "notes": [
-    "Directos: ClipSphere vigila el en vivo mientras pasa y saca cada clip viral al momento",
-    "La IA elige pensando en tu público (Ajustes → Público / países)"
+    "Nueva firma: Creado por Erick Nex · NexTech360"
   ],
   "files": [
     {
@@ -12,15 +11,15 @@
     },
     {
       "path": "LEEME-PRIMERO.txt",
-      "sha256": "04eb478b3ae8e0ab5ffe132fb9c06164c372efc0700840484fea7aa97b8ae94f"
+      "sha256": "1cb66ab0d12adffa650bc60c5422d14705c92e5c2b0894106752fd17ec2e3455"
     },
     {
       "path": "LICENCIA.txt",
-      "sha256": "0872f153bea595d779b8e7241c2a4db845b48adff9e3a3e9ef0c85061d249b08"
+      "sha256": "a231bb352ede7d5432b8bdbc80636be7be2b6951c689cd5281009f376a1d6986"
     },
     {
       "path": "README.md",
-      "sha256": "7f147e226067136a9877bc407c8085884271ccee239fa4005f90488f839bf351"
+      "sha256": "70938dbea58568be89d774685f7b26b2dd3b94bd25d782a11d85f45bf3b654a3"
     },
     {
       "path": "iniciar.bat",
@@ -32,35 +31,35 @@
     },
     {
       "path": "lib/backup.js",
-      "sha256": "cef15fb2cbba1025f656cfe725c8cb098d72d8bd08246553a4e3b8b46ffa3b1e"
+      "sha256": "e51ab4d1be36b1d8f30500f223ab700dc8bcc46d8c1e90d07e0f6c95b33c85d5"
     },
     {
       "path": "lib/llm.js",
-      "sha256": "69cfeefd42b14f4b56a2e0e85e5ce07dcb8d80f80c693bb55fd7d8d86d477b69"
+      "sha256": "efe781766a22a421526a3f26e7f2be5a7a0e00d5dbf9770e50c0f2f267bf6be1"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "13eb163506c3a8eae073014d0dcd0a1281979a117de03b908fdd2cce42b6f634"
+      "sha256": "21915ebbb31895b687abef8096dcdf12d26e3b485afa53588071f67f1d0efdb3"
     },
     {
       "path": "lib/render.js",
-      "sha256": "dd515cfb9dcc048fcb5e449e9ad2fd81fd56b32c6b40f5d2ce4f30bba0a2a615"
+      "sha256": "6388d99c46f5f58d130639a84d309062132acaa20ad7a2be85965b1b52a667d5"
     },
     {
       "path": "lib/subs.js",
-      "sha256": "9946ba569a5c62ec7b336b09c71f8f52cc4a9af2f78e63e64c24a2133b5b50ec"
+      "sha256": "4cfa09885afb6a3ad9f52d9d00e7250cc9f28b5a741588cd9954b4d2bfc6b2c3"
     },
     {
       "path": "lib/transcribe.js",
-      "sha256": "d40e6de2060e2d762af2ce58326ab139c8bebea51c3eecc77d4a0b5b75aea923"
+      "sha256": "15bd23b58090e43b4c90bd48052d63f89f42eaa922f963e8c6326ab22987d487"
     },
     {
       "path": "lib/updater.js",
-      "sha256": "a152d370c1af6ee95a7364c382d3abe775d7304d7fb2c9c6835143dc97d9c1cd"
+      "sha256": "fef4aec881d1cb08ed8b9ea56ebe876eba78bc8a2667776c099c51fcf6b8c3f4"
     },
     {
       "path": "lib/util.js",
-      "sha256": "3d6d28a6c88545410713b198fa06846772e9f4f598be358edc410f69805ee972"
+      "sha256": "4de4ef2c4ca1aad4f6bcc9b89949d41c749ec4abec1e87dac9e1d0533d1da8d0"
     },
     {
       "path": "make-manifest.js",
@@ -72,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "41b74fb338686ace6fd2d09bb64f31b2459cf7db63dc32030633f7d4343006ae"
+      "sha256": "1126dba2b84621a686efde54350c81ed0041eb6bb46d862cadc567eebc3d54dc"
     },
     {
       "path": "reiniciar.bat",
@@ -80,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "57ca5c60ca2eaf9e13210d10f9f7be3839a6576528c8696baa504cab4c333831"
+      "sha256": "f054807491111605001f113402adad17e850108ac8c2574969d7c5f62375d904"
     }
   ]
 }
