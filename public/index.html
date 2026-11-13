@@ -106,7 +106,12 @@ section.clips.show{display:block}
 .acts button:hover,.acts a:hover{border-color:var(--paper)}
 
 /* ---------- historial ---------- */
-.hrow{display:flex;flex-direction:column;gap:6px;padding:12px 10px;margin:0;border-top:1px solid var(--line);cursor:pointer;border-radius:10px}
+.hrow{position:relative;display:flex;flex-direction:column;gap:6px;padding:12px 44px 12px 10px;margin:0;border-top:1px solid var(--line);cursor:pointer;border-radius:10px}
+.hdel{position:absolute;top:8px;right:6px;width:32px;height:32px;padding:0;border-radius:9px;display:grid;place-items:center;
+  background:transparent;border:1px solid transparent;color:var(--mute);opacity:0;transition:opacity .15s,background .15s,color .15s;cursor:pointer;font-size:17px}
+.hrow:hover .hdel,.hdel:focus-visible{opacity:1}
+.hdel:hover{background:#3a1a14;border-color:#6b2a20;color:#ffb3a5}
+@media (hover:none){.hdel{opacity:.75}}
 .hrow:first-child{border-top:0}
 .hrow:hover{background:var(--ink3)}
 .hrow:hover b{color:var(--sig)}
@@ -499,7 +504,7 @@ async function loadDone(jobId, status = "done") {
 async function loadHist() {
   const h = await api("/api/jobs");
   const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
-  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}"><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
+  $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">Todavía no hay trabajos.</p>`;
   return h;
 }
 
@@ -546,7 +551,18 @@ $("#btnCancel").onclick = async () => {
   try { await api(`/api/jobs/${current}/cancel`, { method: "POST" }); toast("Trabajo cancelado"); }
   finally { $("#btnCancel").disabled = false; $("#go").disabled = false; loadHist(); }
 };
-$("#hist").onclick = (e) => { const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+async function deleteRow(r) {
+  if (r.dataset.st === "running" || r.dataset.st === "queued") return toast("Ese video se está procesando. Cancélalo o espera a que termine.");
+  const n = +r.dataset.n;
+  if (!confirm(`¿Eliminar "${r.dataset.title}"${n ? ` y sus ${n} clips` : ""}?\n\nSe borra de esta PC. Si tienes respaldo activado, queda una copia en la carpeta _papelera del respaldo.`)) return;
+  try {
+    const out = await api("/api/jobs/" + encodeURIComponent(r.dataset.id), { method: "DELETE" });
+    if (current && out.ids.includes(current)) { try { es?.close(); } catch {} current = null; $("#run").classList.remove("show"); $("#clipsSec").classList.remove("show"); }
+    toast("Eliminado");
+    loadHist();
+  } catch (e) { toast(e.message); }
+}
+$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
 $("#btnRetry").onclick = async () => {
   if (!current) return;
   try { const { id } = await api(`/api/jobs/${current}/retry`, { method: "POST" }); attach(id); loadHist(); toast("Retomando…"); }

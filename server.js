@@ -188,6 +188,22 @@ function listHistory() {
   }
   return out;
 }
+async function deleteVideo(id) {
+  const cfg = loadConfig(), root = cfg.outputRoot;
+  if (!/^[\w.-]+$/.test(id)) throw Object.assign(new Error("Trabajo no válido."), { status: 400 });
+  const vid = id.replace(/^\d{8}-\d{4}-/, "");
+  const busy = [...jobs.values()].some((j) => j.id.replace(/^\d{8}-\d{4}-/, "") === vid && (j.status === "running" || j.status === "queued"));
+  if (busy) throw Object.assign(new Error("Ese video se está procesando. Cancélalo o espera a que termine para eliminarlo."), { status: 409 });
+  let names = [];
+  try { names = fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith("_") && (d.name === id || d.name.replace(/^\d{8}-\d{4}-/, "") === vid)).map((d) => d.name); } catch {}
+  if (!names.length) throw Object.assign(new Error("Ese video ya no está en esta PC."), { status: 404 });
+  const rmOpts = { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }; // Windows a veces tiene el archivo abierto un instante
+  for (const n of names) { fs.rmSync(path.join(root, n), rmOpts); jobs.delete(n); }
+  if (vid && vid !== id) try { fs.rmSync(path.join(root, "_cache", vid), rmOpts); } catch {}
+  const trashed = await backup.trash(cfg, names).catch(() => 0);
+  console.log(`  Eliminado del historial: ${names.join(", ")}${trashed ? " (copia del respaldo movida a _papelera)" : ""}`);
+  return { deleted: names.length, ids: names, trashed };
+}
 function readJsonSafe(f) { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } }
 
 function startJob({ url, dir, opts }) {
@@ -338,6 +354,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (p === "/api/jobs" && req.method === "GET") return send(res, 200, listHistory());
+    // Eliminar un video del historial: todos sus intentos, sus clips y el video descargado.
+    const mDel = p.match(/^\/api\/jobs\/([^/]+)$/);
+    if (mDel && req.method === "DELETE") {
+      try { return send(res, 200, await deleteVideo(decodeURIComponent(mDel[1]))); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
 
     if (p === "/api/jobs" && req.method === "POST") {
       const body = await readBody(req);

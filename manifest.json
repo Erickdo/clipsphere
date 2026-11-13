@@ -1,8 +1,8 @@
 {
-  "version": "1.1.8",
-  "date": "2026-11-12",
+  "version": "1.2.0",
+  "date": "2026-11-13",
   "notes": [
-    "Whisper: acentos bien en Windows y encuentra la transcripción aunque la guarde con otro nombre"
+    "Historial: botón para eliminar un video (aparece al pasar el mouse; pregunta antes de borrar)"
   ],
   "files": [
     {
@@ -31,7 +31,7 @@
     },
     {
       "path": "lib/backup.js",
-      "sha256": "8290c9657f1a99156ea6beac7f8158e87ba5d917a50cd9096260ba072c6c7c18"
+      "sha256": "cef15fb2cbba1025f656cfe725c8cb098d72d8bd08246553a4e3b8b46ffa3b1e"
     },
     {
       "path": "lib/llm.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "664a84807663de3b0ab7a659cd3850b9439236514f124f5a4b9d4735e743692c"
+      "sha256": "b13ee018bf5ff784ddfd5a52b8ce529e3f6f2371336941aa352a0c813e906dc8"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "2a4f2c8ec0722166e2bb9d53bd34406efe6e63b24c3a11c48486b4742fa19c9f"
+      "sha256": "2acbf33504cca22030e5fc3d6c896b3fafeb0024158a88ab52b1c8cc2a034e25"
     }
   ]
 }
