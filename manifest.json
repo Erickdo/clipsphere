@@ -1,8 +1,8 @@
 {
-  "version": "1.5.3",
+  "version": "1.5.4",
   "date": "2026-11-13",
   "notes": [
-    "Directos: botón «Seguir vigilando el directo» para retomar un live que paraste; los clips nuevos se suman a los anteriores"
+    "Directos: «Grabación en curso» muestra solo el tiempo grabado; «Seguir vigilando» siempre es hasta que termine"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "0da4a491762b66a6025057a494445aa78f0c9a2282906f41943e8301e2ea7f50"
+      "sha256": "b9c39df67e70c12a1a34f7abb18e20060cca66fcabbac9aefcb6dec89eb14f04"
     },
     {
       "path": "lib/render.js",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "a70a11e8859cf1bd389e7ba0f8e8f69468a5dedaa20c2a7c5e047fdd03945b37"
+      "sha256": "cf2564b0536e56acac542749a64345730936dd120a7cea47dd8127376b73d650"
     }
   ]
 }

@@ -435,7 +435,8 @@ const server = http.createServer(async (req, res) => {
       if (live && (live.status === "running" || live.status === "queued")) return send(res, 200, { id: live.id });
       try { fs.unlinkSync(path.join(dir, "done.json")); } catch {}
       const saved = readJsonSafe(path.join(dir, "job.json")) || {};
-      const job = startJob({ url: info.url, dir, opts: { ...(saved.options || {}), module: "live" } });
+      // "Seguir vigilando" = hasta que el directo termine (o hasta que lo pares tú).
+      const job = startJob({ url: info.url, dir, opts: { ...(saved.options || {}), module: "live", liveMinutes: 0 } });
       return send(res, 200, { id: job.id });
     }
     if ((m = /^\/api\/jobs\/([\w-]+)\/stop-recording$/.exec(p)) && req.method === "POST") {
