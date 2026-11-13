@@ -63,7 +63,7 @@
     },
     {
       "path": "make-manifest.js",
-      "sha256": "e80fc63222665739cb85e7e5c471aa38648c65589e1be6154ff80af271e2cd81"
+      "sha256": "6a1fe8ab304d51b21e35f38cf120b6bd5f12e52151e185fc13df965558f68040"
     },
     {
       "path": "prompts/system.md",
