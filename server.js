@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
 const { spawn } = require("node:child_process");
-const { runJob, tools, newJobDir, findResumableDir } = require("./lib/pipeline");
+const { runJob, tools, newJobDir, findResumableDir, updateYtdlp } = require("./lib/pipeline");
 const { isWin, writeAtomic } = require("./lib/util");
 const backup = require("./lib/backup");
 const updater = require("./lib/updater");
@@ -511,6 +511,8 @@ server.on("error", (e) => {
 });
 
 restoreIfFresh().then(() => server.listen(PORT, "0.0.0.0", () => {
+  // Al abrir, pongo al día el descargador de videos sin hacer esperar a nadie.
+  setTimeout(() => { try { const T = tools(); if (T.ytdlp && !running) updateYtdlp(T, (m) => console.log(m.trim())); } catch {} }, 5000);
   console.log(`\n  ClipSphere v${updater.localManifest().version} © 2026 · Creado por Erick Nex · NexTech360`);
   console.log(`\n  ClipSphere listo en ${URL_APP}\n  (deja esta ventana abierta mientras lo usas)\n`);
   const lan = lanUrls();

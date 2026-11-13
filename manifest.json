@@ -1,8 +1,8 @@
 {
-  "version": "1.5.5",
+  "version": "1.5.6",
   "date": "2026-11-13",
   "notes": [
-    "El historial de Directos ahora dice «en vivo finalizado» cuando el directo terminó, y «en vivo» con punto rojo solo mientras se está grabando."
+    "Arreglo para directos de YouTube que daban «Requested format is not available»: ClipSphere ahora actualiza el descargador solo y graba aunque YouTube mande video y audio por separado. En el historial, un directo con error ya no dice «en vivo finalizado»."
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "b9c39df67e70c12a1a34f7abb18e20060cca66fcabbac9aefcb6dec89eb14f04"
+      "sha256": "318af73470551b4c09a5c10fb39fe9da45160e257bf8f8efe4795b6c9ec7f0dd"
     },
     {
       "path": "lib/render.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "5a04fe93e4ced0adfa42cef38ef86e7146191ba39a317583b080c4ab17fca9fd"
+      "sha256": "68c9fcbfca49813703cf2f9814d9960505cd3aa30006c9ae48badb9841544654"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +79,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "5d20949c9724d04b403ed09ec64f3241759c7648bba21ec0f27bf7f901ec9b63"
+      "sha256": "3a290841a50d6c9c628198857d5da97d55b604e38885b2412152d5bd5b15bd67"
     }
   ]
 }
