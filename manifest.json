@@ -1,9 +1,9 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "date": "2026-11-13",
   "notes": [
-    "Nueva sección Directos: graba en vivos (o usa la repetición) y saca clips con el mismo motor, con su propio historial",
-    "Grabación de horas en tramos, reconexión automática y botón Terminar grabación"
+    "Directos: ClipSphere vigila el en vivo mientras pasa y saca cada clip viral al momento",
+    "La IA elige pensando en tu público (Ajustes → Público / países)"
   ],
   "files": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "94f0583ba39b1ce63f5e5e1dbf3bcb149c4cd2b6d2fd3620efbb4202e1438349"
+      "sha256": "7f147e226067136a9877bc407c8085884271ccee239fa4005f90488f839bf351"
     },
     {
       "path": "iniciar.bat",
@@ -36,11 +36,11 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "065bcceacbad3a573eb73c4c6f5daea610fbb3ca44e5c0d97d2c5c18d81a0e9a"
+      "sha256": "69cfeefd42b14f4b56a2e0e85e5ce07dcb8d80f80c693bb55fd7d8d86d477b69"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "ef0ab70f720b2d776e83c83969b99af29c507f8b6f79e36f65192bc87bcf60cd"
+      "sha256": "13eb163506c3a8eae073014d0dcd0a1281979a117de03b908fdd2cce42b6f634"
     },
     {
       "path": "lib/render.js",
@@ -68,11 +68,11 @@
     },
     {
       "path": "prompts/system.md",
-      "sha256": "c69952362dea3ecbb3a705e3751d54b8c3178dd29ebd301d69fe9f1785cc9db2"
+      "sha256": "30b4c5440775e3a892f2959b2ef931e6ad13edf90233b47b6a8e9c2a92212c58"
     },
     {
       "path": "public/index.html",
-      "sha256": "5551f3cca0db9e932c9da1a4851dde74e8473b9454a4c0fb5af95266e943898b"
+      "sha256": "41b74fb338686ace6fd2d09bb64f31b2459cf7db63dc32030633f7d4343006ae"
     },
     {
       "path": "reiniciar.bat",
@@ -80,7 +80,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "146306fc0be90adafe1b10b059d94568d7d1fd6f4340a42fdf7e64b07b1eb1fc"
+      "sha256": "57ca5c60ca2eaf9e13210d10f9f7be3839a6576528c8696baa504cab4c333831"
     }
   ]
 }

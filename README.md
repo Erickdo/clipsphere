@@ -23,10 +23,10 @@ no se tocan.
 
 Arriba, el selector **Videos | Directos** cambia de sección. Cada una tiene su propio historial.
 
-- Pega el link de un **directo en vivo** (YouTube, Kick, Twitch, TikTok, Facebook…): se graba 30 min, 1 h, 2 h, 4 h o **hasta que termine** (máx. 12 h) y luego se sacan los clips con el mismo motor. El botón **Terminar grabación y sacar clips** corta cuando quieras.
-- También acepta la **repetición** de un directo que ya terminó (aunque dure horas).
-- Pensado para horas: graba en tramos y reconecta si la señal se corta; si se cierra la app, lo grabado se conserva y **Reintentar** sigue desde ahí.
-- Si pegas un en vivo en *Videos*, se pasa solo a *Directos*.
+- Pega el link de un **directo en vivo** (YouTube, Kick, Twitch, TikTok, Facebook…). ClipSphere lo **vigila mientras pasa**: graba sin parar y cada 5 minutos (Ajustes → *Directos: revisar lo nuevo cada*) transcribe lo nuevo y la IA busca momentos con potencial viral para tu público (*Público / países*). Cuando encuentra uno, **el clip sale al momento**, mientras el directo sigue.
+- *Vigilar el directo*: hasta que termine (máx. 12 h) o 30 min / 1 h / 2 h / 4 h. **Terminar grabación y sacar clips** corta cuando quieras.
+- También acepta la **repetición** de un directo que ya terminó (se procesa completa).
+- Aguanta horas: graba en tramos, reconecta si la señal se corta, y si se cierra la app, **Reintentar** sigue desde donde iba sin perder lo grabado ni los clips hechos.
 
 ## Respaldo automático (no se pierde nada)
 

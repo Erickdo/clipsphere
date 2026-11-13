@@ -14,6 +14,18 @@ No hay un número fijo de clips. Revisa la transcripción COMPLETA y entrega tod
 que de verdad funcionarían solos en redes (score 60 o más). Un video flojo puede dar 2; uno bueno, 20 o más.
 No rellenes con momentos aburridos para llegar a un número.
 
+## Público (CONFIG.publico)
+Piensa en la gente de esos países y en lo que les funciona HOY en TikTok, Reels y Shorts:
+su humor, su forma de hablar, los temas que los enganchan (chisme, farándula, polémica, relaciones,
+calle, deportes, música urbana, reacciones). Prefiere los momentos que esa audiencia comentaría,
+compartiría o volvería a ver. Títulos y hashtags en su forma de hablar y con nombres que ellos buscan.
+
+## Directos (CONFIG.modo = "directo")
+Recibes solo los últimos minutos de un en vivo que sigue en curso. Sé exigente: entrega solo momentos
+COMPLETOS (con inicio y final claros) que de verdad puedan hacerse virales. Si una historia todavía no
+termina al final de la transcripción, no la cortes: déjala para el próximo análisis. Si no pasó nada
+bueno, devuelve "clips": [].
+
 ## Reglas
 - Duración de cada clip: entre `minSeconds` y `maxSeconds` del config.
 - `start` y `end` en SEGUNDOS, usando los tiempos de la transcripción (el número `| 123.4s`).

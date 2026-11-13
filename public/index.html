@@ -265,7 +265,7 @@ body.mlive .vod-only{display:none !important}
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
         <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
-        <label class="live-only">Grabar el directo <select id="o_liveMinutes"><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option><option value="0">Hasta que termine</option></select></label>
+        <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
       <div class="warn" id="warn"></div>
     </section>
@@ -316,7 +316,9 @@ body.mlive .vod-only{display:none !important}
         <div class="f">Clave de Groq (alternativa a Deepgram; gratis con límite por hora) <input name="groqKey" placeholder="gsk_…" autocomplete="off"></div>
         <div class="row2">
           <div class="f">Clave de Gemini <input name="geminiKey" placeholder="AIza… o AQ.…" autocomplete="off"></div>
-          <div class="f">Minutos a grabar de un EN VIVO (Kick, Twitch, YouTube…) <input name="liveMinutes" type="number" min="1" max="240"></div>
+          <div class="f">Público / países al que apuntan los clips <input name="audience" placeholder="República Dominicana, Latinoamérica y latinos en EE. UU."></div>
+          <div class="f">Directos: revisar lo nuevo cada (minutos) <input name="liveScanMinutes" type="number" min="2" max="30"></div>
+          <div class="f">En vivo pegado en «Videos»: minutos a grabar <input name="liveMinutes" type="number" min="1" max="240"></div>
           <div class="f">Modelo Whisper local
             <select name="whisperModel"><option value="base">base (rápido)</option><option value="small">small (recomendado)</option><option value="medium">medium (más preciso, lento)</option></select>
           </div>
@@ -403,7 +405,7 @@ let MODE = "vod";
 let STEPS = STEPS_VOD;
 const HERO = {
   vod: { t: 'Pega el link. <em>Sal con los clips.</em>', p: "Descarga, transcribe, encuentra los momentos que pegan y los monta en 9:16 con título, subtítulos y texto para publicar.", ph: "https://youtu.be/…", h: "Historial" },
-  live: { t: 'Pega el directo. <em>Sal con los clips.</em>', p: "Graba el en vivo (o usa la repetición de un directo que ya terminó), lo transcribe completo y saca los mejores momentos en 9:16. Aguanta transmisiones de horas.", ph: "Link del directo: YouTube, Kick, Twitch, TikTok, Facebook…", h: "Historial de directos" },
+  live: { t: 'Pega el directo. <em>Los clips salen solos.</em>', p: "Vigilo el en vivo mientras pasa: cada pocos minutos reviso lo nuevo y, cuando hay un momento que puede pegar con tu público, saco el clip al instante. También sirve con la repetición de un directo que ya terminó.", ph: "Link del directo: YouTube, Kick, Twitch, TikTok, Facebook…", h: "Historial de directos" },
 };
 function setMode(m, { keepJob = false, quiet = false } = {}) {
   MODE = m === "live" ? "live" : "vod";
@@ -465,9 +467,8 @@ async function loadBackup() {
 async function loadCfg() {
   cfg = await api("/api/config");
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
-  const lm = String(cfg.liveMinutes ?? 30), sel = $("#o_liveMinutes");
-  if (![...sel.options].some((o) => o.value === lm)) sel.add(new Option(`${lm} min`, lm));
-  sel.value = lm;
+  let lm = "0"; try { lm = localStorage.getItem("cs_liveMin") || "0"; } catch {}
+  $("#o_liveMinutes").value = [...$("#o_liveMinutes").options].some((o) => o.value === lm) ? lm : "0";
   const f = $("#cfgForm");
   for (const el of f.elements) if (el.name in cfg) el.value = BOOLS.includes(el.name) ? (cfg[el.name] ? "1" : "") : cfg[el.name];
 }
@@ -585,7 +586,7 @@ $("#form").onsubmit = async (ev) => {
   const options = {};
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) options[k] = $("#o_" + k).value;
   options.module = MODE;
-  if (MODE === "live") options.liveMinutes = $("#o_liveMinutes").value;
+  if (MODE === "live") { options.liveMinutes = $("#o_liveMinutes").value; try { localStorage.setItem("cs_liveMin", options.liveMinutes); } catch {} }
   $("#go").disabled = true;
   try { const { id } = await api("/api/jobs", { method: "POST", body: { url: $("#url").value, options } }); attach(id); loadHist(); }
   catch (e) { $("#go").disabled = false; const w = $("#warn"); w.textContent = e.message; w.classList.add("show"); }
