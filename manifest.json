@@ -1,8 +1,8 @@
 {
-  "version": "1.5.6",
+  "version": "1.5.7",
   "date": "2026-11-13",
   "notes": [
-    "Arreglo para directos de YouTube que daban «Requested format is not available»: ClipSphere ahora actualiza el descargador solo y graba aunque YouTube mande video y audio por separado. En el historial, un directo con error ya no dice «en vivo finalizado»."
+    "Directos: la IA ya no es tan exigente. Saca los momentos buenos de realities y streams (discusiones, nominaciones, bromas, reacciones), mira más contexto para no partir historias y, si pasan 15 minutos sin clips, entrega al menos el mejor momento."
   ],
   "files": [
     {
@@ -35,11 +35,11 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "efe781766a22a421526a3f26e7f2be5a7a0e00d5dbf9770e50c0f2f267bf6be1"
+      "sha256": "f3809ac9a8163142c5acc9a985a0f2f9b2dc4f9155edf3ac74289ee18cc1ce03"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "318af73470551b4c09a5c10fb39fe9da45160e257bf8f8efe4795b6c9ec7f0dd"
+      "sha256": "17d0359fce9ba4b62d4ab82f01bdade0c47d808db36d59c8a27870c1f28cb83b"
     },
     {
       "path": "lib/render.js",
@@ -67,7 +67,7 @@
     },
     {
       "path": "prompts/system.md",
-      "sha256": "30b4c5440775e3a892f2959b2ef931e6ad13edf90233b47b6a8e9c2a92212c58"
+      "sha256": "7e17e218045347438122d5c260a494f0b83bd7e29abb033e67154f7e8acea9f2"
     },
     {
       "path": "public/index.html",
