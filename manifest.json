@@ -1,8 +1,8 @@
 {
-  "version": "1.5.7",
-  "date": "2026-11-13",
+  "version": "1.5.8",
+  "date": "2026-11-14",
   "notes": [
-    "Directos: la IA ya no es tan exigente. Saca los momentos buenos de realities y streams (discusiones, nominaciones, bromas, reacciones), mira más contexto para no partir historias y, si pasan 15 minutos sin clips, entrega al menos el mejor momento."
+    "Directos largos: si la señal da un salto de tiempo (YouTube lo hace al reconectar), ClipSphere ya no se traba revisando el mismo tramo. Mide bien el tiempo grabado, saca el audio de otra forma y, si un tramo viene dañado, lo salta y sigue vigilando."
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "17d0359fce9ba4b62d4ab82f01bdade0c47d808db36d59c8a27870c1f28cb83b"
+      "sha256": "ce39868a11207b2687bc35a3ca3c9b5ae3357b5351a9643604ed3b8481f36466"
     },
     {
       "path": "lib/render.js",
