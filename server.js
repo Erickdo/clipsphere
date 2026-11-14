@@ -49,6 +49,7 @@ const DEFAULTS = {
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
   whisperModel: "small",
+  focus: "todo",                    // enfoque de la IA: "todo" o "peleas" (peleas y discusiones)
   liveMinutes: 30,                 // en vivo pegado en "Videos": minutos a grabar (en "Directos" se elige en pantalla)
   liveScanMinutes: 5,              // directos: cada cuántos minutos la IA revisa lo nuevo
   audience: "República Dominicana, Latinoamérica y latinos en EE. UU.", // público al que apunta la IA
@@ -399,7 +400,8 @@ const server = http.createServer(async (req, res) => {
       if (oldInfo?.isLive && Date.now() - fs.statSync(path.join(dir, "info.json")).mtimeMs > 6 * 3600e3) dir = null;
       dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
-      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
+      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
+      if (opts.focus !== undefined) opts.focus = opts.focus === "peleas" ? "peleas" : "todo";
       const job = startJob({ url, dir, opts });
       return send(res, 200, { id: job.id });
     }

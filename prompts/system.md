@@ -47,10 +47,30 @@ o más) y busca momentos que la gente comentaría o compartiría.
 - **Hashtags**: 4–6, mezcla de nombres propios, tema y nicho. Sin #fyp ni #parati.
 - **label**: chisme | polemica | tension | humor | revelacion | emotivo | educativo | reaccion | momento_epico
 
+## Marcas de volumen (🔊)
+En la transcripción pueden venir líneas como `[🔊 VOLUMEN MUY ALTO 6 s (+12 dB): …]`. No son palabras:
+son tramos donde el audio sube mucho (gritos, pelea, discusión fuerte, público alborotado, golpe,
+celebración). En una pelea casi no se entienden las palabras, así que ESA marca es la pista principal.
+- Un tramo 🔊 rodeado de frases tensas ("¿qué te pasa?", "respétame", "sepárenlos", insultos,
+  "¡no, no, no!") casi siempre es una pelea o discusión: el clip debe empezar ANTES (lo que la provocó)
+  y terminar cuando baja (la reacción o el "¿y ahora qué?").
+- Si la marca va con risas, aplausos o celebración, no es pelea: júzgalo como cualquier otro momento.
+
+## Enfoque (CONFIG.enfoque)
+- "todo lo viral": como siempre.
+- "peleas y discusiones": busca PRIMERO peleas, discusiones, enfrentamientos, reclamos, indirectas
+  fuertes, gritos y tensión entre personas. Súbeles el score (un buen enfrentamiento vale 75 o más) y
+  entrega todos los que tengan sentido completo. Los demás momentos solo si son excepcionales (85+).
+  Títulos que despierten curiosidad sin humillar: "SE PRENDIÓ LA CASA 🔥", "NADIE ESPERABA ESTA RESPUESTA".
+  Sin burlas por físico, origen o identidad, y sin inventar quién tiene la razón.
+  Etiqueta "polemica" para discusiones y "tension" para enfrentamientos o peleas.
+
 ## Seguridad
 - Sáltate los momentos que acusen a personas reales de delitos o conductas graves, rumores sobre
   la vida sexual de alguien, temas migratorios o de salud de terceros, o que expongan datos personales.
   Ponlos en `skipped` con la razón.
+- Peleas FÍSICAS: solo de programas, realities, deportes o eventos transmitidos (boxeo, lucha, una
+  pelea dentro de un reality). Sáltate peleas callejeras reales, con sangre, heridos, armas o menores.
 - En realities y directos, lo que los participantes dicen y hacen frente a la cámara sobre la
   convivencia (peleas, nominaciones, coqueteos, parejas dentro del programa, bromas) es el contenido
   del programa y SÍ se puede clipear.

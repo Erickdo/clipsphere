@@ -60,6 +60,7 @@ h1,h2,h3,b,p,span,a,div{overflow-wrap:anywhere}
 .go{background:var(--sig);color:var(--ink);border:0;border-radius:10px;padding:12px 22px;font-weight:800;font-size:16px;display:inline-flex;gap:8px;align-items:center;justify-content:center;white-space:nowrap}
 .go:disabled{opacity:.5;cursor:wait}
 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+.opts label.wide{grid-column:span 2}
 .opts label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--mute)}
 .opts input,.opts select{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-family:var(--mono);font-size:14px;width:100%}
 .warn{margin-top:14px;padding:12px 14px;border:1px solid var(--hot);border-radius:12px;color:#ffb3a5;font-size:14px;display:none;line-height:1.45}
@@ -269,6 +270,7 @@ body.mlive .vod-only{display:none !important}
         <label>Duración mínima (seg) <input id="o_minSeconds" type="number" min="15" inputmode="numeric"></label>
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
+        <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option></select></label>
         <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
         <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
@@ -417,6 +419,7 @@ function setMode(m, { keepJob = false, quiet = false } = {}) {
   MODE = m === "live" ? "live" : "vod";
   STEPS = MODE === "live" ? STEPS_LIVE : STEPS_VOD;
   document.body.classList.toggle("mlive", MODE === "live");
+  if ($("#o_focus")) setFocusFor(MODE);
   document.querySelectorAll("#modes button").forEach((b) => b.classList.toggle("on", b.dataset.mode === MODE));
   $("#heroTitle").innerHTML = HERO[MODE].t; $("#heroText").textContent = HERO[MODE].p;
   $("#url").placeholder = HERO[MODE].ph; $("#histTitle").textContent = HERO[MODE].h;
@@ -470,9 +473,11 @@ async function loadBackup() {
     el.innerHTML = t;
   } catch (e) { el.textContent = e.message; }
 }
+function setFocusFor(m) { let f = "todo"; try { f = localStorage.getItem("cs_focus_" + m) || "todo"; } catch {} $("#o_focus").value = f === "peleas" ? "peleas" : "todo"; }
 async function loadCfg() {
   cfg = await api("/api/config");
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
+  setFocusFor(MODE);
   let lm = "0"; try { lm = localStorage.getItem("cs_liveMin") || "0"; } catch {}
   $("#o_liveMinutes").value = [...$("#o_liveMinutes").options].some((o) => o.value === lm) ? lm : "0";
   const f = $("#cfgForm");
@@ -592,8 +597,9 @@ async function loadHist() {
 $("#form").onsubmit = async (ev) => {
   ev.preventDefault();
   const options = {};
-  for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) options[k] = $("#o_" + k).value;
+  for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "focus"]) options[k] = $("#o_" + k).value;
   options.module = MODE;
+  try { localStorage.setItem("cs_focus_" + MODE, options.focus); } catch {}
   if (MODE === "live") { options.liveMinutes = $("#o_liveMinutes").value; try { localStorage.setItem("cs_liveMin", options.liveMinutes); } catch {} }
   $("#go").disabled = true;
   try { const { id } = await api("/api/jobs", { method: "POST", body: { url: $("#url").value, options } }); attach(id); loadHist(); }

@@ -1,8 +1,8 @@
 {
-  "version": "1.5.8",
+  "version": "1.5.9",
   "date": "2026-11-14",
   "notes": [
-    "Directos largos: si la señal da un salto de tiempo (YouTube lo hace al reconectar), ClipSphere ya no se traba revisando el mismo tramo. Mide bien el tiempo grabado, saca el audio de otra forma y, si un tramo viene dañado, lo salta y sigue vigilando."
+    "Nuevo: «Buscar: 🥊 Peleas y discusiones» en Videos y Directos. ClipSphere ahora también escucha el volumen: detecta gritos, peleas y discusiones fuertes aunque no se entiendan las palabras, y la IA las prioriza."
   ],
   "files": [
     {
@@ -35,11 +35,15 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "f3809ac9a8163142c5acc9a985a0f2f9b2dc4f9155edf3ac74289ee18cc1ce03"
+      "sha256": "ea5dea9a94d8c76e43e4c6aeb9d213699ca27eab9c3340b9cbb09bd1aeb0b032"
+    },
+    {
+      "path": "lib/loud.js",
+      "sha256": "a510cbb73804659357587fe85cfff9df558b91b753ff058eb67c338ce6f1dcf4"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "ce39868a11207b2687bc35a3ca3c9b5ae3357b5351a9643604ed3b8481f36466"
+      "sha256": "b8132bc4409f53f4d4c815699fe271705d8161be99db91d1e2ad623034fb4003"
     },
     {
       "path": "lib/render.js",
@@ -67,11 +71,11 @@
     },
     {
       "path": "prompts/system.md",
-      "sha256": "7e17e218045347438122d5c260a494f0b83bd7e29abb033e67154f7e8acea9f2"
+      "sha256": "2ac8a78fff9d82e694cba84c691a1647d14e03a9c462db6be89d46bc9171c643"
     },
     {
       "path": "public/index.html",
-      "sha256": "68c9fcbfca49813703cf2f9814d9960505cd3aa30006c9ae48badb9841544654"
+      "sha256": "9576a93dad56b8f824e8339884c68509c3acb956f42794de6c98290ec958ac2c"
     },
     {
       "path": "reiniciar.bat",
@@ -79,7 +83,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "3a290841a50d6c9c628198857d5da97d55b604e38885b2412152d5bd5b15bd67"
+      "sha256": "4f6ca7c5505f51cbdd5195353b595c8797c4e041cf8a521a7dc10777827c2ce1"
     }
   ]
 }
