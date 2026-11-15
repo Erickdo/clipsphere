@@ -1,8 +1,8 @@
 {
-  "version": "1.6.0",
+  "version": "1.6.1",
   "date": "2026-11-15",
   "notes": [
-    "Nuevo: 🚀 Lanzamientos — prepara clips antes de un estreno con misiones: lo que busca la gente, lo que más peta, clips con palabras clave, títulos y portadas, y calendario para el día del lanzamiento."
+    "Si Windows bloquea yt-dlp (Control inteligente de aplicaciones o antivirus, error «spawn UNKNOWN»), ClipSphere usa yt-dlp por Python y sigue funcionando. Lanzamientos: botón para cambiar la fecha de la campaña."
   ],
   "files": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "path": "lib/launch.js",
-      "sha256": "a858b3ad69f994b987d6d8160ace972c4953b84bb18c5b2c5a9c9eb40cf4c4b4"
+      "sha256": "58b59b7a42d74bab91279f5d3cea2c1119886d2cfc3f6f2afc9fc88832afb6eb"
     },
     {
       "path": "lib/llm.js",
@@ -67,7 +67,7 @@
     },
     {
       "path": "lib/util.js",
-      "sha256": "4de4ef2c4ca1aad4f6bcc9b89949d41c749ec4abec1e87dac9e1d0533d1da8d0"
+      "sha256": "8cda001b1db79ac4c75ea5016ceea72f84ba545c12ba4e999d13770be8632efc"
     },
     {
       "path": "make-manifest.js",
@@ -83,7 +83,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "7b384e1ef9721a26942d0d1460c4d1ea333e779f44b082a4f10285117dc6979c"
+      "sha256": "465403839882c7a15601598b8eb14d7fbb27a082752e8719b19e3c05cf06cb2e"
     },
     {
       "path": "reiniciar.bat",
@@ -91,7 +91,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "1f794d5852d56dc5b180a74b2dd245fa1a18ce5b2bef56fe29a4f2ce77389662"
+      "sha256": "4a06e0096509b53192a8c1ee10004e279df0e337f39b66884f651d6d2a26289b"
     }
   ]
 }

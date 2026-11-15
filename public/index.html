@@ -901,7 +901,8 @@ function renderCampaign() {
     : `<div class="hint">Arma el calendario: lo de expectativa y teorías en los días antes; el día del lanzamiento, lo que la gente buscará. Después, el «Paquete del día» y avisos a la hora de publicar.</div>`;
 
   $("#camp").innerHTML = `
-    <div class="chead"><div><h2>🚀 ${escH(c.tema)}</h2><small>Lanzamiento: ${rd(c.fecha, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "2-digit" })} (hora de RD) · ${escH(c.publico || "")}</small></div>
+    <div class="chead"><div><h2>🚀 ${escH(c.tema)}</h2><small>Lanzamiento: ${rd(c.fecha, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "2-digit" })} (hora de RD) · ${escH(c.publico || "")}</small>
+      <div class="pk" style="margin-top:8px"><button class="cpy" id="l_editDate"><i class="ti ti-calendar"></i> Cambiar fecha</button><span id="l_dateBox" hidden><input type="datetime-local" id="l_newDate" value="${escH(c.fecha.slice(0, 16))}" style="background:var(--ink2);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-family:var(--mono);color-scheme:dark"> <button class="cpy" id="l_saveDate">Guardar</button></span></div></div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="cd" id="cd"></div><button class="ghost local-only" id="l_del" title="Eliminar campaña"><i class="ti ti-trash"></i></button></div></div>
     <div class="mchips" id="mchips"></div>
     <details class="log" id="lLog"><summary>Registro de misiones</summary><pre></pre></details>
@@ -929,6 +930,11 @@ $("#camp").addEventListener("click", async (e) => {
   }
   if (e.target.closest("#l_open")) return api(`/api/campaigns/${CAMP.id}/open`, { method: "POST", body: { day: $("#l_day")?.value } }).catch((err) => toast(err.message));
   if (e.target.closest("#l_del")) return deleteCampaign(CAMP.id);
+  if (e.target.closest("#l_editDate")) { $("#l_dateBox").hidden = !$("#l_dateBox").hidden; return; }
+  if (e.target.closest("#l_saveDate")) {
+    try { CAMP = await api("/api/campaigns/" + CAMP.id, { method: "PATCH", body: { fecha: $("#l_newDate").value } }); renderCampaign(); loadCamps(); toast("Fecha cambiada. Si ya tenías calendario, vuelve a correr la Misión final."); }
+    catch (err) { toast(err.message, 4000); }
+  }
 });
 
 async function campaignClips(url, title) {

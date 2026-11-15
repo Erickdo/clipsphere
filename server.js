@@ -441,6 +441,7 @@ const server = http.createServer(async (req, res) => {
         if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)\/events$/.exec(p))) return launch.subscribe(mm[1], res, req);
         if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)$/.exec(p))) {
           if (req.method === "GET") return send(res, 200, launch.viewCampaign(cfg, mm[1]));
+          if (req.method === "PATCH") { launch.updateCampaign(cfg, mm[1], await readBody(req)); backupSoon(); return send(res, 200, launch.viewCampaign(cfg, mm[1])); }
           if (req.method === "DELETE") {
             if (!isLocal(req)) return send(res, 403, { error: "Las campañas se borran desde la laptop." });
             if (launch.isRunning(mm[1])) return send(res, 409, { error: "Hay una misión corriendo. Espera a que termine." });
