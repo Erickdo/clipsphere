@@ -8,6 +8,8 @@ const { spawn } = require("node:child_process");
 const { runJob, tools, newJobDir, findResumableDir, updateYtdlp } = require("./lib/pipeline");
 const { isWin, writeAtomic } = require("./lib/util");
 const backup = require("./lib/backup");
+const launch = require("./lib/launch");
+const render = require("./lib/render");
 const updater = require("./lib/updater");
 
 const PORT = +process.env.PORT || 3600;
@@ -400,10 +402,71 @@ const server = http.createServer(async (req, res) => {
       if (oldInfo?.isLive && Date.now() - fs.statSync(path.join(dir, "info.json")).mtimeMs > 6 * 3600e3) dir = null;
       dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
-      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
+      for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus", "campaign"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
       if (opts.focus !== undefined) opts.focus = opts.focus === "peleas" ? "peleas" : "todo";
+      // 🚀 Lanzamientos: el trabajo lleva la campaña; si este video ya se procesó SIN ella, se hace aparte.
+      let camp = null;
+      if (opts.campaign) {
+        try { camp = launch.readCampaign(cfg, String(opts.campaign)); } catch (e) { return send(res, e.status || 400, { error: e.message }); }
+        opts.campaign = camp.id; opts.module = "vod";
+        const oldPlan = readJsonSafe(path.join(dir, "plan.json"));
+        if (oldPlan && oldPlan.campaign !== camp.id) dir = newJobDir(cfg.outputRoot, url);
+      }
       const job = startJob({ url, dir, opts });
+      if (camp) {
+        const c = launch.readCampaign(cfg, camp.id);
+        c.jobs = [...(c.jobs || []).filter((j) => j.jobId !== job.id), { jobId: job.id, url, title: String(body.title || url).slice(0, 200), at: new Date().toISOString() }];
+        launch.saveCampaign(cfg, c);
+      }
       return send(res, 200, { id: job.id });
+    }
+
+    // ---- 🚀 Lanzamientos (campañas) ----
+    if (p.startsWith("/api/campaigns")) {
+      const cfg = loadConfig();
+      const deps = { tools, render, backupSoon: () => backupSoon() };
+      try {
+        if (p === "/api/campaigns" && req.method === "GET") {
+          return send(res, 200, launch.listCampaigns(cfg).map((c) => ({
+            id: c.id, tema: c.tema, fecha: c.fecha, missions: c.missions, running: launch.isRunning(c.id),
+            calendario: (c.m5?.calendario || []).map((i) => ({ at: i.at, title: i.title, slot: i.slot })),
+          })));
+        }
+        if (p === "/api/campaigns" && req.method === "POST") {
+          const c = launch.createCampaign(cfg, await readBody(req));
+          backupSoon();
+          return send(res, 200, c);
+        }
+        let mm;
+        if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)\/events$/.exec(p))) return launch.subscribe(mm[1], res, req);
+        if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)$/.exec(p))) {
+          if (req.method === "GET") return send(res, 200, launch.viewCampaign(cfg, mm[1]));
+          if (req.method === "DELETE") {
+            if (!isLocal(req)) return send(res, 403, { error: "Las campañas se borran desde la laptop." });
+            if (launch.isRunning(mm[1])) return send(res, 409, { error: "Hay una misión corriendo. Espera a que termine." });
+            launch.readCampaign(cfg, mm[1]);
+            return send(res, 200, launch.deleteCampaign(cfg, mm[1]));
+          }
+        }
+        if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)\/mission\/(\d)$/.exec(p)) && req.method === "POST")
+          return send(res, 200, launch.runMission(cfg, mm[1], mm[2], deps));
+        if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)\/package$/.exec(p)) && req.method === "POST") {
+          const body = await readBody(req);
+          const r = await launch.buildPackage(cfg, mm[1], body.day);
+          backupSoon();
+          return send(res, 200, { ...r, folder: isLocal(req) ? r.folder : undefined });
+        }
+        if ((mm = /^\/api\/campaigns\/([a-z0-9-]+)\/open$/.exec(p)) && req.method === "POST") {
+          if (!isLocal(req)) return send(res, 403, { error: "La carpeta se abre en la laptop." });
+          const body = await readBody(req);
+          let dir = launch.campDir(cfg, mm[1]);
+          if (/^\d{4}-\d{2}-\d{2}$/.test(body.day || "") && fs.existsSync(path.join(dir, "paquetes", body.day))) dir = path.join(dir, "paquetes", body.day);
+          const cmd = isWin ? "explorer.exe" : process.platform === "darwin" ? "open" : "xdg-open";
+          spawn(cmd, [dir], { detached: true, stdio: "ignore" }).unref();
+          return send(res, 200, { ok: true });
+        }
+      } catch (e) { return send(res, e.status || 500, { error: e.message }); }
+      return send(res, 404, { error: "no encontrado" });
     }
 
     let m;

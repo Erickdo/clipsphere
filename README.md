@@ -21,12 +21,38 @@ no se tocan.
 
 ## Directos (Live Clips)
 
-Arriba, el selector **Videos | Directos** cambia de sección. Cada una tiene su propio historial.
+Arriba, el selector **Videos | Directos | 🚀 Lanzamientos** cambia de sección. Cada una tiene su propio historial.
 
 - Pega el link de un **directo en vivo** (YouTube, Kick, Twitch, TikTok, Facebook…). ClipSphere lo **vigila mientras pasa**: graba sin parar y cada 5 minutos (Ajustes → *Directos: revisar lo nuevo cada*) transcribe lo nuevo y la IA busca momentos con potencial viral para tu público (*Público / países*). Cuando encuentra uno, **el clip sale al momento**, mientras el directo sigue.
 - *Vigilar el directo*: hasta que termine (máx. 12 h) o 30 min / 1 h / 2 h / 4 h. **Terminar grabación y sacar clips** corta cuando quieras.
 - También acepta la **repetición** de un directo que ya terminó (se procesa completa).
 - Aguanta horas: graba en tramos, reconecta si la señal se corta, y si se cierra la app, **Reintentar** sigue desde donde iba sin perder lo grabado ni los clips hechos.
+
+## Lanzamientos (Modo Misión) 🚀
+
+Tercera sección del selector: **Videos | Directos | 🚀 Lanzamientos**. Sirve para preparar clips
+**antes** de un evento grande (un juego, un estreno, un concierto, un reality) y llegar a ese día
+con todo listo. Creas una campaña (tema, fecha y hora del lanzamiento en hora de RD, público e idioma)
+y arriba ves la cuenta regresiva. Después corres las misiones:
+
+1. **Lo que busca la gente** — más de 30 consultas al autocompletado de YouTube (el tema, el tema + a…z,
+   + cómo / qué / cuándo / dónde / precio). La IA agrupa las frases en temas y elige las 30 más fuertes.
+   El ranking es **alta / media / baja**: YouTube no da cifras de búsquedas y ClipSphere no las inventa.
+2. **Lo que más peta** — busca con yt-dlp lo más nuevo y lo más visto, calcula vistas por día y muestra
+   el top 15 (Short o Largo, con su enlace). La IA saca la fórmula: ganchos, títulos, duración y portadas.
+3. **Fuentes y clips** — los videos largos de la misión 2 con el botón **Sacar clips con esta campaña**
+   (o pega tu propio link). Van al flujo normal de Videos, pero la IA recibe las frases clave y la fórmula,
+   prefiere los momentos que responden a lo que la gente busca y mete esas frases en títulos y hashtags.
+   Esos clips se marcan con la campaña y se ven también dentro de ella.
+4. **Títulos y portadas** — 20 títulos en MAYÚSCULAS, 3 sets de hashtags (amplio, nicho, local RD/Latam)
+   y el texto de portada de cada clip, que también se pone en su `.jpg`. Todo con botón de copiar.
+5. **El lanzamiento** — calendario de publicación (D-2, D-1, la hora del lanzamiento y las horas fuertes
+   del día). **Paquete del día** arma una carpeta con los clips en orden (`01_`, `02_`…), sus portadas y un
+   `publicar.txt` con hora, título, descripción y hashtags. Cuando llega la hora de un clip, la app avisa
+   (mensaje y sonido). **ClipSphere nunca publica solo.**
+
+Las campañas se guardan en `_campanas/<campaña>/campana.json` dentro de tu carpeta de salida y entran
+en el respaldo automático. Desde el móvil puedes ver y correr misiones; borrar campañas, solo desde la laptop.
 
 ## Respaldo automático (no se pierde nada)
 

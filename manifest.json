@@ -1,8 +1,8 @@
 {
-  "version": "1.5.9",
-  "date": "2026-11-14",
+  "version": "1.6.0",
+  "date": "2026-11-15",
   "notes": [
-    "Nuevo: «Buscar: 🥊 Peleas y discusiones» en Videos y Directos. ClipSphere ahora también escucha el volumen: detecta gritos, peleas y discusiones fuertes aunque no se entiendan las palabras, y la IA las prioriza."
+    "Nuevo: 🚀 Lanzamientos — prepara clips antes de un estreno con misiones: lo que busca la gente, lo que más peta, clips con palabras clave, títulos y portadas, y calendario para el día del lanzamiento."
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "70938dbea58568be89d774685f7b26b2dd3b94bd25d782a11d85f45bf3b654a3"
+      "sha256": "c1b9865c3533c78d9ce6840cf74bb10041bd441008197fea7449174469c53d7b"
     },
     {
       "path": "iniciar.bat",
@@ -31,23 +31,27 @@
     },
     {
       "path": "lib/backup.js",
-      "sha256": "e51ab4d1be36b1d8f30500f223ab700dc8bcc46d8c1e90d07e0f6c95b33c85d5"
+      "sha256": "f0376df62305dbb5940128a7f6a3945d291d158b14a661d24603af4e4e8eedc3"
+    },
+    {
+      "path": "lib/launch.js",
+      "sha256": "a858b3ad69f994b987d6d8160ace972c4953b84bb18c5b2c5a9c9eb40cf4c4b4"
     },
     {
       "path": "lib/llm.js",
-      "sha256": "ea5dea9a94d8c76e43e4c6aeb9d213699ca27eab9c3340b9cbb09bd1aeb0b032"
+      "sha256": "6ea102dfd277f1a296430504e44c2dd9f710bf3cab1c281b9768544c99fbcb53"
     },
     {
       "path": "lib/loud.js",
-      "sha256": "a510cbb73804659357587fe85cfff9df558b91b753ff058eb67c338ce6f1dcf4"
+      "sha256": "0e99557d07ba7b35236c0ea23d8b4f0882113c3b83dc18295f2d18afabef3cd5"
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "b8132bc4409f53f4d4c815699fe271705d8161be99db91d1e2ad623034fb4003"
+      "sha256": "a901d15de74ebd46aa424681c600c1c1fa507fcb627e66f79dcfdec258e536dd"
     },
     {
       "path": "lib/render.js",
-      "sha256": "6388d99c46f5f58d130639a84d309062132acaa20ad7a2be85965b1b52a667d5"
+      "sha256": "b719b3bc7f5e94c12fbfe1310a6fa03ad1f810e0a5790a5b68fa06680dc2ab1d"
     },
     {
       "path": "lib/subs.js",
@@ -70,12 +74,16 @@
       "sha256": "6a1fe8ab304d51b21e35f38cf120b6bd5f12e52151e185fc13df965558f68040"
     },
     {
+      "path": "prompts/campana.md",
+      "sha256": "055a5faa784a778622b293da380960e07ca760d538000d3660b0273a092b9c23"
+    },
+    {
       "path": "prompts/system.md",
       "sha256": "2ac8a78fff9d82e694cba84c691a1647d14e03a9c462db6be89d46bc9171c643"
     },
     {
       "path": "public/index.html",
-      "sha256": "9576a93dad56b8f824e8339884c68509c3acb956f42794de6c98290ec958ac2c"
+      "sha256": "7b384e1ef9721a26942d0d1460c4d1ea333e779f44b082a4f10285117dc6979c"
     },
     {
       "path": "reiniciar.bat",
@@ -83,7 +91,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "4f6ca7c5505f51cbdd5195353b595c8797c4e041cf8a521a7dc10777827c2ce1"
+      "sha256": "1f794d5852d56dc5b180a74b2dd245fa1a18ce5b2bef56fe29a4f2ce77389662"
     }
   ]
 }

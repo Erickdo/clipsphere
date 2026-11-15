@@ -234,6 +234,66 @@ body.mlive .vod-only{display:none !important}
   .modes{order:3;width:100%}
   .modes button{flex:1;justify-content:center;padding:9px 10px}
 }
+
+/* ---------- 🚀 Lanzamientos ---------- */
+.pane[hidden],body.app .pane.on[hidden]{display:none !important}
+.modes button[data-mode="launch"].on .rk{animation:rk 1.4s ease-in-out infinite}
+@keyframes rk{50%{transform:translateY(-2px)}}
+.lchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--sig);background:#2a2608;border:1px solid #5a5010;border-radius:999px;padding:4px 11px;margin-bottom:14px}
+#launch h1{font-size:clamp(28px,4.4vw,52px);line-height:1;letter-spacing:-.03em;font-weight:800;margin-bottom:10px}
+#launch h1 em{font-style:normal;color:var(--sig)}
+#launch .sub{color:var(--mute);max-width:720px;margin-bottom:16px}
+.lnew{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:18px;background:var(--ink)}
+.lnew summary{cursor:pointer;font-weight:700}
+.lform{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:12px;align-items:end}
+.lform label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--mute)}
+.lform input,.lform select{background:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:var(--mono);font-size:14px;width:100%;color-scheme:dark}
+.chead{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.chead h2{font-size:clamp(24px,3.4vw,38px);font-weight:800;letter-spacing:-.02em}
+.chead small{font-family:var(--mono);color:var(--mute);font-size:12px}
+.cd{font-family:var(--mono);font-size:clamp(20px,3vw,30px);font-weight:600;color:var(--sig);display:flex;gap:10px}
+.cd span{display:flex;flex-direction:column;align-items:center;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:6px 10px;min-width:58px}
+.cd span i{font-style:normal;font-size:10px;color:var(--mute);letter-spacing:.1em}
+.mchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.mchip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--mute);cursor:pointer;background:none}
+.mchip.lista{border-color:#1f5a3a;color:var(--ok);background:#0f2219}
+.mchip.corriendo{border-color:#5a5010;color:var(--sig);background:#2a2608}
+.mchip.error{border-color:#5a2a1e;color:#ffb3a5;background:#3a1a14}
+.mis{border:1px solid var(--line);border-radius:14px;background:var(--ink);margin-bottom:14px;overflow:hidden}
+.mis>header{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mis>header h3{font-size:18px;font-weight:800;display:flex;gap:10px;align-items:center}
+.mis>header h3 .n{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--sig);border-radius:6px;padding:2px 7px}
+.mis>header .st{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.mis>.bd{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.mis .hint{color:var(--mute);font-size:14px}
+.mis .go.sm{padding:8px 14px;font-size:14px}
+.lvl{font-family:var(--mono);font-size:11px;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.lvl.alta{background:#0f2219;color:var(--ok)}.lvl.media{background:#2a2608;color:var(--sig)}.lvl.baja{background:var(--ink3);color:var(--mute)}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp b{font-size:14px;margin-right:4px}
+.pill{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--ink2);cursor:pointer}
+.pill:hover{border-color:var(--sig)}
+.rows{display:flex;flex-direction:column}
+.rw{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.rw:first-child{border-top:0}
+.rw .t{flex:1;min-width:0}
+.rw .t a{color:var(--paper);text-decoration:none;font-weight:600}
+.rw .t a:hover{color:var(--sig)}
+.rw .t small{display:block;font-family:var(--mono);font-size:11px;color:var(--mute);margin-top:3px}
+.rw .k{font-family:var(--mono);font-size:12px;color:var(--mute);width:22px;flex:none}
+.cpy{background:none;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12px;color:var(--mute);display:inline-flex;gap:4px;align-items:center;flex:none}
+.cpy:hover{color:var(--paper);border-color:var(--paper)}
+.fbox{background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45}
+.fbox h4{font-size:12px;font-family:var(--mono);letter-spacing:.12em;color:var(--sig);margin-bottom:6px;text-transform:uppercase}
+.fbox ul{margin:0;padding-left:18px}
+.f2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.badge2{font-family:var(--mono);font-size:11px;border-radius:6px;padding:1px 6px;background:var(--ink3);color:var(--mute);flex:none}
+.badge2.short{background:#3b1530;color:#ff9ad5}
+.pk{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pk select{background:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:var(--mono)}
+#lLog{margin-top:0}
+body.remote .local-only{display:none !important}
+.toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
 </style>
 </head>
 <body>
@@ -243,6 +303,7 @@ body.mlive .vod-only{display:none !important}
     <nav class="modes" id="modes" aria-label="Sección">
       <button type="button" data-mode="vod" class="on"><i class="ti ti-movie"></i><span>Videos</span></button>
       <button type="button" data-mode="live"><span class="ldot"></span><span>Directos</span></button>
+      <button type="button" data-mode="launch"><span class="rk">🚀</span><span>Lanzamientos</span></button>
     </nav>
     <div class="hbtns">
       <button class="ghost" id="btnPhone" title="Abrir en el móvil"><i class="ti ti-device-mobile"></i><span class="hide-sm">Abrir en el </span><span>móvil</span></button>
@@ -275,6 +336,22 @@ body.mlive .vod-only{display:none !important}
         <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
       <div class="warn" id="warn"></div>
+    </section>
+
+    <section class="panel pane" id="launch" data-pane="crear" hidden>
+      <span class="lchip">🚀 MODO MISIÓN</span>
+      <h1>Prepara los clips <em>antes del estreno.</em></h1>
+      <p class="sub">Un juego, una película, un concierto o un reality: averigua qué va a buscar la gente, qué es lo que más peta, saca los clips con esas palabras y llega al día del lanzamiento con todo listo para publicar.</p>
+      <details class="lnew" id="lNew" open><summary>＋ Nueva campaña</summary>
+        <form class="lform" id="lForm">
+          <label>Tema <input id="l_tema" placeholder="GTA 6" required autocomplete="off"></label>
+          <label>Lanzamiento (hora de RD) <input id="l_fecha" type="datetime-local" required></label>
+          <label>Público <input id="l_publico" placeholder="República Dominicana, Latinoamérica…"></label>
+          <label>Idioma <select id="l_idioma"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
+          <button class="go" id="lCreate"><i class="ti ti-rocket"></i> Crear campaña</button>
+        </form>
+      </details>
+      <div id="camp"></div>
     </section>
 
     <section class="panel run pane" id="run" data-pane="progreso">
@@ -416,31 +493,37 @@ const HERO = {
   live: { t: 'Pega el directo. <em>Los clips salen solos.</em>', p: "Vigilo el en vivo mientras pasa: cada pocos minutos reviso lo nuevo y, cuando hay un momento que puede pegar con tu público, saco el clip al instante. También sirve con la repetición de un directo que ya terminó.", ph: "Link del directo: YouTube, Kick, Twitch, TikTok, Facebook…", h: "Historial de directos" },
 };
 function setMode(m, { keepJob = false, quiet = false } = {}) {
-  MODE = m === "live" ? "live" : "vod";
+  MODE = m === "live" ? "live" : m === "launch" ? "launch" : "vod";
+  const L = MODE === "launch";
   STEPS = MODE === "live" ? STEPS_LIVE : STEPS_VOD;
   document.body.classList.toggle("mlive", MODE === "live");
-  if ($("#o_focus")) setFocusFor(MODE);
+  document.body.classList.toggle("mlaunch", L);
+  // 🚀 Lanzamientos tiene su propio panel; Videos y Directos comparten el de siempre.
+  $("#launch").hidden = !L; document.querySelector(".hero").hidden = L; $("#run").hidden = L; $("#clipsSec").hidden = L;
+  if (!L && $("#o_focus")) setFocusFor(MODE);
   document.querySelectorAll("#modes button").forEach((b) => b.classList.toggle("on", b.dataset.mode === MODE));
-  $("#heroTitle").innerHTML = HERO[MODE].t; $("#heroText").textContent = HERO[MODE].p;
-  $("#url").placeholder = HERO[MODE].ph; $("#histTitle").textContent = HERO[MODE].h;
+  if (!L) { $("#heroTitle").innerHTML = HERO[MODE].t; $("#heroText").textContent = HERO[MODE].p; $("#url").placeholder = HERO[MODE].ph; }
+  $("#histTitle").textContent = L ? "Campañas" : HERO[MODE].h;
   try { localStorage.setItem("cs_mode", MODE); } catch {}
-  history.replaceState(null, "", MODE === "live" ? "#directos" : location.pathname);
-  if (!keepJob) {
+  history.replaceState(null, "", MODE === "live" ? "#directos" : L ? "#lanzamientos" : location.pathname);
+  if (!keepJob && !L) {
     try { es?.close(); } catch {}
     current = null; $("#run").classList.remove("show"); $("#clipsSec").classList.remove("show"); $("#grid").innerHTML = "";
     $("#go").disabled = false; $("#btnStopRec").classList.remove("show");
-    if (!quiet) tab("crear");
   }
+  if (!quiet) tab("crear");
   return loadHist();
 }
 $("#modes").onclick = async (e) => {
   const b = e.target.closest("button[data-mode]"); if (!b || b.dataset.mode === MODE) return;
   const h = await setMode(b.dataset.mode);
+  if (MODE === "launch") { if (!CAMP) { let c = null; try { c = localStorage.getItem("cs_camp"); } catch {} if (c) openCampaign(c, { quiet: true }); } return; }
   const r = (h || []).find((j) => j.status === "running" || j.status === "queued"); if (r) attach(r.id);
 };
 let current = null, es = null, cfg = {};
 
-function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1600); }
+let toastT = null;
+function toast(t, ms = 1600) { const el = $("#toast"); el.textContent = t; el.classList.toggle("big", ms > 3000); el.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), ms); }
 function fmt(s) { s = Math.round(s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
 function escH(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 
@@ -588,6 +671,7 @@ async function loadDone(jobId, status = "done", err = "", isLive = false) {
 }
 
 async function loadHist() {
+  if (MODE === "launch") return loadCamps();
   const h = await api("/api/jobs?module=" + MODE);
   const label = { running: "en proceso", queued: "en cola", interrumpido: "sin terminar", error: "con error", done: "" };
   $("#hist").innerHTML = h.length ? h.map((j) => `<div class="hrow" data-id="${j.id}" data-st="${j.status}" data-title="${escH(j.title)}" data-n="${j.clips || 0}" data-err="${escH(j.error || "")}" data-live="${j.live ? 1 : ""}"><button type="button" class="hdel" title="Eliminar este video" aria-label="Eliminar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button><b>${escH(j.title)}</b><span>${j.status === "done" ? j.clips : (j.ready || 0) + "/" + j.clips} clips · ${new Date(j.createdAt).toLocaleString("es-DO", { dateStyle: "short", timeStyle: "short" })}${j.live ? (j.onAir ? `<em class="st live on"><i></i>en vivo</em>` : j.status === "done" ? `<em class="st ended">en vivo finalizado</em>` : `<em class="st live">directo</em>`) : ""}${label[j.status] ? `<em class="st ${j.status}">${label[j.status]}</em>` : ""}</span></div>`).join("") : `<p class="empty">${MODE === "live" ? "Todavía no has procesado ningún directo." : "Todavía no hay trabajos."}</p>`;
@@ -651,7 +735,10 @@ async function deleteRow(r) {
     loadHist();
   } catch (e) { toast(e.message); }
 }
-$("#hist").onclick = (e) => { const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err, !!r.dataset.live); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+$("#hist").onclick = (e) => {
+  const dc = e.target.closest("[data-delcamp]"); if (dc) { e.stopPropagation(); return deleteCampaign(dc.dataset.delcamp); }
+  const cr = e.target.closest("[data-camp]"); if (cr) return openCampaign(cr.dataset.camp);
+  const d = e.target.closest(".hdel"); if (d) { e.stopPropagation(); return deleteRow(d.closest(".hrow")); } const r = e.target.closest(".hrow"); if (!r) return; r.dataset.st === "running" || r.dataset.st === "queued" ? attach(r.dataset.id) : loadDone(r.dataset.id, r.dataset.st, r.dataset.err, !!r.dataset.live); setTimeout(() => $("#run").scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
 $("#btnResumeLive").onclick = async () => {
   if (!current) return;
   try { const { id } = await api(`/api/jobs/${current}/resume-live`, { method: "POST" }); attach(id); loadHist(); toast("Vigilando el directo otra vez…"); }
@@ -677,6 +764,213 @@ function copyText(t) {
   return Promise.resolve();
 }
 document.addEventListener("click", (e) => { const b = e.target.closest("[data-copy]"); if (b) { copyText(b.dataset.copy).then(() => toast("Copiado"), () => toast("No se pudo copiar")); } });
+
+
+// ================= 🚀 LANZAMIENTOS (Modo Misión) =================
+let CAMP = null, cES = null;
+const MST = { pendiente: "pendiente", corriendo: "corriendo…", lista: "lista ✅", error: "con error" };
+const TRASH = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>';
+const rd = (iso, o = { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) => new Date(iso).toLocaleString("es-DO", { timeZone: "America/Santo_Domingo", ...o });
+const nfmt = (n) => (n == null ? "—" : Number(n).toLocaleString("es-DO"));
+const cp = (t, label = "") => `<button class="cpy" data-copy="${escH(t)}"><i class="ti ti-copy"></i>${label}</button>`;
+
+async function loadCamps() {
+  const list = await api("/api/campaigns").catch(() => []);
+  $("#hist").innerHTML = list.length ? list.map((c) => {
+    const done = Object.values(c.missions || {}).filter((m) => m.status === "lista").length;
+    const past = new Date(c.fecha) < Date.now();
+    return `<div class="hrow" data-camp="${c.id}"><button type="button" class="hdel local-only" data-delcamp="${c.id}" title="Eliminar campaña" aria-label="Eliminar">${TRASH}</button><b>🚀 ${escH(c.tema)}</b><span>${rd(c.fecha)} · ${done}/5 misiones${c.running ? '<em class="st running">corriendo</em>' : past ? '<em class="st ended">ya salió</em>' : ""}</span></div>`;
+  }).join("") : `<p class="empty">Todavía no hay campañas. Crea la primera: pon el tema y la fecha del lanzamiento.</p>`;
+  return list;
+}
+
+$("#lForm").onsubmit = async (ev) => {
+  ev.preventDefault();
+  const b = $("#lCreate"); b.disabled = true;
+  try {
+    const c = await api("/api/campaigns", { method: "POST", body: { tema: $("#l_tema").value, fecha: $("#l_fecha").value, publico: $("#l_publico").value, idioma: $("#l_idioma").value } });
+    $("#l_tema").value = ""; toast("Campaña creada 🚀"); await loadCamps(); openCampaign(c.id);
+  } catch (e) { toast(e.message, 4000); }
+  finally { b.disabled = false; }
+};
+
+async function openCampaign(id, { quiet = false } = {}) {
+  try { CAMP = await api("/api/campaigns/" + id); }
+  catch (e) { toast(e.message); try { localStorage.removeItem("cs_camp"); } catch {} return; }
+  try { localStorage.setItem("cs_camp", id); } catch {}
+  $("#lNew").open = false;
+  renderCampaign();
+  if (!quiet) { tab("crear"); $("#camp").scrollIntoView({ behavior: "smooth", block: "start" }); }
+  if (cES && cES.cid === id) return;
+  try { cES?.close(); } catch {}
+  cES = new EventSource(`/api/campaigns/${id}/events`); cES.cid = id;
+  cES.onmessage = (m) => {
+    const e = JSON.parse(m.data);
+    if (e.type === "log") { const p = $("#lLog pre"); if (p) { p.textContent += e.msg + "\n"; p.scrollTop = p.scrollHeight; } }
+    if (e.type === "mission" && CAMP?.id === id) {
+      CAMP.missions[e.n] = { status: e.status, error: e.error };
+      if (e.status === "corriendo") renderChips(); else if (e.at > Date.now() - 5000) refreshCampaign();
+    }
+    if (e.type === "campaign" && e.at > Date.now() - 5000) { refreshCampaign(); loadCamps(); }
+  };
+}
+async function refreshCampaign() {
+  if (!CAMP) return;
+  const log = $("#lLog pre")?.textContent || "", open = $("#lLog")?.open;
+  try { CAMP = await api("/api/campaigns/" + CAMP.id); } catch { return; }
+  renderCampaign();
+  const p = $("#lLog pre"); if (p) { p.textContent = log; p.scrollTop = p.scrollHeight; $("#lLog").open = open; }
+}
+
+function countdown() {
+  const el = $("#cd"); if (!el || !CAMP) return;
+  let ms = new Date(CAMP.fecha) - Date.now();
+  if (ms <= 0) { el.innerHTML = `<span style="min-width:auto;padding:8px 14px">🚀 ¡YA SALIÓ!</span>`; return; }
+  const d = Math.floor(ms / 864e5); ms -= d * 864e5;
+  const h = Math.floor(ms / 36e5); ms -= h * 36e5;
+  const m = Math.floor(ms / 6e4); const s = Math.floor((ms - m * 6e4) / 1000);
+  el.innerHTML = [[d, "DÍAS"], [h, "HORAS"], [m, "MIN"], [s, "SEG"]].map(([v, l]) => `<span>${String(v).padStart(2, "0")}<i>${l}</i></span>`).join("");
+}
+setInterval(countdown, 1000);
+
+function renderChips() {
+  const el = $("#mchips"); if (!el || !CAMP) return;
+  el.innerHTML = Object.entries(CAMP.missionNames).map(([n, name]) => {
+    const st = CAMP.missions[n]?.status || "pendiente";
+    return `<button class="mchip ${st}" data-goto="${n}">${n === "5" ? "🏁" : n} · ${escH(name)} · ${MST[st] || st}</button>`;
+  }).join("");
+  document.querySelectorAll(".mis").forEach((m) => {
+    const st = CAMP.missions[m.dataset.n]?.status || "pendiente";
+    const s = m.querySelector(".st"); if (s) s.textContent = MST[st] || st;
+    const b = m.querySelector("[data-run]"); if (b) { b.disabled = !!CAMP.running || st === "corriendo"; }
+  });
+}
+
+function misCard(n, body, { run = true, runLabel = "Correr misión" } = {}) {
+  const st = CAMP.missions[n]?.status || "pendiente";
+  const err = st === "error" && CAMP.missions[n]?.error ? `<div class="warn show" style="margin:0">${escH(CAMP.missions[n].error)}</div>` : "";
+  return `<section class="mis" data-n="${n}" id="mis_${n}"><header><h3><span class="n">${n === "5" ? "FINAL" : "MISIÓN " + n}</span>${escH(CAMP.missionNames[n])}</h3>
+    <div class="hbtns" style="align-items:center"><span class="st">${MST[st] || st}</span>${run ? `<button class="go sm" data-run="${n}" ${CAMP.running || st === "corriendo" ? "disabled" : ""}><i class="ti ti-player-play"></i> ${st === "lista" ? "Volver a correr" : runLabel}</button>` : ""}</div></header>
+    <div class="bd">${err}${body}</div></section>`;
+}
+
+function renderCampaign() {
+  const c = CAMP; if (!c) { $("#camp").innerHTML = ""; return; }
+  const m1 = c.m1, m2 = c.m2, m3 = c.m3, m4 = c.m4, m5 = c.m5;
+  const ready = (c.clips || []).filter((x) => x.ready);
+  // ---- Misión 1
+  const b1 = m1 ? `
+    <div class="hint">${m1.total} frases reales del autocompletado de YouTube. El nivel es relativo (alta / media / baja): YouTube no da números de búsquedas y aquí no se inventan.</div>
+    ${(m1.grupos || []).map((g) => `<div class="grp"><b>${escH((g.emoji ? g.emoji + " " : "") + g.tema)}</b>${g.frases.map((f) => `<span class="pill" data-copy="${escH(f.frase)}" title="Copiar">${escH(f.frase)} <span class="lvl ${f.nivel}">${f.nivel}</span></span>`).join("")}</div>`).join("")}
+    <div class="fbox"><h4>Las ${m1.clave.length} frases clave ${cp(m1.clave.map((f) => f.frase).join("\n"), "Copiar todas")}</h4>
+      <div class="rows">${m1.clave.map((f, i) => `<div class="rw"><span class="k">${i + 1}</span><div class="t">${escH(f.frase)}</div><span class="lvl ${f.nivel}">${f.nivel}</span>${cp(f.frase)}</div>`).join("")}</div></div>`
+    : `<div class="hint">Le pregunta al buscador de YouTube qué escribe la gente sobre «${escH(c.tema)}» (más de 30 búsquedas) y la IA lo agrupa en temas y elige las 30 frases más fuertes.</div>`;
+  // ---- Misión 2
+  const f = m2?.formula;
+  const b2 = m2 ? `
+    ${f ? `<div class="f2">
+      <div class="fbox"><h4>Ganchos que funcionan</h4><ul>${(f.ganchos || []).map((g) => `<li>${escH(g)}</li>`).join("")}</ul></div>
+      <div class="fbox"><h4>Cómo son los títulos</h4><ul>${["palabras", "mayusculas", "emojis", "numeros"].filter((k) => f.titulos?.[k]).map((k) => `<li>${escH(f.titulos[k])}</li>`).join("")}</ul>${(f.titulos?.ejemplos || []).length ? `<div style="margin-top:6px;color:var(--mute)">Ej.: ${f.titulos.ejemplos.map(escH).join(" · ")}</div>` : ""}</div>
+      <div class="fbox"><h4>Duración ideal</h4>${f.duracion?.shorts ? `<div><b>Shorts:</b> ${escH(f.duracion.shorts)}</div>` : ""}${f.duracion?.largos ? `<div><b>Largos:</b> ${escH(f.duracion.largos)}</div>` : ""}</div>
+      <div class="fbox"><h4>Texto de portadas</h4><ul>${(f.portadas || []).map((g) => `<li>${escH(g)}</li>`).join("")}</ul></div>
+    </div>${f.resumen ? `<div class="fbox"><h4>La fórmula en una frase</h4>${escH(f.resumen)}</div>` : ""}` : ""}
+    <div class="fbox"><h4>Top ${m2.top.length} por vistas al día</h4><div class="rows">${m2.top.map((v, i) => `<div class="rw"><span class="k">${i + 1}</span><div class="t"><a href="${escH(v.url)}" target="_blank" rel="noopener">${escH(v.title)}</a><small>${escH(v.channel)} · ${nfmt(v.views)} vistas · ${v.perDay != null ? nfmt(v.perDay) + "/día" : "fecha ?"} · ${fmt(v.duration || 0)}</small></div><span class="badge2 ${v.short ? "short" : ""}">${v.short ? "Short" : "Largo"}</span></div>`).join("")}</div></div>`
+    : `<div class="hint">Busca en YouTube lo más nuevo y lo más visto del tema, ordena por vistas al día y la IA saca la fórmula: ganchos, títulos, duración y portadas.</div>`;
+  // ---- Misión 3
+  const fuentes = m3?.fuentes || (m2 ? m2.videos.filter((v) => !v.short && v.duration >= 90).slice(0, 20) : []);
+  const b3 = `
+    ${fuentes.length ? `<div class="fbox"><h4>Videos largos para sacar clips</h4><div class="rows">${fuentes.map((v) => `<div class="rw"><div class="t"><a href="${escH(v.url)}" target="_blank" rel="noopener">${escH(v.title)}</a><small>${escH(v.channel)} · ${fmt(v.duration || 0)} · ${nfmt(v.views)} vistas</small></div><button class="go sm" data-src="${escH(v.url)}" data-title="${escH(v.title)}"><i class="ti ti-scissors"></i> Sacar clips con esta campaña</button></div>`).join("")}</div></div>`
+      : `<div class="hint">${m2 ? "La búsqueda no trajo videos largos." : "Corre primero la Misión 2: de ahí salen los tráilers, análisis y directos para sacar clips."}</div>`}
+    <div class="pk"><input id="l_src" class="lform" style="margin:0;flex:1;min-width:220px;background:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:var(--mono);font-size:14px" placeholder="…o pega otro link (tráiler, podcast, directo grabado)"><button class="ghost" id="l_srcGo"><i class="ti ti-scissors"></i> Sacar clips</button></div>
+    ${(c.jobs || []).length ? `<div class="hint">${c.jobs.length} video${c.jobs.length === 1 ? "" : "s"} enviados con esta campaña · ${ready.length} clips listos.</div>` : ""}
+    ${(c.clips || []).length ? `<div class="grid">${c.clips.map((x) => card(x, x.jobId, x.ready).replace(/id="card_/, 'data-ccard="')).join("")}</div>` : ""}`;
+  // ---- Misión 4
+  const b4 = m4 ? `
+    <div class="fbox"><h4>${m4.titulos.length} títulos listos ${cp(m4.titulos.join("\n"), "Copiar todos")}</h4><div class="rows">${m4.titulos.map((t, i) => `<div class="rw"><span class="k">${i + 1}</span><div class="t">${escH(t)}</div>${cp(t)}</div>`).join("")}</div></div>
+    <div class="f2">${[["amplio", "Amplio"], ["nicho", "Nicho"], ["local", "Local RD / Latam"]].map(([k, l]) => `<div class="fbox"><h4>${l} ${cp((m4.hashtags[k] || []).join(" "), "Copiar")}</h4>${escH((m4.hashtags[k] || []).join(" "))}</div>`).join("")}</div>
+    ${m4.portadas.length ? `<div class="fbox"><h4>Texto de portada de cada clip (ya va en su .jpg)</h4><div class="rows">${m4.portadas.map((p) => `<div class="rw"><div class="t">${escH(p.texto)}<small>${escH(p.title)}</small></div>${cp(p.texto)}</div>`).join("")}</div></div>` : `<div class="hint">Cuando haya clips de la campaña, vuelve a correr esta misión para ponerles su portada.</div>`}`
+    : `<div class="hint">20 títulos en MAYÚSCULAS con la fórmula y las frases clave, 3 sets de hashtags y el texto de portada de cada clip (también se pone en su .jpg).</div>`;
+  // ---- Misión final
+  const days = [...new Set((m5?.calendario || []).map((i) => i.at.slice(0, 10)))];
+  const b5 = m5 ? `
+    <div class="fbox"><h4>Calendario de publicación (hora de RD)</h4><div class="rows">${m5.calendario.map((i) => `<div class="rw"><div class="t"><b>${escH(i.label)}</b> · ${escH(i.slot)}<small>${escH(i.title)} · ${escH(i.tipo || "")}</small></div>${new Date(i.at) < Date.now() ? '<span class="badge2">pasó</span>' : ""}</div>`).join("")}</div></div>
+    <div class="pk"><select id="l_day">${days.map((d) => `<option value="${d}">${rd(d + "T12:00:00-04:00", { weekday: "long", day: "numeric", month: "long" })}</option>`).join("")}</select>
+      <button class="go sm" id="l_pkg"><i class="ti ti-package"></i> Paquete del día</button>
+      <button class="ghost local-only" id="l_open"><i class="ti ti-folder-open"></i> Abrir carpeta</button></div>
+    <div class="hint" id="l_pkgMsg">El paquete es una carpeta con los clips en orden (01_, 02_…), sus portadas y un publicar.txt con la hora, el título, la descripción y los hashtags. Cuando llegue la hora de cada clip, ClipSphere te avisa aquí (con la app abierta). Nunca publica solo.</div>`
+    : `<div class="hint">Arma el calendario: lo de expectativa y teorías en los días antes; el día del lanzamiento, lo que la gente buscará. Después, el «Paquete del día» y avisos a la hora de publicar.</div>`;
+
+  $("#camp").innerHTML = `
+    <div class="chead"><div><h2>🚀 ${escH(c.tema)}</h2><small>Lanzamiento: ${rd(c.fecha, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "2-digit" })} (hora de RD) · ${escH(c.publico || "")}</small></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="cd" id="cd"></div><button class="ghost local-only" id="l_del" title="Eliminar campaña"><i class="ti ti-trash"></i></button></div></div>
+    <div class="mchips" id="mchips"></div>
+    <details class="log" id="lLog"><summary>Registro de misiones</summary><pre></pre></details>
+    ${misCard("1", b1)}${misCard("2", b2)}${misCard("3", b3, { runLabel: "Preparar fuentes" })}${misCard("4", b4)}${misCard("5", b5, { runLabel: "Armar calendario" })}`;
+  renderChips(); countdown();
+}
+
+$("#camp").addEventListener("click", async (e) => {
+  const g = e.target.closest("[data-goto]"); if (g) return $("#mis_" + g.dataset.goto)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const r = e.target.closest("[data-run]");
+  if (r) {
+    r.disabled = true; $("#lLog").open = true;
+    try { await api(`/api/campaigns/${CAMP.id}/mission/${r.dataset.run}`, { method: "POST" }); CAMP.running = r.dataset.run; CAMP.missions[r.dataset.run] = { status: "corriendo" }; renderChips(); toast("Misión en marcha 🚀"); }
+    catch (err) { r.disabled = false; toast(err.message, 4000); }
+    return;
+  }
+  const src = e.target.closest("[data-src]"); if (src) return campaignClips(src.dataset.src, src.dataset.title);
+  if (e.target.closest("#l_srcGo")) { const u = $("#l_src").value.trim(); if (!/^https?:\/\//.test(u)) return toast("Pega un link válido (https://…)"); return campaignClips(u, u); }
+  if (e.target.closest("#l_pkg")) {
+    const b = $("#l_pkg"); b.disabled = true; $("#l_pkgMsg").textContent = "Armando el paquete…";
+    try { const p = await api(`/api/campaigns/${CAMP.id}/package`, { method: "POST", body: { day: $("#l_day").value } }); $("#l_pkgMsg").innerHTML = `✅ Paquete del ${escH(p.day)}: <b>${p.clips} clips</b> en orden, con portadas y publicar.txt.${p.folder ? `<br><span style="font-family:var(--mono);font-size:12px">${escH(p.folder)}</span>` : " Ábrelo en la laptop (carpeta _campanas)."}`; toast("Paquete listo 📦"); }
+    catch (err) { $("#l_pkgMsg").textContent = err.message; }
+    finally { b.disabled = false; }
+    return;
+  }
+  if (e.target.closest("#l_open")) return api(`/api/campaigns/${CAMP.id}/open`, { method: "POST", body: { day: $("#l_day")?.value } }).catch((err) => toast(err.message));
+  if (e.target.closest("#l_del")) return deleteCampaign(CAMP.id);
+});
+
+async function campaignClips(url, title) {
+  const options = { module: "vod", campaign: CAMP.id, language: CAMP.idioma || $("#o_language").value, focus: "todo" };
+  for (const k of ["minSeconds", "maxSeconds", "maxHeight"]) options[k] = $("#o_" + k).value;
+  try {
+    const { id } = await api("/api/jobs", { method: "POST", body: { url, title, options } });
+    toast("Sacando clips para la campaña 🚀", 2500);
+    await setMode("vod", { keepJob: true });
+    attach(id);
+  } catch (err) { toast(err.message, 4000); }
+}
+
+async function deleteCampaign(id) {
+  if (!confirm("¿Eliminar esta campaña?\n\nSe borran sus misiones, el calendario y los paquetes. Los clips siguen en tu historial de Videos.")) return;
+  try {
+    await api("/api/campaigns/" + id, { method: "DELETE" });
+    if (CAMP?.id === id) { CAMP = null; try { cES?.close(); } catch {} cES = null; $("#camp").innerHTML = ""; $("#lNew").open = true; try { localStorage.removeItem("cs_camp"); } catch {} }
+    toast("Campaña eliminada"); loadCamps();
+  } catch (e) { toast(e.message, 4000); }
+}
+
+// Avisos a la hora de publicar (solo con la app abierta; ClipSphere nunca publica solo).
+function beep() {
+  try {
+    const a = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18, 0.36].forEach((t, i) => { const o = a.createOscillator(), g = a.createGain(); o.frequency.value = [880, 1175, 1568][i]; g.gain.setValueAtTime(0.0001, a.currentTime + t); g.gain.exponentialRampToValueAtTime(0.25, a.currentTime + t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + t + 0.16); o.connect(g).connect(a.destination); o.start(a.currentTime + t); o.stop(a.currentTime + t + 0.17); });
+  } catch {}
+}
+async function checkReminders() {
+  let list; try { list = await api("/api/campaigns"); } catch { return; }
+  const now = Date.now();
+  for (const c of list) for (const it of c.calendario || []) {
+    const t = new Date(it.at).getTime(), key = `cs_rem_${c.id}_${it.at}`;
+    let seen = false; try { seen = !!localStorage.getItem(key); } catch {}
+    if (t <= now && now - t < 30 * 60e3 && !seen) {
+      try { localStorage.setItem(key, "1"); } catch {}
+      toast(`🚀 ${c.tema} · ${it.slot}: hora de publicar «${it.title}». Está en el Paquete del día.`, 12000); beep();
+    }
+  }
+}
+setInterval(checkReminders, 30000);
 
 // ---------- modo app (móvil) ----------
 const mqApp = window.matchMedia("(max-width:700px)");
@@ -727,12 +1021,14 @@ checkUpdate(); setInterval(checkUpdate, 6 * 3600 * 1000);
 loadCfg().then(check);
 // Al abrir: la sección que tocaba (#directos o la última usada); si hay un trabajo en curso, se va a su sección.
 (async () => {
-  let saved = location.hash === "#directos" ? "live" : "";
+  let saved = location.hash === "#directos" ? "live" : location.hash === "#lanzamientos" ? "launch" : "";
   if (!saved) try { saved = localStorage.getItem("cs_mode") || "vod"; } catch { saved = "vod"; }
   const all = await api("/api/jobs").catch(() => []);
   const r = all.find((j) => j.status === "running" || j.status === "queued");
-  await setMode(r ? r.module || "vod" : saved, { quiet: true });
-  if (r) attach(r.id);
+  await setMode(r && saved !== "launch" ? r.module || "vod" : saved, { quiet: true });
+  if (r && saved !== "launch") attach(r.id);
+  if (MODE === "launch") { let c = null; try { c = localStorage.getItem("cs_camp"); } catch {} if (c) openCampaign(c, { quiet: true }); }
+  checkReminders();
 })();
 </script>
 </body>
