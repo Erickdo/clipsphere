@@ -40,10 +40,30 @@ h1,h2,h3,b,p,span,a,div{overflow-wrap:anywhere}
 .layout{max-width:1440px;margin:0 auto;padding:var(--gap);display:grid;gap:var(--gap);grid-template-columns:minmax(0,1fr)}
 .main{display:flex;flex-direction:column;gap:var(--gap)}
 @media (min-width:1180px){
-  .layout{grid-template-columns:minmax(0,1fr) 340px;align-items:start}
-  .side{position:sticky;top:76px;max-height:calc(100vh - 96px);display:flex}
-  .side .panel{flex:1;display:flex;flex-direction:column;min-height:0}
+  .layout{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
+  .side{position:sticky;top:76px;height:calc(100vh - 96px);display:flex;flex-direction:column;gap:var(--gap)}
+  .side .run.show{flex:none;max-height:62%;overflow-y:auto;overscroll-behavior:contain}
+  .side .hist{flex:1 1 220px;display:flex;flex-direction:column;min-height:220px}
   .side #hist{overflow-y:auto;overflow-x:hidden;flex:1;padding:0 10px;margin:0 -10px}
+  /* progreso en columna: pasos en lista compacta */
+  .side .runhead{flex-direction:column;gap:10px;margin-bottom:12px}
+  .side .runhead > div:first-child{flex:none}
+  .side .runhead h2{font-size:19px}
+  .side .runhead .hbtns{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+  .side .runhead .hbtns > *{flex:1 1 auto;justify-content:center;padding:8px 12px !important;font-size:13.5px !important}
+  .side .steps{grid-template-columns:1fr;gap:6px}
+  .side .step{display:grid;grid-template-columns:26px minmax(0,auto) minmax(0,1fr);align-items:center;gap:8px;padding:9px 12px}
+  .side .step .t{margin:0;font-size:14px;white-space:nowrap}
+  .side .step .d{margin:0;min-height:0;text-align:right}
+  .side details.log pre{max-height:170px}
+}
+@media (max-width:1179px){
+  /* una sola columna: crear → progreso → clips → historial */
+  .main,.side{display:contents}
+  .layout{display:flex;flex-direction:column}
+  .hero,#launch{order:1}.run{order:2}.clips{order:3}.side .hist{order:4}
+  .top .hbtns .hide-sm{display:none}
+  .top .hbtns{flex-wrap:nowrap}
 }
 .panel{scroll-margin-top:76px;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);padding:clamp(14px,2.2vw,24px)}
 .ph-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
@@ -91,7 +111,7 @@ details.log pre{font-family:var(--mono);font-size:12px;color:#c9c5bd;max-height:
 /* ---------- clips ---------- */
 section.clips{display:none}
 section.clips.show{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));gap:14px}
 .card{background:var(--ink);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .card video,.card .ph{width:100%;aspect-ratio:9/16;background:#000;display:block;object-fit:contain}
 .card .ph{display:grid;place-items:center;color:var(--mute);font-family:var(--mono);font-size:12px}
@@ -180,7 +200,6 @@ body.remote #btnPhone, body.remote #btnSettings, body.remote #btnOpen{display:no
   body.app .panel{border-radius:14px}
   body.app .pane{display:none !important}
   body.app .pane.on{display:block !important}
-  body.app .side{position:static;max-height:none;display:block}
   body.app .hero h1{font-size:26px}
   body.app .hero p{display:none}
   body.app .hero::before{content:"Nuevo trabajo";display:block;font-family:var(--mono);font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
@@ -396,6 +415,14 @@ body.remote .local-only{display:none !important}
       <div id="camp"></div>
     </section>
 
+    <section class="panel clips pane" id="clipsSec" data-pane="clips">
+      <div class="empty-pane"><i class="ti ti-movie" style="font-size:34px"></i><br>Aquí aparecen los clips a medida que se terminan.</div>
+      <div class="ph-title"><h4><i class="ti ti-movie"></i> Clips</h4><span class="count" id="clipCount"></span></div>
+      <div class="grid" id="grid"></div>
+    </section>
+  </main>
+
+  <aside class="side">
     <section class="panel run pane" id="run" data-pane="progreso">
       <div class="empty-pane"><i class="ti ti-activity" style="font-size:34px"></i><br>No hay ningún trabajo en curso.<br>Ve a <b>Crear</b> y pega un link.</div>
       <div class="ph-title"><h4><i class="ti ti-activity"></i> Progreso</h4></div>
@@ -412,16 +439,7 @@ body.remote .local-only{display:none !important}
       <div class="steps" id="steps"></div>
       <details class="log"><summary>Registro</summary><pre id="log"></pre></details>
     </section>
-
-    <section class="panel clips pane" id="clipsSec" data-pane="clips">
-      <div class="empty-pane"><i class="ti ti-movie" style="font-size:34px"></i><br>Aquí aparecen los clips a medida que se terminan.</div>
-      <div class="ph-title"><h4><i class="ti ti-movie"></i> Clips</h4><span class="count" id="clipCount"></span></div>
-      <div class="grid" id="grid"></div>
-    </section>
-  </main>
-
-  <aside class="side pane" data-pane="historial">
-    <section class="panel">
+    <section class="panel hist pane" data-pane="historial">
       <div class="ph-title"><h4><i class="ti ti-history"></i> <span id="histTitle">Historial</span></h4></div>
       <div id="hist"></div>
     </section>

@@ -1,8 +1,8 @@
 {
-  "version": "1.6.7",
+  "version": "1.6.8",
   "date": "2026-11-17",
   "notes": [
-    "Vertical con el video completo por defecto (sin recortes ni zoom), calidad más alta y 1080p por defecto"
+    "Interfaz de la PC reorganizada: a la izquierda crear y los clips; a la derecha el progreso y el historial, siempre a la vista"
   ],
   "files": [
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "636b4cb912753de371d78de0f9aac6dd395b68a019581f613a942b3b5bcefc3c"
+      "sha256": "896550ec7cd9ceed19976183ab919298f31494f7c43f85061f47ef399776e0da"
     },
     {
       "path": "reiniciar.bat",
