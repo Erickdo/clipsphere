@@ -45,10 +45,10 @@ const DEFAULTS = {
   minScore: 60,
   minSeconds: 90,
   maxSeconds: 200,
-  maxHeight: 720,
+  maxHeight: 1080,
   encoder: "libx264",
-  framing: "auto",
-  cookiesFile: "",                 // ruta a un cookies.txt (vacío = cookies.txt en la carpeta de ClipSphere)                // encuadre: "auto" (sigue al que habla / pantalla dividida) o "clasico"
+  framingMode: "completo",         // encuadre: "completo" (video entero en 9:16 con fondo difuminado, sin recortes) o "inteligente"
+  cookiesFile: "",                 // ruta a un cookies.txt (vacío = cookies.txt en la carpeta de ClipSphere)              
   keepSource: false,
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",

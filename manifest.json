@@ -1,8 +1,8 @@
 {
-  "version": "1.6.6",
+  "version": "1.6.7",
   "date": "2026-11-17",
   "notes": [
-    "Misión 2 pide los datos a YouTube con pausas para que no salte el 'confirma que no eres un robot'"
+    "Vertical con el video completo por defecto (sin recortes ni zoom), calidad más alta y 1080p por defecto"
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "448fc9eda711fd2cf08aab6f5c5c2cb8d6a1c00d522b3d6ce2b0bd54add02826"
+      "sha256": "662fa4a135d5fe53a2b95d15b928f8c646831aead189e2bb059bfb9ebe17d62c"
     },
     {
       "path": "iniciar.bat",
@@ -47,7 +47,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "f8d64adbdad127fa382c4497bf0df6fc23ee9e196bca85d963f1a926c10350cf"
+      "sha256": "4444a6eff2eecaaffd87705438ebdcf94e6fc53806b9e9174dc838ce4af4a31c"
     },
     {
       "path": "lib/reframe.js",
@@ -55,7 +55,7 @@
     },
     {
       "path": "lib/render.js",
-      "sha256": "b09a96c22474e148cfd2b8e986186cf18c6ee217e6589ea8ad102bab7a5a168e"
+      "sha256": "15ea6939ffb2d58e8b476881e71dc537c11bc572f5b24fdb161a2f7524b031b2"
     },
     {
       "path": "lib/subs.js",
@@ -87,7 +87,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "b75336867d952cc3668e29b607482076fe24f5c58baa83fa54a353f050c83cf6"
+      "sha256": "636b4cb912753de371d78de0f9aac6dd395b68a019581f613a942b3b5bcefc3c"
     },
     {
       "path": "reiniciar.bat",
@@ -95,7 +95,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "86c485f82a81902b1b5465f1b067a4dc59a78692a42ffb24df43481336169f70"
+      "sha256": "e74a61eb9d1abf58c363d7e9f43f010522e7f06d99a381245f19e07d3dacd1af"
     },
     {
       "path": "tools/face_yunet.onnx",

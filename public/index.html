@@ -373,7 +373,7 @@ body.remote .local-only{display:none !important}
         <label>Duración mínima (seg) <input id="o_minSeconds" type="number" min="15" inputmode="numeric"></label>
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
-        <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
+        <label>Calidad <select id="o_maxHeight"><option value="1080">1080p (mejor calidad)</option><option value="720">720p (más rápido)</option></select></label>
         <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option></select></label>
         <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
@@ -490,7 +490,7 @@ body.remote .local-only{display:none !important}
       </div>
     </fieldset>
     <div class="f">Encuadre vertical
-      <select name="framing"><option value="auto">Inteligente: sigue al que habla · pantalla dividida en streams</option><option value="clasico">Clásico: video completo con fondo difuminado</option></select>
+      <select name="framingMode"><option value="completo">Completo: todo el video, sin recortes, con fondo difuminado</option><option value="inteligente">Inteligente: sigue al que habla · pantalla dividida (recorta)</option></select>
     </div>
     <div class="row2">
       <div class="f">Codificador de video
