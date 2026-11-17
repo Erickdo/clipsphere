@@ -294,6 +294,47 @@ body.mlive .vod-only{display:none !important}
 #lLog{margin-top:0}
 body.remote .local-only{display:none !important}
 .toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
+
+/* v1.6.2 · orden en el teléfono */
+.lbl-s{display:none}
+.mchip{display:inline-flex;align-items:center;gap:8px}
+.mchip .n{font-weight:700}
+.mchip .s{opacity:.85}
+.mchip .s::before{content:"· "}
+.rw > .go{flex:none;width:auto}
+@media (max-width:700px){
+  .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .modes button{min-width:0;padding:9px 4px;font-size:13.5px;gap:6px;justify-content:center}
+  .lbl-l{display:none}.lbl-s{display:inline}
+  .chead{flex-direction:column;align-items:stretch;gap:10px}
+  .chead > div{width:100%}
+  .cd{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;flex:1;width:100%}
+  .cd span{min-width:0;padding:8px 4px}
+  .mchips{display:grid;grid-template-columns:1fr;gap:6px}
+  .mchip{width:100%;border-radius:10px;padding:9px 12px;font-size:12.5px}
+  .mchip .nm{flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mchip .s::before{content:""}
+  .mchip .n{width:20px;text-align:center}
+  .rw{flex-wrap:wrap;row-gap:8px}
+  .rw .t{flex:1 1 0}
+  .rw > .go{flex:1 1 100%;width:100%;padding:10px}
+  .rw .k + .t ~ .go{margin-left:32px;flex-basis:calc(100% - 32px)}
+  .mis .go.sm{width:100%}
+  .pk{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pk > *{width:100%;justify-content:center}
+  .pk > span[hidden]{display:none}
+  .lform{grid-template-columns:1fr}
+  .fbox{overflow-wrap:anywhere}
+  .opts label.live-only{grid-column:1/-1}
+  .mis .hbtns{width:100%;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+  .mis .hbtns .go{width:100%}
+  #l_src{min-width:0 !important;grid-column:1/-1}
+  .pk #l_srcGo{grid-column:1/-1}
+  .card .acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .card .acts > :last-child:nth-child(odd){grid-column:1/-1}
+  .card .acts > *{justify-content:center}
+}
+@media (max-width:360px){ .modes button{font-size:12.5px;padding:8px 2px} }
 </style>
 </head>
 <body>
@@ -303,7 +344,7 @@ body.remote .local-only{display:none !important}
     <nav class="modes" id="modes" aria-label="Sección">
       <button type="button" data-mode="vod" class="on"><i class="ti ti-movie"></i><span>Videos</span></button>
       <button type="button" data-mode="live"><span class="ldot"></span><span>Directos</span></button>
-      <button type="button" data-mode="launch"><span class="rk">🚀</span><span>Lanzamientos</span></button>
+      <button type="button" data-mode="launch"><span class="rk">🚀</span><span class="lbl-l">Lanzamientos</span><span class="lbl-s">Lanzar</span></button>
     </nav>
     <div class="hbtns">
       <button class="ghost" id="btnPhone" title="Abrir en el móvil"><i class="ti ti-device-mobile"></i><span class="hide-sm">Abrir en el </span><span>móvil</span></button>
@@ -331,8 +372,8 @@ body.remote .local-only{display:none !important}
         <label>Duración mínima (seg) <input id="o_minSeconds" type="number" min="15" inputmode="numeric"></label>
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
-        <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option></select></label>
         <label>Calidad <select id="o_maxHeight"><option value="720">720p</option><option value="1080">1080p</option></select></label>
+        <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option></select></label>
         <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
       <div class="warn" id="warn"></div>
@@ -837,7 +878,7 @@ function renderChips() {
   const el = $("#mchips"); if (!el || !CAMP) return;
   el.innerHTML = Object.entries(CAMP.missionNames).map(([n, name]) => {
     const st = CAMP.missions[n]?.status || "pendiente";
-    return `<button class="mchip ${st}" data-goto="${n}">${n === "5" ? "🏁" : n} · ${escH(name)} · ${MST[st] || st}</button>`;
+    return `<button class="mchip ${st}" data-goto="${n}"><span class="n">${n === "5" ? "🏁" : n}</span><span class="nm">${escH(name)}</span><span class="s">${MST[st] || st}</span></button>`;
   }).join("");
   document.querySelectorAll(".mis").forEach((m) => {
     const st = CAMP.missions[m.dataset.n]?.status || "pendiente";

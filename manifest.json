@@ -1,8 +1,8 @@
 {
-  "version": "1.6.1",
-  "date": "2026-11-15",
+  "version": "1.6.2",
+  "date": "2026-11-17",
   "notes": [
-    "Si Windows bloquea yt-dlp (Control inteligente de aplicaciones o antivirus, error «spawn UNKNOWN»), ClipSphere usa yt-dlp por Python y sigue funcionando. Lanzamientos: botón para cambiar la fecha de la campaña."
+    "Interfaz del teléfono ordenada: botones de modo iguales (🚀 Lanzar), Misión 3 legible, cuenta regresiva y misiones a todo el ancho, botones parejos"
   ],
   "files": [
     {
@@ -83,7 +83,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "465403839882c7a15601598b8eb14d7fbb27a082752e8719b19e3c05cf06cb2e"
+      "sha256": "149b72998009c859a7023479ae1378e45e79e606a17339a9b6ca8f6e1c83885b"
     },
     {
       "path": "reiniciar.bat",
