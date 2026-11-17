@@ -7,7 +7,7 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "9452c5f463975517506515c4e6850e7a761fabe36d6450eed554a48fedc72af2"
+      "sha256": "3f5758a81d74147ec1cf2758bbe69f6ccde44a8cffc24cfa5938fff8b54f38ba"
     },
     {
       "path": "LEEME-PRIMERO.txt",
@@ -96,10 +96,6 @@
     {
       "path": "server.js",
       "sha256": "e2f5cc303966843d72164ca9649ba759f374b4a28b99137d543d2f80b6b86116"
-    },
-    {
-      "path": "tools/__pycache__/reframe.cpython-313.pyc",
-      "sha256": "3a307cec1e15fc6560f166e971fd4cf26664ab223dc2f71417867de3b5999215"
     },
     {
       "path": "tools/face_yunet.onnx",
