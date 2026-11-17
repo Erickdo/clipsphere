@@ -6,3 +6,4 @@ config.json.bak
 *.guardando
 errores.log
 __pycache__/
+cookies.txt

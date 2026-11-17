@@ -47,7 +47,8 @@ const DEFAULTS = {
   maxSeconds: 200,
   maxHeight: 720,
   encoder: "libx264",
-  framing: "auto",                // encuadre: "auto" (sigue al que habla / pantalla dividida) o "clasico"
+  framing: "auto",
+  cookiesFile: "",                 // ruta a un cookies.txt (vacío = cookies.txt en la carpeta de ClipSphere)                // encuadre: "auto" (sigue al que habla / pantalla dividida) o "clasico"
   keepSource: false,
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
@@ -334,6 +335,27 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (p === "/api/whoami") return send(res, 200, { local: isLocal(req) });
+
+    if (p === "/api/cookies") { // sesión de YouTube (cookies.txt): se guarda solo en esta PC y nunca se devuelve
+      if (!isLocal(req)) return send(res, 403, { error: "La sesión se pone desde la laptop." });
+      const cf = path.join(ROOT, "cookies.txt");
+      if (req.method === "GET") {
+        let st = null; try { st = fs.statSync(cf); } catch {}
+        const txt = st ? fs.readFileSync(cf, "utf8") : "";
+        const n = (txt.match(/^[^#\n][^\t\n]*\t/gm) || []).length;
+        return send(res, 200, { has: !!st, date: st ? st.mtimeMs : 0, youtube: /youtube\.com/.test(txt), count: n });
+      }
+      if (req.method === "DELETE") { try { fs.unlinkSync(cf); } catch {} return send(res, 200, { ok: true }); }
+      if (req.method === "POST") {
+        const body = await readBody(req);
+        const t = String(body.text || "").replace(/\r\n/g, "\n");
+        const lines = t.split("\n").filter((l) => l && !l.startsWith("#") && l.split("\t").length >= 7);
+        if (!lines.length) return send(res, 400, { error: "Ese archivo no es un cookies.txt válido (formato Netscape). Expórtalo con la extensión «Get cookies.txt LOCALLY»." });
+        if (!lines.some((l) => /youtube\.com|google\.com/.test(l.split("\t")[0]))) return send(res, 400, { error: "Ese cookies.txt no tiene la sesión de YouTube. Expórtalo estando en youtube.com con tu cuenta iniciada." });
+        writeAtomic(cf, "# Netscape HTTP Cookie File\n" + lines.join("\n") + "\n");
+        return send(res, 200, { ok: true, count: lines.length });
+      }
+    }
 
     if (p === "/api/lan") {
       if (!isLocal(req)) return send(res, 403, { error: "solo desde la laptop" });

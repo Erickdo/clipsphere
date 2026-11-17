@@ -295,6 +295,7 @@ body.mlive .vod-only{display:none !important}
 body.remote .local-only{display:none !important}
 .toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
 
+.ck-steps{margin:6px 0 10px 18px;font-size:13px;color:var(--mute);line-height:1.6}.ck-steps b{color:var(--paper)}#ckDel[hidden]{display:none}.ck-up{cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 /* v1.6.2 · orden en el teléfono */
 .lbl-s{display:none}
 .mchip{display:inline-flex;align-items:center;gap:8px}
@@ -456,6 +457,20 @@ body.remote .local-only{display:none !important}
       </div>
     </details>
     <div class="f">Carpeta de salida <input name="outputRoot"></div>
+    <fieldset class="bk" id="ckBox">
+      <legend><i class="ti ti-brand-youtube"></i> Sesión de YouTube (cookies.txt)</legend>
+      <p class="bk-note">Para videos con <b>restricción de edad</b> o cuando YouTube pide <b>«confirma que no eres un robot»</b>. Windows no deja leer la sesión de Edge/Chrome/Brave, así que se hace con un archivo. Queda solo en esta PC: no lo compartas con nadie.</p>
+      <ol class="ck-steps">
+        <li>En Edge o Chrome instala la extensión <b>Get cookies.txt LOCALLY</b>.</li>
+        <li>Abre <b>youtube.com</b> con tu cuenta iniciada, toca la extensión y dale a <b>Export</b>.</li>
+        <li>Sube aquí el archivo que se descargó.</li>
+      </ol>
+      <div class="bk-st" id="ckStatus">…</div>
+      <div class="bk-acts">
+        <label class="ghost ck-up"><i class="ti ti-upload"></i> Subir cookies.txt<input type="file" id="ckFile" accept=".txt,text/plain" hidden></label>
+        <button type="button" class="ghost" id="ckDel" hidden><i class="ti ti-trash"></i> Quitar sesión</button>
+      </div>
+    </fieldset>
     <fieldset class="bk">
       <legend><i class="ti ti-cloud-upload"></i> Respaldo automático</legend>
       <p class="bk-note">Copia tus ajustes, claves, historial y clips a la nube (OneDrive o Google Drive) cada vez que termina un clip. Si se daña o cambias la PC, instalas ClipSphere y todo vuelve solo. Nunca se borra nada del respaldo.</p>
@@ -602,7 +617,7 @@ async function loadBackup() {
 }
 function setFocusFor(m) { let f = "todo"; try { f = localStorage.getItem("cs_focus_" + m) || "todo"; } catch {} $("#o_focus").value = f === "peleas" ? "peleas" : "todo"; }
 async function loadCfg() {
-  cfg = await api("/api/config");
+  cfg = await api("/api/config"); ckRefresh();
   for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight"]) $("#o_" + k).value = cfg[k];
   setFocusFor(MODE);
   let lm = "0"; try { lm = localStorage.getItem("cs_liveMin") || "0"; } catch {}
@@ -1080,6 +1095,31 @@ loadCfg().then(check);
   if (MODE === "launch") { let c = null; try { c = localStorage.getItem("cs_camp"); } catch {} if (c) openCampaign(c, { quiet: true }); }
   checkReminders();
 })();
+
+// ---- Sesión de YouTube (cookies.txt) ----
+async function ckRefresh() {
+  const el = $("#ckStatus"); if (!el) return;
+  try {
+    const r = await api("/api/cookies");
+    $("#ckDel").hidden = !r.has;
+    el.textContent = !r.has ? "Sin sesión guardada." :
+      `✅ Sesión guardada (${r.count} cookies${r.youtube ? ", con YouTube" : ""}) · ${new Date(r.date).toLocaleDateString("es-DO")}. Si YouTube vuelve a pedirla, expórtala de nuevo.`;
+  } catch { el.textContent = "Solo se configura desde la laptop."; }
+}
+document.addEventListener("change", async (e) => {
+  if (e.target.id !== "ckFile") return;
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f) return;
+  if (f.size > 2e6) return toast("Ese archivo es muy grande para ser un cookies.txt.");
+  try { const r = await api("/api/cookies", { method: "POST", body: { text: await f.text() } }); toast(`Sesión guardada (${r.count} cookies). Dale a Reintentar.`); }
+  catch (err) { toast(err.message || "No se pudo guardar.", 7000); }
+  ckRefresh();
+});
+document.addEventListener("click", async (e) => {
+  if (!e.target.closest("#ckDel")) return;
+  if (!confirm("¿Quitar la sesión de YouTube guardada en esta PC?")) return;
+  await api("/api/cookies", { method: "DELETE" }); ckRefresh();
+});
 </script>
 </body>
 </html>

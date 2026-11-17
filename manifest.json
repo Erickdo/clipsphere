@@ -1,13 +1,13 @@
 {
-  "version": "1.6.3",
+  "version": "1.6.4",
   "date": "2026-11-17",
   "notes": [
-    "Encuadre inteligente 9:16: sigue al que habla con cortes secos y primer plano; pantalla dividida (juego arriba, webcam abajo) en streams; sin fondo difuminado"
+    "Videos que piden sesión: dice el motivo real (edad, robot, bloqueo), prueba otros modos de YouTube y acepta tu sesión con cookies.txt desde Ajustes"
   ],
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "3f5758a81d74147ec1cf2758bbe69f6ccde44a8cffc24cfa5938fff8b54f38ba"
+      "sha256": "255b97af97fc00dbdcf372ff381316e7aae2fe4e0770d763e1458f74d0d93a40"
     },
     {
       "path": "LEEME-PRIMERO.txt",
@@ -47,7 +47,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "d91f2f1c1b87a59149a6ceb1f82915dbc6237a43410b894a1c79df5f6737f761"
+      "sha256": "4aabf7fc70f3684c80fe9afc9e9ac0e622d2cb2658509e58e1e52c3dfec8dabe"
     },
     {
       "path": "lib/reframe.js",
@@ -87,7 +87,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "4af49d29482204abe86a9c5881a583faa69304e5fa8d9249ee3c51ff46a149aa"
+      "sha256": "b75336867d952cc3668e29b607482076fe24f5c58baa83fa54a353f050c83cf6"
     },
     {
       "path": "reiniciar.bat",
@@ -95,7 +95,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "e2f5cc303966843d72164ca9649ba759f374b4a28b99137d543d2f80b6b86116"
+      "sha256": "86c485f82a81902b1b5465f1b067a4dc59a78692a42ffb24df43481336169f70"
     },
     {
       "path": "tools/face_yunet.onnx",
