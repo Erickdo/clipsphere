@@ -1,8 +1,8 @@
 {
-  "version": "1.6.4",
+  "version": "1.6.5",
   "date": "2026-11-17",
   "notes": [
-    "Videos que piden sesión: dice el motivo real (edad, robot, bloqueo), prueba otros modos de YouTube y acepta tu sesión con cookies.txt desde Ajustes"
+    "Aviso de 'no eres un robot': explica que la VPN suele ser la causa; mensajes de yt-dlp sin caracteres raros"
   ],
   "files": [
     {
@@ -47,7 +47,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "4aabf7fc70f3684c80fe9afc9e9ac0e622d2cb2658509e58e1e52c3dfec8dabe"
+      "sha256": "f8d64adbdad127fa382c4497bf0df6fc23ee9e196bca85d963f1a926c10350cf"
     },
     {
       "path": "lib/reframe.js",
@@ -71,7 +71,7 @@
     },
     {
       "path": "lib/util.js",
-      "sha256": "7fd6faefce52c3a8b75301ed3a552e331c3b717ae7c3b71cf7688e3d7ca58fa5"
+      "sha256": "cdb36581e0781319ddd808e4db3d3429e9215b4c041e60017d694700778a71fb"
     },
     {
       "path": "make-manifest.js",
