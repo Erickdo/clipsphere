@@ -1,8 +1,8 @@
 {
-  "version": "1.6.2",
+  "version": "1.6.3",
   "date": "2026-11-17",
   "notes": [
-    "Interfaz del teléfono ordenada: botones de modo iguales (🚀 Lanzar), Misión 3 legible, cuenta regresiva y misiones a todo el ancho, botones parejos"
+    "Encuadre inteligente 9:16: sigue al que habla con cortes secos y primer plano; pantalla dividida (juego arriba, webcam abajo) en streams; sin fondo difuminado"
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "c1b9865c3533c78d9ce6840cf74bb10041bd441008197fea7449174469c53d7b"
+      "sha256": "448fc9eda711fd2cf08aab6f5c5c2cb8d6a1c00d522b3d6ce2b0bd54add02826"
     },
     {
       "path": "iniciar.bat",
@@ -47,11 +47,15 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "a901d15de74ebd46aa424681c600c1c1fa507fcb627e66f79dcfdec258e536dd"
+      "sha256": "d91f2f1c1b87a59149a6ceb1f82915dbc6237a43410b894a1c79df5f6737f761"
+    },
+    {
+      "path": "lib/reframe.js",
+      "sha256": "140da096e382b0369d171dcec47026de93da503104fbbff6d8c13c136594a9a1"
     },
     {
       "path": "lib/render.js",
-      "sha256": "b719b3bc7f5e94c12fbfe1310a6fa03ad1f810e0a5790a5b68fa06680dc2ab1d"
+      "sha256": "b09a96c22474e148cfd2b8e986186cf18c6ee217e6589ea8ad102bab7a5a168e"
     },
     {
       "path": "lib/subs.js",
@@ -59,7 +63,7 @@
     },
     {
       "path": "lib/transcribe.js",
-      "sha256": "15bd23b58090e43b4c90bd48052d63f89f42eaa922f963e8c6326ab22987d487"
+      "sha256": "2dda3b1c524e72a1aadec08a4533328ad3e590d733c98c65830c93b1a2d9a8de"
     },
     {
       "path": "lib/updater.js",
@@ -67,7 +71,7 @@
     },
     {
       "path": "lib/util.js",
-      "sha256": "8cda001b1db79ac4c75ea5016ceea72f84ba545c12ba4e999d13770be8632efc"
+      "sha256": "7fd6faefce52c3a8b75301ed3a552e331c3b717ae7c3b71cf7688e3d7ca58fa5"
     },
     {
       "path": "make-manifest.js",
@@ -83,7 +87,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "149b72998009c859a7023479ae1378e45e79e606a17339a9b6ca8f6e1c83885b"
+      "sha256": "4af49d29482204abe86a9c5881a583faa69304e5fa8d9249ee3c51ff46a149aa"
     },
     {
       "path": "reiniciar.bat",
@@ -91,7 +95,19 @@
     },
     {
       "path": "server.js",
-      "sha256": "4a06e0096509b53192a8c1ee10004e279df0e337f39b66884f651d6d2a26289b"
+      "sha256": "e2f5cc303966843d72164ca9649ba759f374b4a28b99137d543d2f80b6b86116"
+    },
+    {
+      "path": "tools/__pycache__/reframe.cpython-313.pyc",
+      "sha256": "3a307cec1e15fc6560f166e971fd4cf26664ab223dc2f71417867de3b5999215"
+    },
+    {
+      "path": "tools/face_yunet.onnx",
+      "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+    },
+    {
+      "path": "tools/reframe.py",
+      "sha256": "a5efb0121ab71a26caa7668cd937c76cd66a79265202216f84b6346984ad557e"
     }
   ]
 }

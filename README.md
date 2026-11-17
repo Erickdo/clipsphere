@@ -28,6 +28,17 @@ Arriba, el selector **Videos | Directos | 🚀 Lanzamientos** cambia de sección
 - También acepta la **repetición** de un directo que ya terminó (se procesa completa).
 - Aguanta horas: graba en tramos, reconecta si la señal se corta, y si se cierra la app, **Reintentar** sigue desde donde iba sin perder lo grabado ni los clips hechos.
 
+## Encuadre inteligente 9:16 🎯
+
+Cada clip sale vertical, **sin barras ni fondo difuminado**, con la persona en grande:
+
+- **Entrevistas y podcasts:** ClipSphere detecta las caras, mira quién mueve la boca (y, con Deepgram, quién dice cada palabra) y hace **cortes secos** al que tiene la palabra, en primer plano medio.
+- **Streams con webcam:** si hay una cara pequeña y fija en una esquina, la pantalla se divide: **arriba el juego** (centrado en la acción) y **abajo la cara del streamer**. Los subtítulos van en la línea del medio.
+- **Sin caras:** el recorte sigue el movimiento.
+- Si el video original cambia de cámara, el encuadre se recalcula en cada plano.
+
+La primera vez instala OpenCV con Python (~1 min). Si algo falla, ese clip sale con el encuadre clásico. Se cambia en ⚙️ Ajustes → *Encuadre vertical*.
+
 ## Lanzamientos (Modo Misión) 🚀
 
 Tercera sección del selector: **Videos | Directos | 🚀 Lanzamientos**. Sirve para preparar clips

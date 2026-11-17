@@ -47,6 +47,7 @@ const DEFAULTS = {
   maxSeconds: 200,
   maxHeight: 720,
   encoder: "libx264",
+  framing: "auto",                // encuadre: "auto" (sigue al que habla / pantalla dividida) o "clasico"
   keepSource: false,
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
