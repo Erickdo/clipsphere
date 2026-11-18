@@ -1,8 +1,8 @@
 {
-  "version": "1.6.9",
+  "version": "1.6.10",
   "date": "2026-11-18",
   "notes": [
-    "Nuevo Buscar: 🎮 GTA / Roleplay — gaboches, reacciones, persecuciones y giros en directos de GTA (Kick, Twitch, YouTube), clips de 25–55 s que arrancan en la frase fuerte"
+    "Cada clip muestra su gancho (la frase con la que arranca) en la tarjeta"
   ],
   "files": [
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "e00b3d18f71504893a1ad01eceac9cc208ea478d2d0f6cd152453c4a67ed6c8d"
+      "sha256": "a47749ef6f73a5154740fc21696c03ecef3dc39ee3da9951cdccdbd6e86a9122"
     },
     {
       "path": "reiniciar.bat",

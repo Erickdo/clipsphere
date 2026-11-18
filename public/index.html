@@ -315,6 +315,7 @@ body.remote .local-only{display:none !important}
 .toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
 
 .ck-steps{margin:6px 0 10px 18px;font-size:13px;color:var(--mute);line-height:1.6}.ck-steps b{color:var(--paper)}#ckDel[hidden]{display:none}.ck-up{cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.card .hook{font-style:italic;color:var(--sig);font-size:13px;margin:4px 0 2px;line-height:1.35}
 /* v1.6.2 · orden en el teléfono */
 .lbl-s{display:none}
 .mchip{display:inline-flex;align-items:center;gap:8px}
@@ -681,7 +682,7 @@ function card(c, jobId, ready = true) {
     : `<div class="ph">renderizando…</div>`;
   return `<div class="card" id="card_${c.id}">${media}<div class="b">
     <div class="meta"><span class="tag l">${escH(c.category || c.label)}</span><span class="tag">${fmt(c.end - c.start)}</span><span class="tag">${c.startTimestamp?.slice(0, 8)}</span>${c.series ? `<span class="tag">Parte ${c.series.part}/${c.series.totalParts}</span>` : ""}</div>
-    <h3>${escH(c.title)}</h3><p>${escH((c.description || "").split("\n")[0])}</p><div class="hs">${escH(hs)}</div>
+    <h3>${escH(c.title)}</h3>${c.hook ? `<p class="hook" title="Frase con la que arranca el clip">🎣 «${escH(c.hook)}»</p>` : ""}<p>${escH((c.description || "").split("\n")[0])}</p><div class="hs">${escH(hs)}</div>
     <div class="acts">
       <button data-copy="${escH(c.title)}"><i class="ti ti-copy"></i>Título</button>
       <button data-copy="${escH(c.description + "\n\n" + hs)}"><i class="ti ti-copy"></i>Texto</button>
