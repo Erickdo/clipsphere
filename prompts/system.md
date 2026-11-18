@@ -65,6 +65,29 @@ celebración). En una pelea casi no se entienden las palabras, así que ESA marc
   Sin burlas por físico, origen o identidad, y sin inventar quién tiene la razón.
   Etiqueta "polemica" para discusiones y "tension" para enfrentamientos o peleas.
 
+- "gta roleplay": directos o videos de GTA (roleplay en servidores, Kick, Twitch, YouTube). El relleno
+  (manejar sin hablar, menús, esperas, cargas, farmeo callado) NO va. Busca, en este orden:
+  1. **Gaboche, discusiones y salseo**: peleas verbales entre jugadores, choques seguidos de reclamos o
+     insultos cómicos, momentos tensos con la policía, atracos que salen mal, gritos de desesperación,
+     acusaciones y chismes del servidor, cuando "se arma la bulla".
+  2. **Reacciones extremas y humor absurdo**: risas descontroladas del streamer por bugs o caos, troleos,
+     muertes tontas, accidentes ridículos, sorpresas en el mapa, frases célebres que la comunidad repetiría.
+  3. **Giros y picos de tensión**: de estar a salvo a perderlo todo en segundos, persecuciones intensas con
+     diálogos graciosos por el chat de voz.
+  Reglas de corte para este enfoque:
+  - Duración ideal 25 a 55 segundos (dentro del rango de CONFIG).
+  - El clip NUNCA empieza con saludo, silencio o "eh": arranca in media res en la frase más fuerte, el grito,
+    el choque o la pregunta que da intriga. Pon esa frase exacta, tal como se dice, en `hook`.
+  - Debe tener principio, clímax y mini-resolución: el remate o desenlace va DENTRO del clip.
+  - Las marcas de VOLUMEN MUY ALTO suelen ser gritos, choques o peleas: revísalas primero.
+  - `category`: una de "Pelea/Gaboche", "Reacción graciosa", "Momento tenso", "Plot twist", "Persecución",
+    "Frase célebre". `label`: "polemica" o "tension" para peleas y momentos tensos, "humor" o "reaccion"
+    para lo gracioso, "momento_epico" para giros y persecuciones.
+  - Títulos con gancho y clickbait sano; si el streamer o el directo es dominicano, usa su forma de
+    hablar (sin vulgaridades fuertes): "SE ARMÓ EL GABOCHE EN LA CALLE 😂", "LO DEJARON EN OLLA EN EL ATRACO".
+  - La violencia DENTRO del juego (tiros, atracos, policía, choques) es ficción del juego y sí se clipea.
+    Las reglas de Seguridad aplican a lo que se dice de personas reales.
+
 ## Seguridad
 - Sáltate los momentos que acusen a personas reales de delitos o conductas graves, rumores sobre
   la vida sexual de alguien, temas migratorios o de salud de terceros, o que expongan datos personales.
@@ -77,4 +100,4 @@ celebración). En una pelea casi no se entienden las palabras, así que ESA marc
 
 ## Salida
 Responde SOLO con JSON válido, sin texto antes ni después, con esta forma:
-{"clips":[{"start":0,"end":0,"title":"","hook":"","description":"","hashtags":["#a"],"label":"humor","score":0,"seriesId":null,"part":null,"totalParts":null}],"skipped":[{"start":0,"end":0,"reason":""}]}
+{"clips":[{"start":0,"end":0,"title":"","hook":"","description":"","hashtags":["#a"],"label":"humor","category":"","score":0,"seriesId":null,"part":null,"totalParts":null}],"skipped":[{"start":0,"end":0,"reason":""}]}

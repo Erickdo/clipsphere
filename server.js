@@ -53,7 +53,7 @@ const DEFAULTS = {
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
   whisperModel: "small",
-  focus: "todo",                    // enfoque de la IA: "todo" o "peleas" (peleas y discusiones)
+  focus: "todo",                    // enfoque de la IA: "todo", "peleas" (peleas y discusiones) o "gta" (GTA / roleplay)
   liveMinutes: 30,                 // en vivo pegado en "Videos": minutos a grabar (en "Directos" se elige en pantalla)
   liveScanMinutes: 5,              // directos: cada cuántos minutos la IA revisa lo nuevo
   audience: "República Dominicana, Latinoamérica y latinos en EE. UU.", // público al que apunta la IA
@@ -426,7 +426,7 @@ const server = http.createServer(async (req, res) => {
       dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
       for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus", "campaign"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
-      if (opts.focus !== undefined) opts.focus = opts.focus === "peleas" ? "peleas" : "todo";
+      if (opts.focus !== undefined) opts.focus = ["peleas", "gta"].includes(opts.focus) ? opts.focus : "todo";
       // 🚀 Lanzamientos: el trabajo lleva la campaña; si este video ya se procesó SIN ella, se hace aparte.
       let camp = null;
       if (opts.campaign) {

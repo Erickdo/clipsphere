@@ -1,8 +1,8 @@
 {
-  "version": "1.6.8",
-  "date": "2026-11-17",
+  "version": "1.6.9",
+  "date": "2026-11-18",
   "notes": [
-    "Interfaz de la PC reorganizada: a la izquierda crear y los clips; a la derecha el progreso y el historial, siempre a la vista"
+    "Nuevo Buscar: 🎮 GTA / Roleplay — gaboches, reacciones, persecuciones y giros en directos de GTA (Kick, Twitch, YouTube), clips de 25–55 s que arrancan en la frase fuerte"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "6ea102dfd277f1a296430504e44c2dd9f710bf3cab1c281b9768544c99fbcb53"
+      "sha256": "611ddcb1c6797dac0524dfe72e5ec19ee3ca1b1cad648e7e1842996e4c81234b"
     },
     {
       "path": "lib/loud.js",
@@ -47,7 +47,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "4444a6eff2eecaaffd87705438ebdcf94e6fc53806b9e9174dc838ce4af4a31c"
+      "sha256": "e4dc43b6bed4b5bcb51568b8ce6761f8cc7c844401449079882e3d920ef0e8e4"
     },
     {
       "path": "lib/reframe.js",
@@ -83,11 +83,11 @@
     },
     {
       "path": "prompts/system.md",
-      "sha256": "2ac8a78fff9d82e694cba84c691a1647d14e03a9c462db6be89d46bc9171c643"
+      "sha256": "539fb3a8e0f367f627972a2b3e7fda039f760c46bfb19865486edd3ce4e7cc2e"
     },
     {
       "path": "public/index.html",
-      "sha256": "896550ec7cd9ceed19976183ab919298f31494f7c43f85061f47ef399776e0da"
+      "sha256": "e00b3d18f71504893a1ad01eceac9cc208ea478d2d0f6cd152453c4a67ed6c8d"
     },
     {
       "path": "reiniciar.bat",
@@ -95,7 +95,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "e74a61eb9d1abf58c363d7e9f43f010522e7f06d99a381245f19e07d3dacd1af"
+      "sha256": "6d17475a2b508732f2590f62298fe8308d5e00fe61f414b9a3bd13e36bea24ab"
     },
     {
       "path": "tools/face_yunet.onnx",
