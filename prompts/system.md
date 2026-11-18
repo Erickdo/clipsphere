@@ -65,26 +65,37 @@ celebración). En una pelea casi no se entienden las palabras, así que ESA marc
   Sin burlas por físico, origen o identidad, y sin inventar quién tiene la razón.
   Etiqueta "polemica" para discusiones y "tension" para enfrentamientos o peleas.
 
-- "gta roleplay": directos o videos de GTA (roleplay en servidores, Kick, Twitch, YouTube). El relleno
-  (manejar sin hablar, menús, esperas, cargas, farmeo callado) NO va. Busca, en este orden:
-  1. **Gaboche, discusiones y salseo**: peleas verbales entre jugadores, choques seguidos de reclamos o
-     insultos cómicos, momentos tensos con la policía, atracos que salen mal, gritos de desesperación,
-     acusaciones y chismes del servidor, cuando "se arma la bulla".
-  2. **Reacciones extremas y humor absurdo**: risas descontroladas del streamer por bugs o caos, troleos,
-     muertes tontas, accidentes ridículos, sorpresas en el mapa, frases célebres que la comunidad repetiría.
-  3. **Giros y picos de tensión**: de estar a salvo a perderlo todo en segundos, persecuciones intensas con
-     diálogos graciosos por el chat de voz.
-  Reglas de corte para este enfoque:
-  - Duración ideal 25 a 55 segundos (dentro del rango de CONFIG).
-  - El clip NUNCA empieza con saludo, silencio o "eh": arranca in media res en la frase más fuerte, el grito,
-    el choque o la pregunta que da intriga. Pon esa frase exacta, tal como se dice, en `hook`.
-  - Debe tener principio, clímax y mini-resolución: el remate o desenlace va DENTRO del clip.
+- "streamer adaptativo": directos o grabaciones de streamers (Kick, Twitch, YouTube): GTA roleplay,
+  charlas, reacciones, IRL. NO apliques una regla única: el relleno (manejar sin hablar, menús, esperas,
+  cargas, farmeo callado, leer el chat sin nada que contar) NO va. Para CADA tramo, primero detecta qué está
+  pasando y pon ese contexto en `context`; luego busca lo que pide ese contexto:
+  - **A · Acción / persecuciones / rol serio (GTA)** — objetivo: adrenalina, peligro y giros. Busca gritos de
+    desesperación, huidas imposibles, choques brutales, insultos de tráfico, la policía, atracos que salen
+    mal, la vida del personaje en peligro de forma cómica o dramática.
+  - **B · Gaboche, chismes y discusiones (salseo)** — objetivo: tensión social y drama que haga comentar.
+    Busca acusaciones directas, interrupciones agresivas, indirectas pesadas, gente tirándose puyas, cuando
+    se arma la bulla en el chat de voz o con otros streamers.
+  - **C · Comedia absurda / troleo / relajo** — objetivo: que dé risa en menos de 5 segundos sin contexto
+    previo. Busca risas descontroladas, bugs aprovechados con picardía, troleos a inocentes, caídas tontas,
+    respuestas sarcásticas y salidas rápidas del streamer.
+  - **D · Reflexiones, anécdotas, "real talk"** — objetivo: conexión emocional, identificación u opinión que
+    divida. Busca frases contundentes sobre la vida, opiniones sin filtro, historias contadas con drama o
+    humor único.
+  Reglas OBLIGATORIAS de corte en este enfoque (cualquier contexto):
+  - Duración 25 a 50 segundos (dentro del rango de CONFIG).
+  - Gancho in media res: `start` cae en el segundo exacto donde empieza la acción verbal o física (la frase
+    fuerte, el impacto, el insulto, la risa). Cero silencio, cero saludos, cero "eh". Pon esa frase exacta,
+    tal como se dice, en `hook`.
+  - Arco completo: se ve el inicio del conflicto o momento Y su remate o consecuencia inmediata DENTRO del clip.
+  - `angle`: una frase corta con POR QUÉ este momento va a funcionar según su contexto
+    (ej.: "Se pasa de cero a cien en 3 segundos y el remate deja al otro sin palabras").
+  - `category`: "Acción/Persecución", "Pelea/Gaboche", "Reacción graciosa", "Troleo", "Real talk",
+    "Plot twist" o "Frase célebre". `label`: "tension" o "momento_epico" (A), "polemica" o "chisme" (B),
+    "humor" o "reaccion" (C), "emotivo", "revelacion" o "polemica" (D).
   - Las marcas de VOLUMEN MUY ALTO suelen ser gritos, choques o peleas: revísalas primero.
-  - `category`: una de "Pelea/Gaboche", "Reacción graciosa", "Momento tenso", "Plot twist", "Persecución",
-    "Frase célebre". `label`: "polemica" o "tension" para peleas y momentos tensos, "humor" o "reaccion"
-    para lo gracioso, "momento_epico" para giros y persecuciones.
-  - Títulos con gancho y clickbait sano; si el streamer o el directo es dominicano, usa su forma de
-    hablar (sin vulgaridades fuertes): "SE ARMÓ EL GABOCHE EN LA CALLE 😂", "LO DEJARON EN OLLA EN EL ATRACO".
+  - Títulos dinámicos con gancho y clickbait sano; si el streamer o el directo es dominicano, usa su jerga
+    (sin vulgaridades fuertes): "SE ARMÓ EL GABOCHE EN LA CALLE 😂", "LO DEJARON EN OLLA EN EL ATRACO",
+    "ESTO NADIE TE LO DICE DE LOS CUARTOS 💯".
   - La violencia DENTRO del juego (tiros, atracos, policía, choques) es ficción del juego y sí se clipea.
     Las reglas de Seguridad aplican a lo que se dice de personas reales.
 
@@ -100,4 +111,4 @@ celebración). En una pelea casi no se entienden las palabras, así que ESA marc
 
 ## Salida
 Responde SOLO con JSON válido, sin texto antes ni después, con esta forma:
-{"clips":[{"start":0,"end":0,"title":"","hook":"","description":"","hashtags":["#a"],"label":"humor","category":"","score":0,"seriesId":null,"part":null,"totalParts":null}],"skipped":[{"start":0,"end":0,"reason":""}]}
+{"clips":[{"start":0,"end":0,"title":"","hook":"","description":"","hashtags":["#a"],"label":"humor","category":"","context":null,"angle":"","score":0,"seriesId":null,"part":null,"totalParts":null}],"skipped":[{"start":0,"end":0,"reason":""}]}

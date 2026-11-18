@@ -315,6 +315,7 @@ body.remote .local-only{display:none !important}
 .toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
 
 .ck-steps{margin:6px 0 10px 18px;font-size:13px;color:var(--mute);line-height:1.6}.ck-steps b{color:var(--paper)}#ckDel[hidden]{display:none}.ck-up{cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.card .angle{font-size:12.5px;color:var(--mute);margin:2px 0 4px;line-height:1.35}
 .card .hook{font-style:italic;color:var(--sig);font-size:13px;margin:4px 0 2px;line-height:1.35}
 /* v1.6.2 · orden en el teléfono */
 .lbl-s{display:none}
@@ -394,7 +395,7 @@ body.remote .local-only{display:none !important}
         <label>Duración máxima (seg) <input id="o_maxSeconds" type="number" min="30" inputmode="numeric"></label>
         <label>Idioma <select id="o_language"><option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option></select></label>
         <label>Calidad <select id="o_maxHeight"><option value="1080">1080p (mejor calidad)</option><option value="720">720p (más rápido)</option></select></label>
-        <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option><option value="gta">🎮 GTA / Roleplay (directos de juego)</option></select></label>
+        <label class="wide">Buscar <select id="o_focus"><option value="todo">Todo lo viral</option><option value="peleas">🥊 Peleas y discusiones</option><option value="gta">🎮 Streamers: Kick/Twitch · GTA, salseo, relajo (detecta el contexto)</option></select></label>
         <label class="live-only">Vigilar el directo <select id="o_liveMinutes"><option value="0">Hasta que termine</option><option value="30">30 min</option><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
       </div>
       <div class="warn" id="warn"></div>
@@ -681,8 +682,8 @@ function card(c, jobId, ready = true) {
     ? `<video src="/files/${jobId}/${c.file}" poster="/files/${jobId}/${c.cover}" controls preload="none" playsinline></video>`
     : `<div class="ph">renderizando…</div>`;
   return `<div class="card" id="card_${c.id}">${media}<div class="b">
-    <div class="meta"><span class="tag l">${escH(c.category || c.label)}</span><span class="tag">${fmt(c.end - c.start)}</span><span class="tag">${c.startTimestamp?.slice(0, 8)}</span>${c.series ? `<span class="tag">Parte ${c.series.part}/${c.series.totalParts}</span>` : ""}</div>
-    <h3>${escH(c.title)}</h3>${c.hook ? `<p class="hook" title="Frase con la que arranca el clip">🎣 «${escH(c.hook)}»</p>` : ""}<p>${escH((c.description || "").split("\n")[0])}</p><div class="hs">${escH(hs)}</div>
+    <div class="meta"><span class="tag l">${escH(c.category || c.label)}</span>${c.context ? `<span class="tag" title="${escH(CTXN[c.context] || "")}">${c.context} · ${escH(CTXN[c.context] || "")}</span>` : ""}<span class="tag">${fmt(c.end - c.start)}</span><span class="tag">${c.startTimestamp?.slice(0, 8)}</span>${c.series ? `<span class="tag">Parte ${c.series.part}/${c.series.totalParts}</span>` : ""}</div>
+    <h3>${escH(c.title)}</h3>${c.hook ? `<p class="hook" title="Frase con la que arranca el clip">🎣 «${escH(c.hook)}»</p>` : ""}${c.angle ? `<p class="angle">💡 ${escH(c.angle)}</p>` : ""}<p>${escH((c.description || "").split("\n")[0])}</p><div class="hs">${escH(hs)}</div>
     <div class="acts">
       <button data-copy="${escH(c.title)}"><i class="ti ti-copy"></i>Título</button>
       <button data-copy="${escH(c.description + "\n\n" + hs)}"><i class="ti ti-copy"></i>Texto</button>
@@ -1140,11 +1141,12 @@ document.addEventListener("click", async (e) => {
   await api("/api/cookies", { method: "DELETE" }); ckRefresh();
 });
 
-// 🎮 GTA / Roleplay: duración recomendada 25–55 s al elegirlo
+const CTXN = { A: "Acción", B: "Gaboche", C: "Relajo", D: "Real talk" };
+// 🎮 Streamers (Kick/Twitch): duración recomendada 25–50 s al elegirlo
 document.addEventListener("change", (e) => {
   if (e.target.id !== "o_focus" || e.target.value !== "gta") return;
   const mn = $("#o_minSeconds"), mx = $("#o_maxSeconds");
-  if (mn && mx) { mn.value = 25; mx.value = 55; toast("🎮 GTA / Roleplay: clips de 25 a 55 segundos (puedes cambiarlo)."); }
+  if (mn && mx) { mn.value = 25; mx.value = 50; toast("🎮 Streamers: clips de 25 a 50 segundos (puedes cambiarlo)."); }
 });
 </script>
 </body>

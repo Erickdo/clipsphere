@@ -53,7 +53,7 @@ const DEFAULTS = {
   fontName: isWin ? "Arial Black" : "DejaVu Sans",
   fontFile: isWin ? "C:\\Windows\\Fonts\\ariblk.ttf" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
   whisperModel: "small",
-  focus: "todo",                    // enfoque de la IA: "todo", "peleas" (peleas y discusiones) o "gta" (GTA / roleplay)
+  focus: "todo",                    // enfoque de la IA: "todo", "peleas" (peleas y discusiones) o "gta" (streamers: detecta el contexto A–D)
   liveMinutes: 30,                 // en vivo pegado en "Videos": minutos a grabar (en "Directos" se elige en pantalla)
   liveScanMinutes: 5,              // directos: cada cuántos minutos la IA revisa lo nuevo
   audience: "República Dominicana, Latinoamérica y latinos en EE. UU.", // público al que apunta la IA

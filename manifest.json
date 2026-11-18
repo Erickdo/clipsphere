@@ -1,8 +1,8 @@
 {
-  "version": "1.6.10",
+  "version": "1.6.11",
   "date": "2026-11-18",
   "notes": [
-    "Cada clip muestra su gancho (la frase con la que arranca) en la tarjeta"
+    "Modo Streamers (Kick/Twitch): la IA detecta el contexto de cada tramo (acción, gaboche, relajo o real talk) y corta según eso; cada clip dice su contexto y por qué va a pegar"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "611ddcb1c6797dac0524dfe72e5ec19ee3ca1b1cad648e7e1842996e4c81234b"
+      "sha256": "b6828dcafe5ce4d051786a15681d9af5dccc5c318e772dd08f31f41bd7af3a01"
     },
     {
       "path": "lib/loud.js",
@@ -47,7 +47,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "e4dc43b6bed4b5bcb51568b8ce6761f8cc7c844401449079882e3d920ef0e8e4"
+      "sha256": "b04348d1cb4bddf0c110c21bc355634cd91644b11aed6f380c5524777c72ee8a"
     },
     {
       "path": "lib/reframe.js",
@@ -83,11 +83,11 @@
     },
     {
       "path": "prompts/system.md",
-      "sha256": "539fb3a8e0f367f627972a2b3e7fda039f760c46bfb19865486edd3ce4e7cc2e"
+      "sha256": "0d0f2b79913756a2a257212fd2193edd98e2706890e8d6575c3ac6a32f8f2c5a"
     },
     {
       "path": "public/index.html",
-      "sha256": "a47749ef6f73a5154740fc21696c03ecef3dc39ee3da9951cdccdbd6e86a9122"
+      "sha256": "874f66a07d1c54ca6a916c24213679f8b9fdaa43a397faf0dc4068cb504be9e2"
     },
     {
       "path": "reiniciar.bat",
@@ -95,7 +95,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "6d17475a2b508732f2590f62298fe8308d5e00fe61f414b9a3bd13e36bea24ab"
+      "sha256": "98ab9e2311bb232d9af5ffa967584c65592b2c72f79a826eae0217c9a4148503"
     },
     {
       "path": "tools/face_yunet.onnx",
