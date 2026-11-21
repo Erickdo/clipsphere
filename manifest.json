@@ -1,8 +1,8 @@
 {
-  "version": "1.6.11",
-  "date": "2026-11-18",
+  "version": "1.6.12",
+  "date": "2026-11-21",
   "notes": [
-    "Modo Streamers (Kick/Twitch): la IA detecta el contexto de cada tramo (acción, gaboche, relajo o real talk) y corta según eso; cada clip dice su contexto y por qué va a pegar"
+    "Si la IA se queda sin crédito, sin cuota o con la clave mala, ClipSphere usa sola la otra IA configurada (Claude ↔ Gemini) y explica qué hacer"
   ],
   "files": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "b6828dcafe5ce4d051786a15681d9af5dccc5c318e772dd08f31f41bd7af3a01"
+      "sha256": "3485103a11c28fc769dfbdbd5f979b177a4dfa09b1eec4a3c1c7d9e691ff9fb5"
     },
     {
       "path": "lib/loud.js",
