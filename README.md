@@ -53,6 +53,14 @@ Antes de elegir, ClipSphere estudia el video (`lib/research.js`) y arma su propi
 2. **Investiga en internet, gratis:** «lo más repetido» de YouTube, comentarios con minutos ("12:34 jajaja"), lo que la gente busca en Google del tema y de las personas, y los títulos de los videos más vistos del mismo tema.
 3. Con eso arma el perfil (tipo, pesos, palabras que pegan, personas, señal de **audiencia** por segundo) y lo aplica solo a ese video. Se ve en la sección Clips → «🧠 Algoritmo de este video», y se guarda en `algoritmo.json` del trabajo.
 
+
+**Fase 1 · Perfil estadístico del video (v1.9):** además del tipo y la investigación, mide el propio video:
+volumen normal y picos (media, desviación, P50/P75/P90, rango), ritmo (palabras por segundo, pausa típica y larga),
+y cortes de imagen por minuto. Con eso ajusta los pesos (una señal plana pesa menos, una con picos pesa más; un video
+estático casi no usa escenas) y las reglas de corte (duración ideal según el ritmo, pausa mínima para cortar).
+Temas propios con **TF-IDF** (lo que se repite en todo el video es relleno y no cuenta) + **temas del momento**
+(⚙️ Ajustes → Temas del momento, o un archivo `momento.txt` junto a ClipSphere, uno por línea).
+
 **Pesos:** ⚙️ Ajustes → *Motor local · pesos* (vacío = automático según **Buscar**). Por defecto:
 
 | Buscar | Volumen | Palabras | Ritmo | Escenas |
@@ -63,7 +71,7 @@ Antes de elegir, ClipSphere estudia el video (`lib/research.js`) y arma su propi
 
 Más fino en `lib/local.js` → `TUNING` (peso del gancho, del mejor tramo, castigo por silencios, clips por minuto, exigencia).
 
-Claude / Gemini / Ollama siguen como **opción** en ⚙️ Ajustes (escriben títulos más creativos). Si una IA se queda sin crédito, ClipSphere sigue solo con el motor local. Las misiones 1, 2 y 4 de 🚀 Lanzamientos escriben textos y necesitan una IA: basta la clave **gratis** de Gemini.
+**Sin IA de pago (v1.9):** se eliminó Claude. Los clips salen siempre del motor local. Solo las misiones 1, 2 y 4 de 🚀 Lanzamientos escriben textos con una IA **gratis**: Gemini (clave gratis) u Ollama (en tu PC).
 
 ## Encuadre vertical 9:16 🎯
 
@@ -117,7 +125,7 @@ ClipSphere copia tus ajustes, claves, historial y clips a **OneDrive** o **Googl
 
 1. Doble clic en **instalar.bat** (instala Node.js, yt-dlp y ffmpeg con winget).
 2. Doble clic en **iniciar.bat**: se abre `http://localhost:3600` en tu navegador.
-3. En **⚙️ Ajustes** elige la IA: **Gemini** (gratis, clave en aistudio.google.com/apikey), Claude (de pago) u Ollama (local).
+3. No hace falta ninguna clave: los clips los elige el motor local. (Opcional: clave gratis de Gemini para los textos de 🚀 Lanzamientos.)
    Alternativa gratis: elige **Ollama** si tienes un modelo instalado (`ollama pull qwen2.5:7b`);
    la calidad de los momentos es menor.
 
@@ -137,8 +145,7 @@ Carpeta de salida por defecto: `Vídeos\ClipSphere\<fecha>-<id del video>`.
 
 ## Costos
 
-Con Claude, un video de ~2 horas cuesta aproximadamente lo de procesar ~60 mil palabras de
-texto: normalmente menos de 1 dólar por video. Todo lo demás corre gratis en tu PC.
+**Cero.** Elegir los clips corre en tu PC con el motor local. Solo cuesta lo que uses de servicios opcionales de transcripción (Deepgram/Groq tienen nivel gratis; Whisper en tu PC es gratis).
 
 ## Derechos de autor
 
@@ -151,7 +158,9 @@ creador o añade comentario propio antes de publicar.
 |---|---|
 | `server.js` | Servidor local y API (sin dependencias de npm) |
 | `lib/pipeline.js` | El flujo completo de un trabajo |
-| `lib/llm.js` | Llamadas a Claude u Ollama |
+| `lib/local.js` | Motor local: puntaje por segundo, ventanas por frase, textos del clip |
+| `lib/research.js` | Algoritmo de cada video: tipo, estadísticas, TF-IDF, temas del momento, investigación gratis |
+| `lib/llm.js` | IA gratis (Gemini / Ollama) solo para textos de 🚀 Lanzamientos |
 | `lib/subs.js` | Subtítulos y transcripción |
 | `lib/render.js` | Montaje vertical con ffmpeg + libass |
 | `prompts/system.md` | Instrucciones para la IA (puedes editarlas) |

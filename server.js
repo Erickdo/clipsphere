@@ -30,14 +30,13 @@ const ROOT = __dirname;
 const CONFIG_FILE = path.join(ROOT, "config.json");
 
 const DEFAULTS = {
-  provider: "local",               // "local" (motor gratis, sin claves) | "claude" | "gemini" | "ollama"
+  provider: "local",               // clips: siempre motor local (gratis). Textos de 🚀 Lanzamientos: Gemini gratis u Ollama
+  momentTopics: "",                // temas del momento (coma): suben los clips que los mencionan
   lwAudio: "", lwLexico: "", lwRitmo: "", lwEscenas: "", // pesos del motor local (vacío = automático según el enfoque)
-  anthropicKey: "",
   geminiKey: "",
   groqKey: "",
   deepgramKey: "",
   geminiModel: "",                 // vacío = el Flash más nuevo disponible
-  claudeModel: "claude-sonnet-5-5",
   ollamaUrl: "http://localhost:11434",
   ollamaModel: "qwen2.5:7b",
   outputRoot: path.join(os.homedir(), "Videos", "ClipSphere"),
@@ -86,7 +85,8 @@ function loadConfig() {
     const lw = {}; for (const [k, n] of [["audio", "lwAudio"], ["lexico", "lwLexico"], ["ritmo", "lwRitmo"], ["escenas", "lwEscenas"]]) { const v = parseFloat(c[n]); if (isFinite(v) && v >= 0) lw[k] = Math.min(1, v); }
     c.localWeights = Object.keys(lw).length ? lw : null;
   }
-  c.anthropicKey = cleanKey(c.anthropicKey, "anthropic");
+  delete c.anthropicKey; delete c.claudeModel; // v1.9: sin IA de pago (Claude eliminado)
+  if (c.provider === "claude") c.provider = "local";
   c.geminiKey = cleanKey(c.geminiKey, "gemini");
   c.groqKey = cleanKey(c.groqKey, "groq");
   c.deepgramKey = cleanKey(c.deepgramKey, "deepgram");
@@ -379,14 +379,14 @@ const server = http.createServer(async (req, res) => {
       const c = loadConfig();
       let ollama = false;
       if (c.provider === "ollama") { try { ollama = (await fetch(c.ollamaUrl + "/api/tags")).ok; } catch {} }
-      const hasKey = c.provider === "gemini" ? !!c.geminiKey : c.provider === "claude" ? !!c.anthropicKey : true;
+      const hasKey = true; // los clips no necesitan clave
       return send(res, 200, { tools: t, hasKey, hasGroq: !!(c.groqKey || c.deepgramKey), provider: c.provider, ollama, fontOk: fs.existsSync(c.fontFile) });
     }
 
     if (p === "/api/config" && req.method === "GET") {
       const c = loadConfig();
       const mask = (k) => (k ? "••••" + k.slice(-4) : "");
-      return send(res, 200, { ...c, anthropicKey: mask(c.anthropicKey), geminiKey: mask(c.geminiKey), groqKey: mask(c.groqKey), deepgramKey: mask(c.deepgramKey) });
+      return send(res, 200, { ...c, geminiKey: mask(c.geminiKey), groqKey: mask(c.groqKey), deepgramKey: mask(c.deepgramKey) });
     }
     if (p === "/api/config" && req.method === "POST") {
       const body = await readBody(req);
@@ -395,7 +395,6 @@ const server = http.createServer(async (req, res) => {
         if (!(k in body)) continue;
         if (/Key$/.test(k) && (!body[k] || String(body[k]).startsWith("••••"))) continue;
         c[k] = typeof DEFAULTS[k] === "number" ? +body[k] : typeof DEFAULTS[k] === "boolean" ? !!body[k] : String(body[k]).trim();
-        if (k === "anthropicKey") c[k] = cleanKey(c[k], "anthropic");
         if (k === "geminiKey") c[k] = cleanKey(c[k], "gemini");
         if (k === "groqKey") c[k] = cleanKey(c[k], "groq");
         if (k === "deepgramKey") c[k] = cleanKey(c[k], "deepgram");
@@ -417,11 +416,7 @@ const server = http.createServer(async (req, res) => {
       const url = String(body.url || "").trim();
       if (!/^https?:\/\//.test(url)) return send(res, 400, { error: "Pega un link válido (https://…)" });
       const cfg = loadConfig();
-      const prov = body.options?.provider || cfg.provider;
-      if (prov === "claude" && !cfg.anthropicKey && !cfg.fakeLlmFile)
-        return send(res, 400, { error: "Falta la API key de Claude. Ábrela en ⚙️ Ajustes." });
-      if (prov === "gemini" && !cfg.geminiKey && !cfg.fakeLlmFile)
-        return send(res, 400, { error: "Falta la clave de Gemini (gratis en aistudio.google.com). Ponla en ⚙️ Ajustes." });
+      // los clips los elige el motor local: no hace falta ninguna clave
       let dir = findResumableDir(cfg.outputRoot, url);
       const wantMod = body.options?.module === "live" ? "live" : "vod";
       const oldJob = dir && readJsonSafe(path.join(dir, "job.json"));

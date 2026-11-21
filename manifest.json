@@ -1,8 +1,8 @@
 {
-  "version": "1.8.0",
+  "version": "1.9.0",
   "date": "2026-11-21",
   "notes": [
-    "Un algoritmo para cada video: detecta el tipo de contenido (entrevista, juego, reality…), investiga en internet (lo más repetido de YouTube, comentarios con minutos, búsquedas de Google, videos más vistos del tema) y elige los clips con ese algoritmo"
+    "Sin IA de pago: los clips salen siempre del motor local. Cada video arma su algoritmo también con sus estadísticas (volumen, ritmo, pausas, imagen), sus temas (TF-IDF) y los temas del momento que pongas en Ajustes"
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "8aaa21a9b7450d8a2e259454e6d0a6ecba9d9b3fad818ebdd0bc71e7a2d72cd5"
+      "sha256": "9db2df660721a342dfc8bdcdc10067f0c1b3190c535a3937280d3eb6f0ccc971"
     },
     {
       "path": "iniciar.bat",
@@ -39,11 +39,11 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "983c94ca04c027d0952651c077471e4c190b3b891b244de6e3ef5088cc50c941"
+      "sha256": "a335e57ecef810dbb1d7400bc0904143eb775e8c8a5e8a8fd8f6fb00241a6db4"
     },
     {
       "path": "lib/local.js",
-      "sha256": "06b9d93523c2c88f2a85baf71db7c9eb97cef3f25652a4fc417dbf276ce56e95"
+      "sha256": "8af3e3321d3173f6b260d2cd7d3c3a46f866e6a1fccb85d7c25d1bc526e2a72f"
     },
     {
       "path": "lib/loud.js",
@@ -51,7 +51,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "8f19f32b899f1ad1a42c0526491ea20739c72f93f8400854ded22c489a8b4f72"
+      "sha256": "f82ae30ebb7891b44da7da8ad0d015b2944336bdc266a9cffb824c6fd562286f"
     },
     {
       "path": "lib/reframe.js",
@@ -63,7 +63,7 @@
     },
     {
       "path": "lib/research.js",
-      "sha256": "9047c918a33e7d2784c6cbd4a7c7d59aeb09ec325491816dbe04b1712e50147d"
+      "sha256": "8db21d87a19ff49e5fda965d2aa35dc269d2805d502b4a327b16485afce69575"
     },
     {
       "path": "lib/subs.js",
@@ -90,12 +90,8 @@
       "sha256": "055a5faa784a778622b293da380960e07ca760d538000d3660b0273a092b9c23"
     },
     {
-      "path": "prompts/system.md",
-      "sha256": "0d0f2b79913756a2a257212fd2193edd98e2706890e8d6575c3ac6a32f8f2c5a"
-    },
-    {
       "path": "public/index.html",
-      "sha256": "37a79d4a877bee5f5a864cfd33f0093c03b8dc21910b44076324d535a5e568af"
+      "sha256": "5fb3b89ff5d366654c00b15cbab53a3759dd8b2b455951fe6ad2d4712f0319dc"
     },
     {
       "path": "reiniciar.bat",
@@ -103,7 +99,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "8751651b8c857591f4b2303b6d5b69c9d3d66a4841e369952a11c3f4356f0da0"
+      "sha256": "61cf8d1d4dc9e047d2b19f38a9a454965416cafd0faecfa088895e14ad6fb967"
     },
     {
       "path": "tools/face_yunet.onnx",

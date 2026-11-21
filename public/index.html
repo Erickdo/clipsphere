@@ -454,18 +454,16 @@ body.remote .local-only{display:none !important}
 <dialog id="dlg">
   <form method="dialog" id="cfgForm">
     <h3>Ajustes</h3>
-    <div class="f">API key de Claude (console.anthropic.com → Obtener clave de API) <input name="anthropicKey" placeholder="sk-ant-…" autocomplete="off"></div>
-    <div class="f">Modelo de Claude <input name="claudeModel"></div>
     <div class="f">Clave de Deepgram — transcribe videos SIN subtítulos en 1–2 min, sin límites ($200 gratis en console.deepgram.com) <input name="deepgramKey" placeholder="pega aquí la clave de Deepgram" autocomplete="off"></div>
-    <p style="font-size:12px;color:var(--mute);margin:-4px 0 14px">Claude elige los momentos y escribe títulos, descripciones y hashtags. Los videos sin subtítulos se transcriben con Deepgram si pones su clave; si no, con Whisper en tu PC (más lento).</p>
+    <p style="font-size:12px;color:var(--mute);margin:-4px 0 14px">⚡ Los clips los elige el <b>motor local</b>: gratis, sin claves, con un algoritmo propio para cada video. Los videos sin subtítulos se transcriben con Deepgram si pones su clave; si no, con Whisper en tu PC (gratis, más lento).</p>
     <details style="margin-bottom:14px"><summary style="cursor:pointer;font-size:13px;color:var(--mute)">Opciones avanzadas (no hacen falta)</summary>
       <div style="margin-top:12px">
-        <div class="f">IA que elige los momentos
-          <select name="provider"><option value="local">⚡ Motor local · gratis, sin claves (recomendado)</option><option value="gemini">Google Gemini (IA, nivel gratis)</option><option value="claude">Claude (IA de pago)</option><option value="ollama">Ollama (IA en tu PC)</option></select>
+        <div class="f">Temas del momento (separados por coma: suben los clips que los mencionan)
+          <input name="momentTopics" placeholder="ej.: Mundial, elecciones, Anuel, dembow, apagón">
         </div>
         <div class="f">Clave de Groq (alternativa a Deepgram; gratis con límite por hora) <input name="groqKey" placeholder="gsk_…" autocomplete="off"></div>
         <div class="row2">
-          <div class="f">Clave de Gemini <input name="geminiKey" placeholder="AIza… o AQ.…" autocomplete="off"></div>
+          <div class="f">Clave de Gemini (gratis, solo para textos de 🚀 Lanzamientos) <input name="geminiKey" placeholder="AIza… o AQ.…" autocomplete="off"></div>
           <div class="f">Público / países al que apuntan los clips <input name="audience" placeholder="República Dominicana, Latinoamérica y latinos en EE. UU."></div>
           <div class="f">Directos: revisar lo nuevo cada (minutos) <input name="liveScanMinutes" type="number" min="2" max="30"></div>
           <div class="f">En vivo pegado en «Videos»: minutos a grabar <input name="liveMinutes" type="number" min="1" max="240"></div>
@@ -667,10 +665,7 @@ async function check() {
   const w = $("#warn");
   let msg = "";
   if (miss.length) msg += `Falta instalar: <b>${miss.join(", ")}</b>. Cierra esto y ejecuta <b>instalar.bat</b>. `;
-  if (c.provider === "claude" && !c.hasKey) msg += `Falta la <b>API key de Claude</b>: ponla en ⚙️ Ajustes. `;
   if (!c.tools.whisper && !c.hasGroq) msg += `Para videos <b>sin subtítulos</b> falta Whisper: cierra ClipSphere y ejecuta <b>instalar.bat</b>. `;
-  if (c.provider === "gemini" && !c.hasKey) msg += `Falta la <b>clave de Gemini</b>: sácala gratis en <b>aistudio.google.com/apikey</b> y pégala en ⚙️ Ajustes. `;
-  if (c.provider === "ollama" && !c.ollama) msg += `Ollama no responde en tu PC. Ábrelo o cambia a Claude. `;
   if (!c.fontOk) msg += `No encuentro el archivo de la fuente; revisa Ajustes. `;
   w.innerHTML = msg; w.classList.toggle("show", !!msg);
 }
@@ -702,8 +697,10 @@ async function loadAlgo(jobId) {
     el.innerHTML = `<summary>🧠 Algoritmo de este video: <b>${escH(a.typeLabel)}</b></summary>
       <p>${escH(a.focus || "")} <span class="mute">(${escH(a.why || "")})</span></p>
       <div class="aw">${Object.entries(a.weights || {}).filter(([, v]) => v > 0).map(([k, v]) => `<span class="tag">${W[k] || k} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>
+      ${a.stats ? `<p class="mute">📊 Volumen: ${escH(a.stats.acoustic?.estilo || "sin medir")}${a.stats.acoustic ? ` (normal ${a.stats.acoustic.p50} dB · picos desde ${a.stats.acoustic.p90} dB)` : ""} · Habla: ${escH(a.stats.pacing?.estilo || "sin medir")}${a.stats.pacing ? ` (${a.stats.pacing.palabrasPorSegundo} palabras/s)` : ""} · Imagen: ${escH(a.stats.visual?.estilo || "sin medir")}</p>` : ""}
+      ${a.rules ? `<p class="mute">✂️ Reglas de este video: clips de ~${a.rules.duracionIdeal} s, cortar en pausas de ${a.rules.pausaCorte} s o más.${a.adjustments?.length ? " " + escH(a.adjustments.map((x) => x[0].toUpperCase() + x.slice(1)).join(" · ")) + "." : ""}</p>` : ""}
       ${a.sources?.length ? `<p class="mute">Investigó: ${escH(a.sources.join(" · "))}</p>` : `<p class="mute">Sin datos de internet para este video: usé el algoritmo del tipo de contenido.</p>`}
-      ${Object.keys(a.keywords || {}).length ? `<p class="mute">Palabras que pegan de este tema: ${escH(Object.keys(a.keywords).slice(0, 12).join(", "))}</p>` : ""}`;
+      ${a.ownTerms?.length ? `<p class="mute">Temas propios (TF-IDF): ${escH(a.ownTerms.slice(0, 10).join(", "))}</p>` : ""}${a.momentTerms?.length ? `<p class="mute">Temas del momento: ${escH(a.momentTerms.slice(0, 10).join(", "))}</p>` : ""}${Object.keys(a.keywords || {}).length ? `<p class="mute">Palabras que pegan de este tema: ${escH(Object.keys(a.keywords).slice(0, 12).join(", "))}</p>` : ""}`;
     el.hidden = false;
   } catch {}
 }
