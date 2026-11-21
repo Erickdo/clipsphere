@@ -30,7 +30,8 @@ const ROOT = __dirname;
 const CONFIG_FILE = path.join(ROOT, "config.json");
 
 const DEFAULTS = {
-  provider: "claude",              // "claude" (recomendado) | "gemini" | "ollama"
+  provider: "local",               // "local" (motor gratis, sin claves) | "claude" | "gemini" | "ollama"
+  lwAudio: "", lwLexico: "", lwRitmo: "", lwEscenas: "", // pesos del motor local (vacío = automático según el enfoque)
   anthropicKey: "",
   geminiKey: "",
   groqKey: "",
@@ -80,6 +81,11 @@ function readConfigFile() {
 }
 function loadConfig() {
   const c = { ...DEFAULTS, ...(readConfigFile() || {}) };
+  if (!c.localEngineV1) { c.provider = "local"; c.localEngineV1 = true; } // v1.7: el motor local pasa a ser el principal
+  { // pesos del motor local (vacío = automático según el enfoque)
+    const lw = {}; for (const [k, n] of [["audio", "lwAudio"], ["lexico", "lwLexico"], ["ritmo", "lwRitmo"], ["escenas", "lwEscenas"]]) { const v = parseFloat(c[n]); if (isFinite(v) && v >= 0) lw[k] = Math.min(1, v); }
+    c.localWeights = Object.keys(lw).length ? lw : null;
+  }
   c.anthropicKey = cleanKey(c.anthropicKey, "anthropic");
   c.geminiKey = cleanKey(c.geminiKey, "gemini");
   c.groqKey = cleanKey(c.groqKey, "groq");

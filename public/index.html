@@ -314,6 +314,7 @@ body.mlive .vod-only{display:none !important}
 body.remote .local-only{display:none !important}
 .toast.big{font-size:16px;padding:14px 18px;max-width:min(92vw,520px);white-space:normal}
 
+.lw-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:700px){.lw-grid{grid-template-columns:1fr 1fr}}
 .ck-steps{margin:6px 0 10px 18px;font-size:13px;color:var(--mute);line-height:1.6}.ck-steps b{color:var(--paper)}#ckDel[hidden]{display:none}.ck-up{cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .card .angle{font-size:12.5px;color:var(--mute);margin:2px 0 4px;line-height:1.35}
 .card .hook{font-style:italic;color:var(--sig);font-size:13px;margin:4px 0 2px;line-height:1.35}
@@ -458,7 +459,7 @@ body.remote .local-only{display:none !important}
     <details style="margin-bottom:14px"><summary style="cursor:pointer;font-size:13px;color:var(--mute)">Opciones avanzadas (no hacen falta)</summary>
       <div style="margin-top:12px">
         <div class="f">IA que elige los momentos
-          <select name="provider"><option value="claude">Claude (recomendado)</option><option value="gemini">Google Gemini</option><option value="ollama">Ollama (local)</option></select>
+          <select name="provider"><option value="local">⚡ Motor local · gratis, sin claves (recomendado)</option><option value="gemini">Google Gemini (IA, nivel gratis)</option><option value="claude">Claude (IA de pago)</option><option value="ollama">Ollama (IA en tu PC)</option></select>
         </div>
         <div class="f">Clave de Groq (alternativa a Deepgram; gratis con límite por hora) <input name="groqKey" placeholder="gsk_…" autocomplete="off"></div>
         <div class="row2">
@@ -477,6 +478,16 @@ body.remote .local-only{display:none !important}
       </div>
     </details>
     <div class="f">Carpeta de salida <input name="outputRoot"></div>
+    <fieldset class="bk" id="lwBox">
+      <legend>⚡ Motor local · pesos</legend>
+      <p class="bk-note">Cuánto cuenta cada señal al elegir los momentos. Déjalos vacíos para que se ajusten solos según lo que elijas en <b>Buscar</b> (Todo lo viral, Peleas, Streamers).</p>
+      <div class="lw-grid">
+        <div class="f">🔊 Volumen (gritos, risas) <input name="lwAudio" type="number" step="0.05" min="0" max="1" placeholder="auto"></div>
+        <div class="f">💬 Palabras clave <input name="lwLexico" type="number" step="0.05" min="0" max="1" placeholder="auto"></div>
+        <div class="f">⏩ Ritmo al hablar <input name="lwRitmo" type="number" step="0.05" min="0" max="1" placeholder="auto"></div>
+        <div class="f">🎬 Cambios de escena <input name="lwEscenas" type="number" step="0.05" min="0" max="1" placeholder="auto"></div>
+      </div>
+    </fieldset>
     <fieldset class="bk" id="ckBox">
       <legend><i class="ti ti-brand-youtube"></i> Sesión de YouTube (cookies.txt)</legend>
       <p class="bk-note">Para videos con <b>restricción de edad</b> o cuando YouTube pide <b>«confirma que no eres un robot»</b>. Windows no deja leer la sesión de Edge/Chrome/Brave, así que se hace con un archivo. Queda solo en esta PC: no lo compartas con nadie.</p>
@@ -553,7 +564,7 @@ const $ = (s) => document.querySelector(s);
 const STEPS_VOD = [
   ["info", "Info", "ti-info-circle"],
   ["subs", "Transcripción", "ti-text-caption"],
-  ["ai", "Momentos (IA)", "ti-brain"],
+  ["ai", "Momentos", "ti-brain"],
   ["download", "Descarga", "ti-download"],
   ["render", "Render 9:16", "ti-movie"],
 ];
@@ -562,7 +573,7 @@ const STEPS_LIVE = [
   ["info", "Info", "ti-info-circle"],
   ["download", "Grabación", "ti-broadcast"],
   ["subs", "Transcripción", "ti-text-caption"],
-  ["ai", "Momentos (IA)", "ti-brain"],
+  ["ai", "Momentos", "ti-brain"],
   ["render", "Render 9:16", "ti-movie"],
 ];
 let MODE = "vod";

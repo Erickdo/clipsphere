@@ -1,8 +1,8 @@
 {
-  "version": "1.6.12",
+  "version": "1.7.0",
   "date": "2026-11-21",
   "notes": [
-    "Si la IA se queda sin crédito, sin cuota o con la clave mala, ClipSphere usa sola la otra IA configurada (Claude ↔ Gemini) y explica qué hacer"
+    "Motor local de momentos: elige los clips gratis, sin claves ni internet (volumen, palabras clave, ritmo y escenas). Las IA quedan como opción"
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "662fa4a135d5fe53a2b95d15b928f8c646831aead189e2bb059bfb9ebe17d62c"
+      "sha256": "080eb606e5dd81869eeab02ed7ad99eacab230f9887ff44a3cb5bc76561d6f9e"
     },
     {
       "path": "iniciar.bat",
@@ -39,7 +39,11 @@
     },
     {
       "path": "lib/llm.js",
-      "sha256": "3485103a11c28fc769dfbdbd5f979b177a4dfa09b1eec4a3c1c7d9e691ff9fb5"
+      "sha256": "7acad89800b81965bb9d8409e1a4547a148e0e3e73ddade435a3ab61ec309676"
+    },
+    {
+      "path": "lib/local.js",
+      "sha256": "2ad27ec86c9757b9ebfe8f569fee1074b6734229c1f280ff2712897a36983a58"
     },
     {
       "path": "lib/loud.js",
@@ -47,7 +51,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "b04348d1cb4bddf0c110c21bc355634cd91644b11aed6f380c5524777c72ee8a"
+      "sha256": "4f7fce93233bcee60d8b0f8c4cf978d0f854078bd7ecc758f935bc69afba8e8a"
     },
     {
       "path": "lib/reframe.js",
@@ -87,7 +91,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "874f66a07d1c54ca6a916c24213679f8b9fdaa43a397faf0dc4068cb504be9e2"
+      "sha256": "d3468ec32c688c86005af8358a8ea126ecba0da1d52f8b27f8227ed07cbc6bae"
     },
     {
       "path": "reiniciar.bat",
@@ -95,7 +99,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "98ab9e2311bb232d9af5ffa967584c65592b2c72f79a826eae0217c9a4148503"
+      "sha256": "8751651b8c857591f4b2303b6d5b69c9d3d66a4841e369952a11c3f4356f0da0"
     },
     {
       "path": "tools/face_yunet.onnx",

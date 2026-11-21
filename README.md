@@ -28,6 +28,35 @@ Arriba, el selector **Videos | Directos | 🚀 Lanzamientos** cambia de sección
 - También acepta la **repetición** de un directo que ya terminó (se procesa completa).
 - Aguanta horas: graba en tramos, reconecta si la señal se corta, y si se cierra la app, **Reintentar** sigue desde donde iba sin perder lo grabado ni los clips hechos.
 
+## Motor local de momentos ⚡ (gratis, sin claves)
+
+Desde la v1.7 ClipSphere elige los momentos **sin IA de pago**: todo se calcula en tu PC en menos de un segundo.
+
+```
+audio (solo la pista, baja calidad) ─► volumen por segundo ─┐
+subtítulos de la plataforma / Whisper local ─► palabras ────┼─► puntaje por segundo ─► ventanas frase-a-frase ─► mejores N sin solapes
+video (versión pequeña, 4 fps) ─► cambios de escena ────────┘        (pesos)            (bordes en pausas)
+```
+
+- **Volumen:** subidas y golpes bruscos (gritos, risas, aplausos, discusión).
+- **Palabras clave:** ganchos, preguntas, énfasis, emoción, polémica, risas, números y jerga dominicana (`lib/local.js` → `LEX`).
+- **Ritmo:** palabras por segundo (hablar rápido = emoción).
+- **Escenas:** cortes de cámara y cambios bruscos de imagen.
+- **Bordes:** cada clip empieza al inicio de una frase y termina en una pausa natural; si la frase anterior es fuerte (lo que inicia el pleito), se incluye.
+- **Título, gancho, descripción, hashtags y etiqueta** salen de las frases más fuertes del propio clip.
+
+**Pesos:** ⚙️ Ajustes → *Motor local · pesos* (vacío = automático según **Buscar**). Por defecto:
+
+| Buscar | Volumen | Palabras | Ritmo | Escenas |
+|---|---|---|---|---|
+| Todo lo viral | 0.30 | 0.40 | 0.20 | 0.10 |
+| Peleas y discusiones | 0.45 | 0.35 | 0.15 | 0.05 |
+| Streamers | 0.40 | 0.30 | 0.15 | 0.15 |
+
+Más fino en `lib/local.js` → `TUNING` (peso del gancho, del mejor tramo, castigo por silencios, clips por minuto, exigencia).
+
+Claude / Gemini / Ollama siguen como **opción** en ⚙️ Ajustes (escriben títulos más creativos). Si una IA se queda sin crédito, ClipSphere sigue solo con el motor local. Las misiones 1, 2 y 4 de 🚀 Lanzamientos escriben textos y necesitan una IA: basta la clave **gratis** de Gemini.
+
 ## Encuadre vertical 9:16 🎯
 
 **Por defecto (Completo):** cada clip sale vertical 1080×1920 con **todo el video original visible**, sin recortes ni zoom, centrado sobre el mismo video difuminado.
