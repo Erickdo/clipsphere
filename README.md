@@ -45,6 +45,14 @@ video (versión pequeña, 4 fps) ─► cambios de escena ───────�
 - **Bordes:** cada clip empieza al inicio de una frase y termina en una pausa natural; si la frase anterior es fuerte (lo que inicia el pleito), se incluye.
 - **Título, gancho, descripción, hashtags y etiqueta** salen de las frases más fuertes del propio clip.
 
+### 🧠 Un algoritmo para cada video (v1.8)
+
+Antes de elegir, ClipSphere estudia el video (`lib/research.js`) y arma su propio algoritmo:
+
+1. **Tipo de contenido** (título, descripción, etiquetas, plataforma y lo que se dice): entrevista/chisme ("dando los focos"), gaming/stream, reality, comedia, deporte, música, noticias/política, educativo, motivación o podcast. Cada tipo trae sus pesos y qué buscar (en una entrevista pesan las palabras y hablar de gente; en un juego, el volumen y las escenas).
+2. **Investiga en internet, gratis:** «lo más repetido» de YouTube, comentarios con minutos ("12:34 jajaja"), lo que la gente busca en Google del tema y de las personas, y los títulos de los videos más vistos del mismo tema.
+3. Con eso arma el perfil (tipo, pesos, palabras que pegan, personas, señal de **audiencia** por segundo) y lo aplica solo a ese video. Se ve en la sección Clips → «🧠 Algoritmo de este video», y se guarda en `algoritmo.json` del trabajo.
+
 **Pesos:** ⚙️ Ajustes → *Motor local · pesos* (vacío = automático según **Buscar**). Por defecto:
 
 | Buscar | Volumen | Palabras | Ritmo | Escenas |

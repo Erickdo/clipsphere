@@ -316,6 +316,7 @@ body.remote .local-only{display:none !important}
 
 .lw-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:700px){.lw-grid{grid-template-columns:1fr 1fr}}
 .ck-steps{margin:6px 0 10px 18px;font-size:13px;color:var(--mute);line-height:1.6}.ck-steps b{color:var(--paper)}#ckDel[hidden]{display:none}.ck-up{cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.algo{margin:-4px 0 14px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;font-size:13.5px}.algo summary{cursor:pointer}.algo p{margin:8px 0 0}.algo .mute{color:var(--mute)}.algo .aw{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .card .angle{font-size:12.5px;color:var(--mute);margin:2px 0 4px;line-height:1.35}
 .card .hook{font-style:italic;color:var(--sig);font-size:13px;margin:4px 0 2px;line-height:1.35}
 /* v1.6.2 · orden en el teléfono */
@@ -421,6 +422,7 @@ body.remote .local-only{display:none !important}
     <section class="panel clips pane" id="clipsSec" data-pane="clips">
       <div class="empty-pane"><i class="ti ti-movie" style="font-size:34px"></i><br>Aquí aparecen los clips a medida que se terminan.</div>
       <div class="ph-title"><h4><i class="ti ti-movie"></i> Clips</h4><span class="count" id="clipCount"></span></div>
+      <details class="algo" id="algo" hidden></details>
       <div class="grid" id="grid"></div>
     </section>
   </main>
@@ -687,7 +689,26 @@ function setStep(id, status, detail) {
 }
 function log(m) { const p = $("#log"); p.textContent += m + "\n"; p.scrollTop = p.scrollHeight; }
 
+// 🧠 El algoritmo que ClipSphere armó para este video
+let ALGO_FOR = null;
+async function loadAlgo(jobId) {
+  if (ALGO_FOR === jobId) return; ALGO_FOR = jobId;
+  const el = $("#algo"); el.hidden = true;
+  try {
+    const r = await fetch(`/files/${jobId}/algoritmo.json`); if (!r.ok || ALGO_FOR !== jobId) return;
+    const a = await r.json();
+    const W = { audiencia: "👥 Audiencia", audio: "🔊 Volumen", lexico: "💬 Palabras", ritmo: "⏩ Ritmo", escenas: "🎬 Escenas" };
+    const tot = Object.values(a.weights || {}).reduce((x, y) => x + y, 0) || 1;
+    el.innerHTML = `<summary>🧠 Algoritmo de este video: <b>${escH(a.typeLabel)}</b></summary>
+      <p>${escH(a.focus || "")} <span class="mute">(${escH(a.why || "")})</span></p>
+      <div class="aw">${Object.entries(a.weights || {}).filter(([, v]) => v > 0).map(([k, v]) => `<span class="tag">${W[k] || k} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>
+      ${a.sources?.length ? `<p class="mute">Investigó: ${escH(a.sources.join(" · "))}</p>` : `<p class="mute">Sin datos de internet para este video: usé el algoritmo del tipo de contenido.</p>`}
+      ${Object.keys(a.keywords || {}).length ? `<p class="mute">Palabras que pegan de este tema: ${escH(Object.keys(a.keywords).slice(0, 12).join(", "))}</p>` : ""}`;
+    el.hidden = false;
+  } catch {}
+}
 function card(c, jobId, ready = true) {
+  loadAlgo(jobId);
   const hs = (c.hashtags || []).join(" ");
   const media = ready
     ? `<video src="/files/${jobId}/${c.file}" poster="/files/${jobId}/${c.cover}" controls preload="none" playsinline></video>`
