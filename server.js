@@ -427,7 +427,7 @@ const server = http.createServer(async (req, res) => {
       dir = dir || newJobDir(cfg.outputRoot, url);
       const opts = {};
       for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus", "campaign"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
-      if (opts.focus !== undefined) opts.focus = ["peleas", "gta"].includes(opts.focus) ? opts.focus : "todo";
+      if (opts.focus !== undefined) opts.focus = ["peleas", "gta", "reality"].includes(opts.focus) ? opts.focus : "todo";
       // 🚀 Lanzamientos: el trabajo lleva la campaña; si este video ya se procesó SIN ella, se hace aparte.
       let camp = null;
       if (opts.campaign) {

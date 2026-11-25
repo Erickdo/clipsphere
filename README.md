@@ -61,6 +61,15 @@ estático casi no usa escenas) y las reglas de corte (duración ideal según el 
 Temas propios con **TF-IDF** (lo que se repite en todo el video es relleno y no cuenta) + **temas del momento**
 (⚙️ Ajustes → Temas del momento, o un archivo `momento.txt` junto a ClipSphere, uno por línea).
 
+### 🏠 Reality y puntuación viral (v2.0)
+
+- **Buscar → 🏠 Reality** (La Casa de Alofoke y similares): clips de 20–60 s (hasta 90 s si la historia sigue fuerte al final). Busca peleas y discusiones, indirectas, romances y celos, confesiones, expulsiones y sanciones, reacciones y momentos graciosos.
+- **Puntuación de 0 a 100 en 6 factores:** impacto emocional (20), potencial de comentarios (20), retención (20), sorpresa o controversia (15), potencial de compartirse (15), claridad del contexto (10). Niveles: 90+ extraordinario · 80+ muy alto · 70+ alto · 60+ moderado.
+- **Reglas:** no confunde una discusión normal con una pelea (pelea = polémica + voces alzadas), no elige un momento solo por los insultos, no repite dos clips casi iguales, se queda con los 10 mejores y los ordena del mayor al menor potencial (c01 = el mejor).
+- **Participantes:** nombres que se repiten en la transcripción + personas del título.
+- **Quita pausas muertas** dentro del clip (sin tocar silencios con risas o gritos) y **resalta en amarillo** las palabras importantes de los subtítulos. Se apaga con `trimSilences: false` en config.
+- **publicar.txt** en formato CLIP #001: participantes, categoría, horas, duración, puntuación y nivel, descripción del momento, motivo, título, gancho, descripción, hashtags, texto de portada, plataforma recomendada, frase para comentarios y textos listos para TikTok, Instagram Reels, Facebook Reels y YouTube Shorts.
+
 **Pesos:** ⚙️ Ajustes → *Motor local · pesos* (vacío = automático según **Buscar**). Por defecto:
 
 | Buscar | Volumen | Palabras | Ritmo | Escenas |

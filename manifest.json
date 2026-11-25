@@ -1,8 +1,8 @@
 {
-  "version": "1.9.0",
-  "date": "2026-11-21",
+  "version": "2.0.0",
+  "date": "2026-11-25",
   "notes": [
-    "Sin IA de pago: los clips salen siempre del motor local. Cada video arma su algoritmo también con sus estadísticas (volumen, ritmo, pausas, imagen), sus temas (TF-IDF) y los temas del momento que pongas en Ajustes"
+    "Reality (La Casa de Alofoke): puntuación viral 0–100 en 6 factores, participantes, top 10 ordenado del mejor al peor, quita pausas muertas, resalta palabras clave en los subtítulos y publicar.txt con textos para TikTok, Reels, Facebook y Shorts"
   ],
   "files": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "9db2df660721a342dfc8bdcdc10067f0c1b3190c535a3937280d3eb6f0ccc971"
+      "sha256": "73a5235fc4b825b08d00650e8f9791daba765441f8568c3c160ea920a1318dd5"
     },
     {
       "path": "iniciar.bat",
@@ -43,7 +43,7 @@
     },
     {
       "path": "lib/local.js",
-      "sha256": "8af3e3321d3173f6b260d2cd7d3c3a46f866e6a1fccb85d7c25d1bc526e2a72f"
+      "sha256": "d62843f87a1df5ee45260632d0b13f9b021ab8778d73a9cf67d404c63c062f9d"
     },
     {
       "path": "lib/loud.js",
@@ -51,7 +51,7 @@
     },
     {
       "path": "lib/pipeline.js",
-      "sha256": "f82ae30ebb7891b44da7da8ad0d015b2944336bdc266a9cffb824c6fd562286f"
+      "sha256": "316af5fb9dc89e675039dc966235fd19aaa36ba6a3de1bec0bc6a72f2beb08a5"
     },
     {
       "path": "lib/reframe.js",
@@ -59,11 +59,11 @@
     },
     {
       "path": "lib/render.js",
-      "sha256": "15ea6939ffb2d58e8b476881e71dc537c11bc572f5b24fdb161a2f7524b031b2"
+      "sha256": "d03d2e139a8fb99055e9a6f4bdd4d27eff7128fdb539d78edc2f0aa912bfc1f6"
     },
     {
       "path": "lib/research.js",
-      "sha256": "8db21d87a19ff49e5fda965d2aa35dc269d2805d502b4a327b16485afce69575"
+      "sha256": "7b3711d92ab566f2de87d67be936034858deaca404fd83fa3e68a7bbaa9b9d20"
     },
     {
       "path": "lib/subs.js",
@@ -91,7 +91,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "5fb3b89ff5d366654c00b15cbab53a3759dd8b2b455951fe6ad2d4712f0319dc"
+      "sha256": "d20f32cf3002e77d2587785603300f7e120184acc6114dec021e3572e468fb4c"
     },
     {
       "path": "reiniciar.bat",
@@ -99,7 +99,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "61cf8d1d4dc9e047d2b19f38a9a454965416cafd0faecfa088895e14ad6fb967"
+      "sha256": "f1e9d8344a9c21e3fc271c0c093ace7d42f9a927f01338c26d5f984cc010b9f0"
     },
     {
       "path": "tools/face_yunet.onnx",
