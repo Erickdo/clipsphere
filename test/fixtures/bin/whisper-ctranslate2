@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+// Whisper FALSO: escribe palabras con tiempo (con un momento fuerte) para el archivo que recibe.
+const fs = require("fs"), path = require("path");
+const file = process.argv[2], b = path.basename(file, path.extname(file));
+const outDir = (() => { const i = process.argv.indexOf("--output_dir"); return i > 0 ? process.argv[i + 1] : process.cwd(); })();
+const filler = "bueno entonces vamos a ver lo que tenemos hoy en el programa y seguimos hablando de lo de siempre".split(" ");
+const strong = "¡Mano tú me robaste! ¡Eso es mentira! ¿Por qué dices eso? ¡Cállate, respeta! jajaja no puede ser".split(" ");
+const ws = []; let s = 0, i = 0;
+while (s < 900) { const w = s > 40 && s < 52 ? strong[i % strong.length] : filler[i % filler.length]; ws.push({ start: s, end: s + 0.35, word: " " + w + (i % 18 === 17 ? "." : "") }); s += 0.42; i++; }
+fs.writeFileSync(path.join(outDir, b + ".json"), JSON.stringify({ segments: [{ start: 0, end: 900, text: "x", words: ws }] }));

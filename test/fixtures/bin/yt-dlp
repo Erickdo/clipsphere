@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+// yt-dlp FALSO para las pruebas: simula un video de YouTube y un directo de Kick sin internet.
+const a = process.argv.slice(2), url = a[a.length - 1], fs = require("fs"), path = require("path");
+const MEDIA = process.env.CS_TEST_MEDIA, LIVE_URL = process.env.CS_TEST_LIVE_URL, STATE = process.env.CS_TEST_STATE;
+const out = (o) => { process.stdout.write(JSON.stringify(o)); process.exit(0); };
+if (a.includes("-U")) { console.log("yt-dlp is up to date"); process.exit(0); }
+if (a.includes("--write-comments") || a.some((x) => /^ytsearch/.test(x))) { if (a.includes("-J")) out({ entries: [] }); process.exit(0); }
+if (/kick\.com/.test(url) && a.includes("-J")) {
+  // las 2 primeras consultas: en vivo; después, el directo "terminó"
+  let n = 0; try { n = +fs.readFileSync(STATE, "utf8"); } catch {} fs.writeFileSync(STATE, String(n + 1));
+  out({ id: "directo", title: "Directo de prueba", uploader: "canalprueba", is_live: n < 2, live_status: n < 2 ? "is_live" : "was_live", extractor_key: "Kick", webpage_url: url, url: LIVE_URL, http_headers: {} });
+}
+if (/youtu/.test(url) && a.includes("-J")) out({ id: "prueba01", title: "Video de prueba: ¡Mano tú me robaste!", uploader: "Canal Prueba", duration: 150, extractor_key: "Youtube", webpage_url: url, description: "prueba", tags: [], categories: ["Entertainment"] });
+if (a.includes("--skip-download")) process.exit(0);
+const o = a[a.indexOf("-o") + 1];
+if (o) { const name = o.replace("%(ext)s", "mp4"); fs.copyFileSync(MEDIA, path.join(process.cwd(), name)); console.log("[download] 100.0%"); process.exit(0); }
+process.exit(0);

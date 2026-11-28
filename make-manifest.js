@@ -2,9 +2,18 @@
 // Genera manifest.json con la versión y el sha256 de cada archivo de la app.
 const fs = require("node:fs"), path = require("node:path"), crypto = require("node:crypto");
 const ROOT = __dirname;
-const SKIP = new Set(["config.json", "config.json.bak", "errores.log", "manifest.json", "node_modules", ".git", "_update_tmp", "ANUNCIOS.md"]);
+const SKIP = new Set(["config.json", "config.json.bak", "errores.log", "manifest.json", "node_modules", ".git", "_update_tmp", "_update_backup", "ANUNCIOS.md",
+  "cookies.txt", ".clipsphere-secret", "seguridad.log", "seguridad.log.1", "seguridad.log.2", "__pycache__", "test"]);
 const files = [];
-(function walk(d) {
+// Solo lo que está en git (nunca archivos locales del autor: sesiones, secretos, cachés); si no hay git, se recorre la carpeta
+let tracked = null;
+try { tracked = require("node:child_process").execSync("git ls-files -co --exclude-standard", { cwd: ROOT }).toString().split("\n").filter(Boolean); } catch {}
+if (tracked) {
+  for (const rel of tracked.sort()) {
+    if (rel.split("/").some((part) => SKIP.has(part)) || rel.endsWith(".new") || rel.endsWith(".guardando") || !fs.existsSync(path.join(ROOT, rel))) continue;
+    files.push({ path: rel, sha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, rel))).digest("hex") });
+  }
+} else (function walk(d) {
   for (const n of fs.readdirSync(d)) {
     if (SKIP.has(n) || n.endsWith(".new") || n.endsWith(".guardando")) continue;
     const p = path.join(d, n), rel = path.relative(ROOT, p).split(path.sep).join("/");

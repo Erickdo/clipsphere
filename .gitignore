@@ -7,3 +7,6 @@ config.json.bak
 errores.log
 __pycache__/
 cookies.txt
+.clipsphere-secret
+_update_backup/
+seguridad.log*

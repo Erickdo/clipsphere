@@ -1,13 +1,13 @@
 {
-  "version": "2.0.0",
-  "date": "2026-11-25",
+  "version": "2.1.0",
+  "date": "2026-11-28",
   "notes": [
-    "Reality (La Casa de Alofoke): puntuación viral 0–100 en 6 factores, participantes, top 10 ordenado del mejor al peor, quita pausas muertas, resalta palabras clave en los subtítulos y publicar.txt con textos para TikTok, Reels, Facebook y Shorts"
+    "Seguridad: solo ClipSphere puede darle órdenes al servidor, código del móvil con límite de intentos y sesión firmada, respaldo sin claves, actualizador que se puede deshacer, memoria acotada en directos largos y registro de seguridad"
   ],
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "255b97af97fc00dbdcf372ff381316e7aae2fe4e0770d763e1458f74d0d93a40"
+      "sha256": "bdbbf02e697c5d9e4cbbaeddd91dce2acfa1927086a6c026eca47b4bede7e866"
     },
     {
       "path": "LEEME-PRIMERO.txt",
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "73a5235fc4b825b08d00650e8f9791daba765441f8568c3c160ea920a1318dd5"
+      "sha256": "5fba6d27811ace197acdce8339c4ef0ccac456afaac3db68fceeedb52e0b5795"
     },
     {
       "path": "iniciar.bat",
@@ -31,11 +31,15 @@
     },
     {
       "path": "lib/backup.js",
-      "sha256": "f0376df62305dbb5940128a7f6a3945d291d158b14a661d24603af4e4e8eedc3"
+      "sha256": "a8c675a0f6d289c3cc1da9a06acbe610e3d481d4e057241bb486a65cb9fd067c"
+    },
+    {
+      "path": "lib/events.js",
+      "sha256": "44116c10ac971e6d86f5ec380cb036f391032629ec5d1031247a2c89b5e6f99a"
     },
     {
       "path": "lib/launch.js",
-      "sha256": "2aeda86aac1988532d5a861bb57f53ddfecec1bbd36b4f5f7c1d631f61ed9be4"
+      "sha256": "ba3bec3ae4862ae3fa38c6d78ca8dc2e8296ac2b8a16b05375374b19b8b46435"
     },
     {
       "path": "lib/llm.js",
@@ -66,6 +70,14 @@
       "sha256": "7b3711d92ab566f2de87d67be936034858deaca404fd83fa3e68a7bbaa9b9d20"
     },
     {
+      "path": "lib/seclog.js",
+      "sha256": "dce49627c04e3512b69eedc7110a72095aa857b40b7ad2b17324e2cac04d50d4"
+    },
+    {
+      "path": "lib/security.js",
+      "sha256": "1e12b840217b33b809af7d43e8747a453d656a780a32a8ce4be711d73cfd43b7"
+    },
+    {
       "path": "lib/subs.js",
       "sha256": "4cfa09885afb6a3ad9f52d9d00e7250cc9f28b5a741588cd9954b4d2bfc6b2c3"
     },
@@ -75,7 +87,7 @@
     },
     {
       "path": "lib/updater.js",
-      "sha256": "fef4aec881d1cb08ed8b9ea56ebe876eba78bc8a2667776c099c51fcf6b8c3f4"
+      "sha256": "387ec741e13a767dfb161beacc92ad360f6372c78735bb8e68c061703014c624"
     },
     {
       "path": "lib/util.js",
@@ -83,7 +95,7 @@
     },
     {
       "path": "make-manifest.js",
-      "sha256": "6a1fe8ab304d51b21e35f38cf120b6bd5f12e52151e185fc13df965558f68040"
+      "sha256": "f56174c73ac5e125c8fe992055e8323e5d0c3cb0bc4b10d33f592343f2638b11"
     },
     {
       "path": "prompts/campana.md",
@@ -91,7 +103,7 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "d20f32cf3002e77d2587785603300f7e120184acc6114dec021e3572e468fb4c"
+      "sha256": "e855feede9cd20efd150f59cf8e0df7207ffcdde237fe86942991fbaa9286dc6"
     },
     {
       "path": "reiniciar.bat",
@@ -99,7 +111,7 @@
     },
     {
       "path": "server.js",
-      "sha256": "f1e9d8344a9c21e3fc271c0c093ace7d42f9a927f01338c26d5f984cc010b9f0"
+      "sha256": "3a19b8cba59a31cb740fc8292a4cfc7cd386e7f019a32b98cf5b97752f558a21"
     },
     {
       "path": "tools/face_yunet.onnx",

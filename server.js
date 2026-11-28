@@ -11,6 +11,9 @@ const backup = require("./lib/backup");
 const launch = require("./lib/launch");
 const render = require("./lib/render");
 const updater = require("./lib/updater");
+const { createSecurity } = require("./lib/security");
+const { keepEvent } = require("./lib/events");
+const { createSecLog } = require("./lib/seclog");
 
 const PORT = +process.env.PORT || 3600;
 // Con "node --watch" (iniciar.bat) el proceso hijo no ve --watch en execArgv; Node marca esta variable.
@@ -27,7 +30,12 @@ process.on("unhandledRejection", (e) => logErr("Promesa sin manejar", e));
 process.on("uncaughtException", (e) => { logErr("Error inesperado", e); process.exit(1); });
 process.on("exit", (code) => { if (code) try { fs.appendFileSync(ERR_LOG, `[${new Date().toISOString()}] Salió con código ${code}\n`); } catch {} });
 const ROOT = __dirname;
-const CONFIG_FILE = path.join(ROOT, "config.json");
+const CONFIG_FILE = process.env.CLIPSPHERE_CONFIG || path.join(ROOT, "config.json");
+// Secreto para firmar las sesiones del móvil: vive junto a config.json, nunca va al respaldo ni a git.
+const SECRET_FILE = path.join(path.dirname(CONFIG_FILE), ".clipsphere-secret");
+// Registro de seguridad (sin códigos ni claves), con rotación: seguridad.log junto a config.json.
+const secLog = createSecLog(path.join(path.dirname(CONFIG_FILE), "seguridad.log"));
+const reqInfo = (req, p) => ({ ip: req.socket.remoteAddress || "", metodo: req.method, ruta: p });
 
 const DEFAULTS = {
   provider: "local",               // clips: siempre motor local (gratis). Textos de 🚀 Lanzamientos: Gemini gratis u Ollama
@@ -113,6 +121,7 @@ function lanUrls() {
   }
   return out;
 }
+const sec = createSecurity({ secretFile: SECRET_FILE, getCode: () => accessCode(), port: PORT });
 function isLocal(req) {
   const ip = req.socket.remoteAddress || "";
   return ip === "127.0.0.1" || ip === "::1" || ip === "::ffff:127.0.0.1";
@@ -127,7 +136,7 @@ const PIN_PAGE = (err) => `<!doctype html><html lang="es"><meta charset="utf-8">
 <p style="color:#8d8a84;margin:0 0 22px">Escribe el código que aparece en la laptop (⚙️ Ajustes → Abrir en el móvil)</p>
 <input name="c" inputmode="numeric" autocomplete="one-time-code" maxlength="6" autofocus placeholder="000000"
  style="width:100%;box-sizing:border-box;font-size:32px;letter-spacing:10px;text-align:center;padding:14px;border-radius:14px;border:1px solid #2c2c34;background:#16161a;color:#f2ede4">
-${err ? '<p style="color:#ff8a70">Código incorrecto</p>' : ""}
+${err ? `<p style="color:#ff8a70">${String(err).replace(/[<>&]/g, "")}</p>` : ""}
 <button style="margin-top:16px;width:100%;padding:16px;border:0;border-radius:14px;background:#ffe100;color:#0d0d0f;font-size:18px;font-weight:800">Entrar</button>
 </form></body></html>`;
 
@@ -138,14 +147,37 @@ let running = null;
 
 function emit(job, ev) {
   ev.at = Date.now();
-  job.events.push(ev);
-  if (ev.type === "done") job.status = "done";
-  if (ev.type === "error") job.status = "error";
+  keepEvent(job.events, ev); // memoria acotada (lib/events.js)
+  if (ev.type === "done") { job.status = "done"; job.finishedAt = Date.now(); }
+  if (ev.type === "error") { job.status = "error"; job.finishedAt = Date.now(); }
   if (ev.type === "recording") job.recording = !!ev.on;
   if ((ev.type === "clip" && ev.clip?.status === "ok") || ev.type === "done" || ev.type === "plan") backupSoon(job.id);
   const data = `data: ${JSON.stringify(ev)}\n\n`;
   for (const res of job.clients) res.write(data);
 }
+
+// Conexiones SSE: un latido cada 25 s detecta pestañas muertas; como mucho 20 por trabajo; nada queda colgado.
+const SSE_MAX = 20;
+function sseAttach(set, res, req) {
+  if (set.size >= SSE_MAX) { const oldest = set.values().next().value; set.delete(oldest); try { oldest.end(); } catch {} }
+  set.add(res);
+  const beat = setInterval(() => { try { res.write(": latido\n\n"); } catch { drop(); } }, 25000);
+  beat.unref();
+  const drop = () => { clearInterval(beat); set.delete(res); };
+  req.on("close", drop); res.on("error", drop); res.on("close", drop);
+}
+// Al terminar un trabajo: se cierran sus conexiones a los 2 min y se libera de la memoria a los 30 min
+// (todo sigue en disco: el historial y los clips se abren igual). Como mucho 30 terminados en memoria.
+function sweepJobs() {
+  const t = Date.now();
+  const finished = [...jobs.values()].filter((j) => j.status === "done" || j.status === "error").sort((a, b) => (b.finishedAt || 0) - (a.finishedAt || 0));
+  finished.forEach((j, i) => {
+    if (!j.finishedAt) j.finishedAt = t;
+    if (t - j.finishedAt > 2 * 60e3) for (const c of j.clients) { try { c.end(); } catch {} j.clients.delete(c); }
+    if (i >= 30 || t - j.finishedAt > 30 * 60e3) jobs.delete(j.id);
+  });
+}
+setInterval(sweepJobs, 60e3).unref();
 
 async function pump() {
   if (running || !queue.length) return;
@@ -215,7 +247,7 @@ function listHistory(module) {
 }
 async function deleteVideo(id) {
   const cfg = loadConfig(), root = cfg.outputRoot;
-  if (!/^[\w.-]+$/.test(id)) throw Object.assign(new Error("Trabajo no válido."), { status: 400 });
+  if (!/^[\w-][\w.-]{0,150}$/.test(id) || id.includes("..")) throw Object.assign(new Error("Trabajo no válido."), { status: 400 });
   const vid = id.replace(/^\d{8}-\d{4}-/, "");
   const busy = [...jobs.values()].some((j) => j.id.replace(/^\d{8}-\d{4}-/, "") === vid && (j.status === "running" || j.status === "queued"));
   if (busy) throw Object.assign(new Error("Ese video se está procesando. Cancélalo o espera a que termine para eliminarlo."), { status: 409 });
@@ -224,7 +256,7 @@ async function deleteVideo(id) {
   if (!names.length) throw Object.assign(new Error("Ese video ya no está en esta PC."), { status: 404 });
   const rmOpts = { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }; // Windows a veces tiene el archivo abierto un instante
   for (const n of names) { fs.rmSync(path.join(root, n), rmOpts); jobs.delete(n); }
-  if (vid && vid !== id) try { fs.rmSync(path.join(root, "_cache", vid), rmOpts); } catch {}
+  if (vid && vid !== id && /^[\w-][\w.-]*$/.test(vid) && !vid.includes("..")) try { fs.rmSync(safeJoin(root, "_cache", vid), rmOpts); } catch {}
   const trashed = await backup.trash(cfg, names).catch(() => 0);
   console.log(`  Eliminado del historial: ${names.join(", ")}${trashed ? " (copia del respaldo movida a _papelera)" : ""}`);
   return { deleted: names.length, ids: names, trashed };
@@ -251,14 +283,15 @@ function startJob({ url, dir, opts }) {
 // ---- HTTP ----
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".json": "application/json", ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml" };
 
+const SEC_HEADERS = { "x-content-type-options": "nosniff", "x-frame-options": "DENY", "content-security-policy": "frame-ancestors 'none'", "referrer-policy": "same-origin" };
 function send(res, code, body, type = "application/json") {
-  res.writeHead(code, { "content-type": type, "cache-control": "no-store", "x-created-by": "ClipSphere by Erick Nex - NexTech360" });
+  if (res.headersSent) { try { res.end(); } catch {} return; }
+  res.writeHead(code, { "content-type": type, "cache-control": "no-store", ...SEC_HEADERS, "x-created-by": "ClipSphere by Erick Nex - NexTech360" });
   res.end(typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 }
 
-function readBody(req) {
-  return new Promise((r) => { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { try { r(JSON.parse(b || "{}")); } catch { r({}); } }); });
-}
+/** JSON estricto: Content-Type, tamaño máximo y JSON válido (si no, 415 / 413 / 400). */
+function readBody(req, limit) { return sec.readJson(req, limit); }
 
 function serveFile(req, res, file) {
   let st;
@@ -287,41 +320,71 @@ const server = http.createServer(async (req, res) => {
     const u = new URL(req.url, "http://x");
     const p = u.pathname;
 
-    // Desde otro aparato (móvil) hace falta el código de acceso
+    // 1) Host, Origin y token: ninguna página externa puede mandar órdenes (tampoco "desde localhost")
+    try { sec.guardRequest(req); }
+    catch (e) { secLog.log("solicitud-rechazada", { ...reqInfo(req, p), detalle: `${e.code}: host=${String(req.headers.host || "").slice(0, 60)} origin=${String(req.headers.origin || "-").slice(0, 80)}` }); throw e; }
+
+    // 2) Desde otro aparato (móvil) hace falta una sesión firmada, que se gana con el código de 6 dígitos
     if (!isLocal(req)) {
-      const code = accessCode();
+      const ip = req.socket.remoteAddress || "?";
+      const ck = cookies(req);
+      let sess = sec.verifySession(ck.cs_s);
       const given = u.searchParams.get("c");
+      const setCookies = [];
+      // Comodidad: el teléfono que ya tenía la cookie vieja (v2.0 y antes) entra sin volver a escribir el código
+      if (!sess && given === null && ck.cs_code && sec.safeEqual(ck.cs_code, accessCode())) {
+        const tok = sec.issueSession();
+        sess = sec.verifySession(tok);
+        setCookies.push(sec.cookieHeader(tok), "cs_code=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
+      }
+      if (!sess && ck.cs_s) secLog.log("sesion-invalida", { ...reqInfo(req, p), detalle: "cookie con firma incorrecta, vencida o de un código anterior" });
       if (given !== null) {
-        if (given.trim() === code) {
-          res.writeHead(302, { "set-cookie": `cs_code=${code}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`, location: "/" });
+        const r = sec.tryCode(ip, given);
+        if (!r.ok) secLog.log(r.locked ? "bloqueo-temporal" : "acceso-fallido", { ...reqInfo(req, p), detalle: r.locked ? `espera ${Math.ceil(r.wait / 1000)} s` : `quedan ${r.left} intentos` });
+        else secLog.log("acceso-correcto", reqInfo(req, p));
+        if (r.ok) {
+          res.writeHead(302, { "set-cookie": [sec.cookieHeader(sec.issueSession()), "cs_code=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax"], location: "/", ...SEC_HEADERS });
           return res.end();
         }
-        return send(res, 401, PIN_PAGE(true), "text/html; charset=utf-8");
+        const msg = r.locked ? `Demasiados intentos. Espera ${Math.ceil(r.wait / 1000)} segundos.` : `Código incorrecto${r.left ? ` (te quedan ${r.left} intento${r.left === 1 ? "" : "s"} antes de esperar)` : ""}`;
+        return send(res, r.locked ? 429 : 401, PIN_PAGE(msg), "text/html; charset=utf-8");
       }
-      if (cookies(req).cs_code !== code) {
-        if (p.startsWith("/api/") || p.startsWith("/files/")) return send(res, 401, { error: "Falta el código de acceso" });
-        return send(res, 200, PIN_PAGE(false), "text/html; charset=utf-8");
+      if (!sess) {
+        if (p.startsWith("/api/") || p.startsWith("/files/")) { secLog.log("sin-autorizacion", reqInfo(req, p)); return send(res, 401, { error: "Falta el código de acceso", code: "auth" }); }
+        const li = sec.lockInfo(ip);
+        return send(res, 200, PIN_PAGE(li.locked ? `Demasiados intentos. Espera ${Math.ceil(li.wait / 1000)} segundos.` : ""), "text/html; charset=utf-8");
       }
+      if (sec.needsRenew(sess)) setCookies.push(sec.cookieHeader(sec.issueSession())); // la sesión se renueva sola mientras la uses
+      if (setCookies.length) res.setHeader("set-cookie", setCookies);
       if (p === "/api/config" && req.method === "POST") return send(res, 403, { error: "Los ajustes solo se cambian desde la laptop." });
       if (/\/open$/.test(p)) return send(res, 200, { ok: true, note: "La carpeta se abre en la laptop" });
     }
+
+    // Token para la página (por si el servidor se reinició y la página tiene uno viejo)
+    if (p === "/api/csrf" && req.method === "GET") return send(res, 200, { token: sec.csrf });
 
     // ---- Actualizaciones (solo desde la laptop) ----
     if (p === "/api/update/check") {
       try { return send(res, 200, await updater.check()); }
       catch (e) { return send(res, 200, { current: updater.localManifest().version, available: false, error: e.message }); }
     }
+    if (p === "/api/update/rollback" && req.method === "POST") { // deshacer la última actualización (copia en _update_backup)
+      if (!isLocal(req)) return send(res, 403, { error: "Esto se hace desde la laptop." });
+      if (running || queue.length) return send(res, 409, { error: "Hay un trabajo en curso. Espera a que termine." });
+      try { const r = updater.rollback((m) => console.log("  " + m)); send(res, 200, r); if (!IS_WATCH) setTimeout(() => process.exit(0), 800); return; }
+      catch (e) { return send(res, 400, { error: e.message }); }
+    }
     if (p === "/api/update/apply" && req.method === "POST") {
       if (!isLocal(req)) return send(res, 403, { error: "La actualización se hace desde la laptop." });
       if (running || queue.length) return send(res, 409, { error: "Hay un trabajo en curso. Espera a que termine para actualizar." });
       try {
-        const r = await updater.apply((m) => console.log("  " + m));
+        const r = await updater.apply((m) => { console.log("  " + m); if (/dañado|falló|no es válido/.test(m)) secLog.log("actualizacion-integridad", { detalle: m }); });
         console.log(`\n  ClipSphere actualizado a la versión ${r.version} (${r.changed.length} archivos). Reiniciando…\n`);
         send(res, 200, r);
         // Si iniciar.bat usa --watch se reinicia solo; si no, salimos y el .bat lo vuelve a abrir.
         if (!IS_WATCH) setTimeout(() => process.exit(0), 800);
         return;
-      } catch (e) { return send(res, 500, { error: e.message }); }
+      } catch (e) { if (/dañado|falló|no es válido|ruta no permitida/.test(e.message)) secLog.log("actualizacion-integridad", { detalle: e.message }); return send(res, e.status || 500, { error: e.message }); }
     }
 
     // ---- Respaldo (solo desde la laptop) ----
@@ -336,7 +399,7 @@ const server = http.createServer(async (req, res) => {
       }
       if (p === "/api/backup/restore" && req.method === "POST") {
         try { return send(res, 200, await backup.restore(loadConfig(), CONFIG_FILE)); }
-        catch (e) { return send(res, 500, { error: e.message }); }
+        catch (e) { return send(res, e.status || 500, { error: e.message }); }
       }
     }
 
@@ -353,7 +416,7 @@ const server = http.createServer(async (req, res) => {
       }
       if (req.method === "DELETE") { try { fs.unlinkSync(cf); } catch {} return send(res, 200, { ok: true }); }
       if (req.method === "POST") {
-        const body = await readBody(req);
+        const body = await readBody(req, 3 * 1024 * 1024); // un cookies.txt puede pesar más
         const t = String(body.text || "").replace(/\r\n/g, "\n");
         const lines = t.split("\n").filter((l) => l && !l.startsWith("#") && l.split("\t").length >= 7);
         if (!lines.length) return send(res, 400, { error: "Ese archivo no es un cookies.txt válido (formato Netscape). Expórtalo con la extensión «Get cookies.txt LOCALLY»." });
@@ -372,7 +435,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "content-type": "image/svg+xml", "cache-control": "max-age=86400" });
       return res.end('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#ffe100"/><path d="M12 9l12 7-12 7z" fill="#0d0d0f"/></svg>');
     }
-    if (p === "/" || p === "/index.html") return serveFile(req, res, path.join(ROOT, "public", "index.html"));
+    if (p === "/" || p === "/index.html") {
+      // la página lleva el token de seguridad: solo ella puede mandar órdenes al servidor
+      const html = fs.readFileSync(path.join(ROOT, "public", "index.html"), "utf8").replace("</head>", `<meta name="cs-token" content="${sec.csrf}">\n</head>`);
+      return send(res, 200, html, "text/html; charset=utf-8");
+    }
 
     if (p === "/api/check") {
       const t = tools();
@@ -386,7 +453,8 @@ const server = http.createServer(async (req, res) => {
     if (p === "/api/config" && req.method === "GET") {
       const c = loadConfig();
       const mask = (k) => (k ? "••••" + k.slice(-4) : "");
-      return send(res, 200, { ...c, geminiKey: mask(c.geminiKey), groqKey: mask(c.groqKey), deepgramKey: mask(c.deepgramKey) });
+      // el código del móvil solo se muestra en la laptop
+      return send(res, 200, { ...c, geminiKey: mask(c.geminiKey), groqKey: mask(c.groqKey), deepgramKey: mask(c.deepgramKey), ...(isLocal(req) ? {} : { accessCode: undefined }) });
     }
     if (p === "/api/config" && req.method === "POST") {
       const body = await readBody(req);
@@ -414,7 +482,9 @@ const server = http.createServer(async (req, res) => {
     if (p === "/api/jobs" && req.method === "POST") {
       const body = await readBody(req);
       const url = String(body.url || "").trim();
-      if (!/^https?:\/\//.test(url)) return send(res, 400, { error: "Pega un link válido (https://…)" });
+      // link real: http(s), sin espacios ni caracteres de control, tamaño razonable
+      let okUrl = false; try { const uu = new URL(url); okUrl = /^https?:$/.test(uu.protocol) && !!uu.hostname; } catch {}
+      if (!/^https?:\/\//.test(url) || !okUrl || url.length > 2048 || /[\s\x00-\x1f]/.test(url)) return send(res, 400, { error: "Pega un link válido (https://…)" });
       const cfg = loadConfig();
       // los clips los elige el motor local: no hace falta ninguna clave
       let dir = findResumableDir(cfg.outputRoot, url);
@@ -428,6 +498,16 @@ const server = http.createServer(async (req, res) => {
       const opts = {};
       for (const k of ["minSeconds", "maxSeconds", "language", "maxHeight", "provider", "module", "liveMinutes", "focus", "campaign"]) if (body.options?.[k] !== undefined && body.options[k] !== "") opts[k] = typeof DEFAULTS[k] === "number" ? +body.options[k] : body.options[k];
       if (opts.focus !== undefined) opts.focus = ["peleas", "gta", "reality"].includes(opts.focus) ? opts.focus : "todo";
+      // valores dentro de rangos sensatos (nada raro llega al pipeline)
+      const clamp = (v, lo, hi, def) => (Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def);
+      if (opts.minSeconds !== undefined) opts.minSeconds = clamp(opts.minSeconds, 5, 600, DEFAULTS.minSeconds);
+      if (opts.maxSeconds !== undefined) opts.maxSeconds = clamp(opts.maxSeconds, Math.max(10, opts.minSeconds || 5), 1800, DEFAULTS.maxSeconds);
+      if (opts.liveMinutes !== undefined) opts.liveMinutes = clamp(opts.liveMinutes, 0, 720, DEFAULTS.liveMinutes);
+      if (opts.maxHeight !== undefined) opts.maxHeight = [360, 480, 720, 1080, 1440, 2160].includes(opts.maxHeight) ? opts.maxHeight : DEFAULTS.maxHeight;
+      if (opts.language !== undefined && !/^[a-z]{2,3}(-[A-Za-z]{2,4})?$|^auto$/.test(String(opts.language))) delete opts.language;
+      if (opts.module !== undefined) opts.module = opts.module === "live" ? "live" : "vod";
+      if (opts.provider !== undefined) delete opts.provider; // los clips siempre usan el motor local
+      if (opts.campaign !== undefined && !/^[a-z0-9-]{1,80}$/.test(String(opts.campaign))) return send(res, 400, { error: "Campaña no válida." });
       // 🚀 Lanzamientos: el trabajo lleva la campaña; si este video ya se procesó SIN ella, se hace aparte.
       let camp = null;
       if (opts.campaign) {
@@ -500,8 +580,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" });
       if (!job) { res.write(`data: ${JSON.stringify({ type: "gone" })}\n\n`); return res.end(); }
       for (const ev of job.events) res.write(`data: ${JSON.stringify(ev)}\n\n`);
-      job.clients.add(res);
-      req.on("close", () => job.clients.delete(res));
+      sseAttach(job.clients, res, req);
       return;
     }
     if ((m = /^\/api\/jobs\/([\w-]+)$/.exec(p)) && req.method === "GET") {
@@ -557,7 +636,8 @@ const server = http.createServer(async (req, res) => {
     }
     send(res, 404, { error: "no encontrado" });
   } catch (e) {
-    send(res, 500, { error: e.message });
+    if (["content-type", "too-large", "bad-json"].includes(e.code)) secLog.log("solicitud-invalida", { ...reqInfo(req, new URL(req.url, "http://x").pathname), detalle: e.code });
+    send(res, e.status || 500, { error: e.message, ...(e.code ? { code: e.code } : {}) });
   }
 });
 

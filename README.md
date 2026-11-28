@@ -82,6 +82,17 @@ Más fino en `lib/local.js` → `TUNING` (peso del gancho, del mejor tramo, cast
 
 **Sin IA de pago (v1.9):** se eliminó Claude. Los clips salen siempre del motor local. Solo las misiones 1, 2 y 4 de 🚀 Lanzamientos escriben textos con una IA **gratis**: Gemini (clave gratis) u Ollama (en tu PC).
 
+## Seguridad 🔒 (v2.1)
+
+- **Solo ClipSphere puede darle órdenes al servidor.** Cada orden (POST/PATCH/DELETE) lleva un token que solo tiene la página de la app; además se revisan `Host` y `Origin`, se exige JSON (`Content-Type: application/json`), con tamaño máximo (256 KB; 3 MB para `cookies.txt`) y JSON válido. Una página web cualquiera abierta en tu navegador ya no puede cambiar ajustes ni lanzar trabajos, aunque esté en tu misma PC.
+- **Móvil:** el mismo código de 6 dígitos. Tras 5 fallos seguidos hay que esperar 30 s, luego 1 min, 2 min… (hasta 1 h); si muchas IP fallan a la vez, se bloquean los intentos 10 min. Al entrar, el teléfono recibe una sesión **firmada** (HMAC-SHA256, `HttpOnly`, `SameSite=Lax`) que dura 30 días y se renueva sola mientras la uses. **Cambiar el código cierra todas las sesiones.** Los teléfonos que ya estaban conectados entran solos la primera vez (migración automática).
+- **Respaldo sin secretos.** A OneDrive / Google Drive **no** van: claves de Gemini, Groq, Deepgram (y cualquier `…Key`), el código del móvil, tokens, contraseñas, `cookies.txt`, el secreto de sesiones (`.clipsphere-secret`) ni los registros. Sí van: ajustes normales, historial, clips y campañas. Al recuperar, nunca se pisa un `config.json` local ni sus claves.
+- **Actualizador:** verifica el SHA-256 de cada archivo; solo retira archivos que la versión anterior instaló, que ya no existen en la nueva y que no modificaste; nunca toca ajustes, claves, clips, campañas, historial ni respaldos. Antes de aplicar guarda una copia en `_update_backup/`; si algo falla a mitad de camino, lo deshace solo. Para volver a la versión anterior a mano: `POST /api/update/rollback` (desde la laptop).
+- **Memoria:** cada trabajo guarda como mucho 1.500 mensajes (los primeros y los más recientes); los trabajos terminados salen de la memoria a los 30 min (siguen en disco). Las conexiones en vivo (SSE) tienen latido y límite.
+- **Registro de seguridad:** `seguridad.log` junto a `config.json` (accesos fallidos, bloqueos, sesiones inválidas, solicitudes rechazadas, problemas de integridad). Nunca guarda códigos, claves, cookies ni tokens. Máximo 512 KB por archivo, con 2 rotaciones.
+
+**Pruebas:** `node --test test/*.test.js` (23 pruebas: seguridad, respaldo, actualizador, un video y un directo simulados, sin internet; necesita ffmpeg). Las herramientas falsas de `test/fixtures/bin` son scripts de Node para Linux/macOS o Git Bash.
+
 ## Encuadre vertical 9:16 🎯
 
 **Por defecto (Completo):** cada clip sale vertical 1080×1920 con **todo el video original visible**, sin recortes ni zoom, centrado sobre el mismo video difuminado.
